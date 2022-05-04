@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  database:
+    container_name: mysql_salon
+    image: mysql:8.0.27
+    hostname: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: SALON
+      MYSQL_ROOT_PASSWORD: 1111
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: adminPass
+    ports:
+      - '3306:3306'

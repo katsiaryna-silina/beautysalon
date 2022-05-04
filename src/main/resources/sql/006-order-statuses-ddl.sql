@@ -1,0 +1,11 @@
+--liquibase formatted sql
+--changeset katsiaryna.silina@gmail.com:add-order-statuses-table splitStatements:true
+CREATE TABLE SALON.ORDER_STATUSES
+(
+    ID          INT AUTO_INCREMENT PRIMARY KEY,
+    STATUS      VARCHAR(30) NOT NULL,
+    DESCRIPTION VARCHAR(30) NOT NULL
+);
+
+CREATE UNIQUE INDEX IDX_UN_ORDER_STATUSES_STATUS ON SALON.ORDER_STATUSES (STATUS);
+--rollback DROP TABLE IF EXISTS SALON.ORDER-STATUSES
