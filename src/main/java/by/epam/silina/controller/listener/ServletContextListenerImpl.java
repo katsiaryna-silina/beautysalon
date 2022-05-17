@@ -1,6 +1,6 @@
 package by.epam.silina.controller.listener;
 
-import by.epam.silina.pool.ConnectionPool;
+import by.epam.silina.connection.ConnectionPool;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;

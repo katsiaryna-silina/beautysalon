@@ -1,7 +1,10 @@
 package by.epam.silina.service;
 
+import by.epam.silina.entity.User;
 import by.epam.silina.exception.ServiceException;
 
+import java.util.Optional;
+
 public interface UserService {
-    boolean authenticate(String login, String password) throws SecurityException, ServiceException;
+    Optional<User> findUserByUsernameAndPassword(String login, String password) throws SecurityException, ServiceException;
 }

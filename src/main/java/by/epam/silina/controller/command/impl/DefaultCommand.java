@@ -1,7 +1,7 @@
-package by.epam.silina.command.impl;
+package by.epam.silina.controller.command.impl;
 
-import by.epam.silina.command.Command;
-import by.epam.silina.command.Router;
+import by.epam.silina.controller.command.Command;
+import by.epam.silina.controller.command.Router;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class DefaultCommand implements Command {

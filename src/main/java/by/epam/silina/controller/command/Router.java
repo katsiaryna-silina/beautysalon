@@ -1,4 +1,4 @@
-package by.epam.silina.command;
+package by.epam.silina.controller.command;
 
 public class Router {
     private String page;

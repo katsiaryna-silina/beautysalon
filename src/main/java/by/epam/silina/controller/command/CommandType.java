@@ -1,9 +1,9 @@
-package by.epam.silina.command;
+package by.epam.silina.controller.command;
 
-import by.epam.silina.command.impl.AddUserCommand;
-import by.epam.silina.command.impl.DefaultCommand;
-import by.epam.silina.command.impl.LoginCommand;
-import by.epam.silina.command.impl.LogoutCommand;
+import by.epam.silina.controller.command.impl.AddUserCommand;
+import by.epam.silina.controller.command.impl.DefaultCommand;
+import by.epam.silina.controller.command.impl.LoginCommand;
+import by.epam.silina.controller.command.impl.LogoutCommand;
 
 import java.util.Arrays;
 

@@ -1,15 +1,24 @@
-package by.epam.silina.pool;
+package by.epam.silina.connection;
 
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class ProxyConnection implements Connection {
-    private final Connection connection;
+record ProxyConnection(Connection connection) implements Connection {
 
-    ProxyConnection(Connection connection) { // in package
-        this.connection = connection;
+    void reallyClose() throws SQLException {
+        connection.close();
+    }
+
+    @Override
+    public void close() {
+        ConnectionPool.getInstance().releaseConnection(this);
+    }
+
+    @Override
+    public boolean isClosed() throws SQLException {
+        return connection.isClosed();
     }
 
     @Override
@@ -50,16 +59,6 @@ public class ProxyConnection implements Connection {
     @Override
     public void rollback() throws SQLException {
         connection.rollback();
-    }
-
-    @Override
-    public void close() throws SQLException {
-        connection.close();
-    }
-
-    @Override
-    public boolean isClosed() throws SQLException {
-        return connection.isClosed();
     }
 
     @Override
@@ -269,16 +268,16 @@ public class ProxyConnection implements Connection {
 
     @Override
     public int getNetworkTimeout() throws SQLException {
-        return 0;
+        return connection.getNetworkTimeout();
     }
 
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        return null;
+        return connection.unwrap(iface);
     }
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return false;
+        return connection.isWrapperFor(iface);
     }
 }
