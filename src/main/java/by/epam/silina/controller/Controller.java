@@ -39,17 +39,16 @@ public class Controller extends HttpServlet {
         SessionRequestContent sessionRequestContent = new SessionRequestContent(request);
         String parameter = sessionRequestContent.getParameterByName(COMMAND);
 
-        //String parameter = request.getParameter(COMMAND);
-        Command command = CommandType.define(parameter);
+        Command command = CommandType.of(parameter);
 
         try {
-            Router router = command.execute(request);
+            Router router = command.execute(sessionRequestContent);
             switch (router.getType()) {
                 case FORWARD -> {
                     //forward - pass request
-                    sessionRequestContent.insertAttributes(request);
+                    sessionRequestContent.insertAttributes(request); //todo
                     RequestDispatcher requestDispatcher = request.getRequestDispatcher(router.getPage());
-                    requestDispatcher.forward(request, response);
+                    requestDispatcher.forward(request, response);//todo
                 }
                 case REDIRECT -> {
                     //sendRedirect - destroy request

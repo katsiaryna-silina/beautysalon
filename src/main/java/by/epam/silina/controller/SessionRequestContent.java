@@ -10,6 +10,7 @@ public class SessionRequestContent {
     private final Map<String, Object> requestAttributes = new HashMap<>();
     private final Map<String, String[]> requestParameters = new HashMap<>();
     private final Map<String, Object> sessionAttributes = new HashMap<>();
+    private boolean isSessionInvalid;
 
     public SessionRequestContent(HttpServletRequest request) {
         request.getAttributeNames()
@@ -29,8 +30,12 @@ public class SessionRequestContent {
         }
     }
 
-    public void extractValues(HttpServletRequest request) {
-        //todo
+    public Map<String, Object> getSessionAttributes() {
+        return sessionAttributes;
+    }
+
+    public void invalidateSession() {
+        isSessionInvalid = true;
     }
 
     // added data for jsp
@@ -40,6 +45,9 @@ public class SessionRequestContent {
         HttpSession session = request.getSession(false);
         if (session != null) {
             sessionAttributes.forEach(session::setAttribute);
+        }
+        if (isSessionInvalid) {
+            request.getSession().invalidate();
         }
     }
 

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
@@ -56,7 +57,7 @@ public class ConnectionPool {
                 ProxyConnection proxyConnection = new ProxyConnection(connection);
                 freeConnections.add(proxyConnection);
             }
-        } catch (Exception e) {
+        } catch (SQLException | IOException e) {
             log.error("Connection pool initialization error.", e);
             throw new ExceptionInInitializerError(e);
         }
@@ -85,20 +86,20 @@ public class ConnectionPool {
             occupiedConnections.put(proxyConnection);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            log.error("Connection interrupted during trying to get connection.");
+            log.error("Connection interrupted during trying to get connection.", e);
         }
         return proxyConnection;
     }
 
     public boolean releaseConnection(Connection connection) {
-        if (connection instanceof ProxyConnection) {
-            occupiedConnections.remove(connection);
+        if (connection instanceof ProxyConnection proxyConnection) {
+            occupiedConnections.remove(proxyConnection);
             try {
-                freeConnections.put((ProxyConnection) connection);
+                freeConnections.put(proxyConnection);
                 return true;
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                log.error("Connection interrupted during trying to release connection.");
+                log.error("Connection interrupted during trying to release connection.", e);
             }
         }
         return false;
@@ -117,7 +118,7 @@ public class ConnectionPool {
                 proxyConnection.reallyClose();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                log.error("Connection pool closing is failed.");
+                log.error("Connection pool closing is failed.", e);
             } catch (SQLException e) {
                 log.error("Connection pool closing is failed.", e);
             }

@@ -28,6 +28,6 @@ public class Router {
 
     public enum Type {
         FORWARD,
-        REDIRECT;
+        REDIRECT
     }
 }

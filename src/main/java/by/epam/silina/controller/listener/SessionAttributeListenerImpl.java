@@ -14,6 +14,7 @@ public class SessionAttributeListenerImpl implements HttpSessionAttributeListene
 
     @Override
     public void attributeAdded(HttpSessionBindingEvent httpSessionBindingEvent) {
+        //todo delete
         /* This method is called when an attribute is added to a session. */
         log.info("++++<<<--------> attributeAdded : {}", httpSessionBindingEvent.getSession().getAttribute("user_name"));
         log.info("++++<<<--------> attributeAdded : {}", httpSessionBindingEvent.getSession().getAttribute("current_page"));

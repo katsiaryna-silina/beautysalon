@@ -8,9 +8,11 @@ public class User extends AbstractEntity {
     private String email;
     private String firstName;
     private String lastName;
+    private String phoneNumber;
+    private Role role;
+    private DiscountStatus discountStatus;
     private LocalDateTime lastLogin;
-    private Long discountStatusId;
-    private Long roleId;
+    private UserStatus userStatus;
 
     private User() {
     }
@@ -59,6 +61,30 @@ public class User extends AbstractEntity {
         this.lastName = lastName;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public DiscountStatus getDiscountStatus() {
+        return discountStatus;
+    }
+
+    public void setDiscountStatus(DiscountStatus discountStatus) {
+        this.discountStatus = discountStatus;
+    }
+
     public LocalDateTime getLastLogin() {
         return lastLogin;
     }
@@ -67,20 +93,12 @@ public class User extends AbstractEntity {
         this.lastLogin = lastLogin;
     }
 
-    public Long getDiscountStatusId() {
-        return discountStatusId;
+    public UserStatus getUserStatus() {
+        return userStatus;
     }
 
-    public void setDiscountStatusId(Long discountStatusId) {
-        this.discountStatusId = discountStatusId;
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 
     @Override
@@ -96,10 +114,12 @@ public class User extends AbstractEntity {
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
-        if (lastLogin != null ? !lastLogin.equals(user.lastLogin) : user.lastLogin != null) return false;
-        if (discountStatusId != null ? !discountStatusId.equals(user.discountStatusId) : user.discountStatusId != null)
+        if (phoneNumber != null ? !phoneNumber.equals(user.phoneNumber) : user.phoneNumber != null) return false;
+        if (role != user.role) return false;
+        if (discountStatus != null ? !discountStatus.equals(user.discountStatus) : user.discountStatus != null)
             return false;
-        return roleId != null ? roleId.equals(user.roleId) : user.roleId == null;
+        if (lastLogin != null ? !lastLogin.equals(user.lastLogin) : user.lastLogin != null) return false;
+        return userStatus != null ? userStatus.equals(user.userStatus) : user.userStatus == null;
     }
 
     @Override
@@ -110,24 +130,30 @@ public class User extends AbstractEntity {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + (discountStatus != null ? discountStatus.hashCode() : 0);
         result = 31 * result + (lastLogin != null ? lastLogin.hashCode() : 0);
-        result = 31 * result + (discountStatusId != null ? discountStatusId.hashCode() : 0);
-        result = 31 * result + (roleId != null ? roleId.hashCode() : 0);
+        result = 31 * result + (userStatus != null ? userStatus.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", lastLogin=" + lastLogin +
-                ", discountStatusId=" + discountStatusId +
-                ", roleId=" + roleId +
-                '}';
+        return new StringBuilder()
+                .append("User{")
+                .append("username='").append(username).append('\'')
+                .append(", password='").append(password).append('\'')
+                .append(", email='").append(email).append('\'')
+                .append(", firstName='").append(firstName).append('\'')
+                .append(", lastName='").append(lastName).append('\'')
+                .append(", phoneNumber='").append(phoneNumber).append('\'')
+                .append(", role=").append(role).append('\'')
+                .append(", discountStatus=").append(discountStatus).append('\'')
+                .append(", lastLogin=").append(lastLogin).append('\'')
+                .append(", userStatus=").append(userStatus)
+                .append('}')
+                .toString();
     }
 
     public static class UserBuilder {
@@ -137,9 +163,11 @@ public class User extends AbstractEntity {
         private String email;
         private String firstName;
         private String lastName;
+        private Role role;
+        private String phoneNumber;
+        private DiscountStatus discountStatus;
         private LocalDateTime lastLogin;
-        private Long discountStatusId;
-        private Long roleId;
+        private UserStatus userStatus;
 
         UserBuilder() {
         }
@@ -174,32 +202,44 @@ public class User extends AbstractEntity {
             return this;
         }
 
+        public UserBuilder phoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public UserBuilder role(Role role) {
+            this.role = role;
+            return this;
+        }
+
+        public UserBuilder discountStatus(DiscountStatus discountStatus) {
+            this.discountStatus = discountStatus;
+            return this;
+        }
+
         public UserBuilder lastLogin(LocalDateTime lastLogin) {
             this.lastLogin = lastLogin;
             return this;
         }
 
-        public UserBuilder discountStatusId(Long discountStatusId) {
-            this.discountStatusId = discountStatusId;
-            return this;
-        }
-
-        public UserBuilder roleId(Long roleId) {
-            this.roleId = roleId;
+        public UserBuilder userStatus(UserStatus userStatus) {
+            this.userStatus = userStatus;
             return this;
         }
 
         public User build() {
             User user = new User();
             user.setId(id);
-            user.roleId = this.roleId;
+            user.role = this.role;
             user.email = this.email;
             user.password = this.password;
             user.firstName = this.firstName;
             user.lastName = this.lastName;
             user.lastLogin = this.lastLogin;
             user.username = this.username;
-            user.discountStatusId = this.discountStatusId;
+            user.phoneNumber = this.phoneNumber;
+            user.discountStatus = this.discountStatus;
+            user.userStatus = this.userStatus;
             return user;
         }
     }

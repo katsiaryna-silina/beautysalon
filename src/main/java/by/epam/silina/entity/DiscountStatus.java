@@ -1,10 +1,8 @@
 package by.epam.silina.entity;
 
-import java.math.BigDecimal;
-
 public class DiscountStatus extends AbstractEntity {
     private String status;
-    private BigDecimal discount;
+    private Double discount;
 
     private DiscountStatus() {
     }
@@ -21,11 +19,11 @@ public class DiscountStatus extends AbstractEntity {
         this.status = status;
     }
 
-    public BigDecimal getDiscount() {
+    public Double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(BigDecimal discount) {
+    public void setDiscount(Double discount) {
         this.discount = discount;
     }
 
@@ -57,11 +55,10 @@ public class DiscountStatus extends AbstractEntity {
                 '}';
     }
 
-
     public static final class DiscountStatusBuilder {
         private Long id;
         private String status;
-        private BigDecimal discount;
+        private Double discount;
 
         DiscountStatusBuilder() {
         }
@@ -76,7 +73,7 @@ public class DiscountStatus extends AbstractEntity {
             return this;
         }
 
-        public DiscountStatusBuilder discount(BigDecimal discount) {
+        public DiscountStatusBuilder discount(Double discount) {
             this.discount = discount;
             return this;
         }

@@ -8,7 +8,6 @@
 </head>
 <body>
 
-
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <!-- Brand -->
     <a class="nav-link navbar-brand" href="#">
@@ -35,8 +34,19 @@
     </div>
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul class="navbar-nav ml-auto">
+            <form action="${pageContext.request.contextPath}/controller">
+                <input type="hidden" name="command" value="login"/>
+                <input type="text" id="login" class="fadeIn second form-control-sm" name="username"
+                       placeholder="username"
+                       value="">
+                <input type="password" id="password" class="fadeIn third form-control-sm" name="password"
+                       placeholder="password"
+                       value="">
+                <input class="fadeIn fourth btn btn-outline-primary btn-sm" type="submit" name="sub" value="LogIn">
+                <p class="small text-danger">${login_failed_message}</p>
+            </form>
             <li class="ui-corner-right nav-item">
-                <a class="nav-link" href="jsp/login.jsp">LogIn</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/jsp/registration.jsp">Register</a>
             </li>
         </ul>
     </div>

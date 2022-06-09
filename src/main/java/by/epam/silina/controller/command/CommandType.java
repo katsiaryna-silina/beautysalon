@@ -1,14 +1,14 @@
 package by.epam.silina.controller.command;
 
-import by.epam.silina.controller.command.impl.AddUserCommand;
 import by.epam.silina.controller.command.impl.DefaultCommand;
 import by.epam.silina.controller.command.impl.LoginCommand;
 import by.epam.silina.controller.command.impl.LogoutCommand;
+import by.epam.silina.controller.command.impl.RegistrationCommand;
 
 import java.util.Arrays;
 
 public enum CommandType {
-    ADD_USER(new AddUserCommand()),
+    REGISTRATION(new RegistrationCommand()),
     LOGIN(new LoginCommand()),
     LOGOUT(new LogoutCommand()),
     DEFAULT(new DefaultCommand());
@@ -19,7 +19,7 @@ public enum CommandType {
         this.command = command;
     }
 
-    public static Command define(String commandStr) {
+    public static Command of(String commandStr) {
         if (commandStr != null) {
             String commandTypeName = commandStr.toUpperCase();
             CommandType commandType = Arrays.stream(values())
