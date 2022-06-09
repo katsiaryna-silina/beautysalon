@@ -20,23 +20,28 @@ import java.util.Optional;
 
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final String SELECT_USER_BY_USERNAME =
-            "SELECT U.ID, U.USERNAME, U.PASSWORD, U.EMAIL, U.FIRST_NAME, U.LAST_NAME, U.PHONE_NUMBER, DS.STATUS DISCOUNT_STATUS, DS.DISCOUNT, UR.ROLE, US.STATUS " +
-                    "FROM USERS U " +
-                    "JOIN USER_ROLES UR ON UR.ID = U.ROLE_ID " +
-                    "JOIN DISCOUNT_STATUSES DS ON DS.ID = U.DISCOUNT_STATUS_ID " +
-                    "JOIN USER_STATUSES US ON US.ID = U.STATUS_ID " +
-                    "WHERE U.USERNAME = ?";
-    private static final String SELECT_USERNAME_IN_USERS =
-            "SELECT USERNAME " +
-                    "FROM USERS " +
-                    "WHERE USERNAME = ?";
-    private static final String SELECT_EMAIL_IN_USERS =
-            "SELECT EMAIL " +
-                    "FROM USERS " +
-                    "WHERE EMAIL = ?";
-    private static final String INSERT_USER = "INSERT INTO USERS (USERNAME, PASSWORD, EMAIL, FIRST_NAME, LAST_NAME, PHONE_NUMBER) " +
-            "VALUES (?, ?, ?, ?, ?, ?);";
+    private static final String SELECT_USER_BY_USERNAME = """
+            SELECT U.ID, U.USERNAME, U.PASSWORD, U.EMAIL, U.FIRST_NAME, U.LAST_NAME, U.PHONE_NUMBER, DS.STATUS DISCOUNT_STATUS, DS.DISCOUNT, UR.ROLE, US.STATUS
+            FROM USERS U
+            JOIN USER_ROLES UR ON UR.ID = U.ROLE_ID
+            JOIN DISCOUNT_STATUSES DS ON DS.ID = U.DISCOUNT_STATUS_ID
+            JOIN USER_STATUSES US ON US.ID = U.STATUS_ID
+            WHERE U.USERNAME = ?
+            """;
+    private static final String SELECT_USERNAME_IN_USERS = """
+            SELECT USERNAME
+            FROM USERS
+            WHERE USERNAME = ?
+            """;
+    private static final String SELECT_EMAIL_IN_USERS = """
+            SELECT EMAIL
+            FROM USERS
+            WHERE EMAIL = ?
+            """;
+    private static final String INSERT_USER = """
+            INSERT INTO USERS (USERNAME, PASSWORD, EMAIL, FIRST_NAME, LAST_NAME, PHONE_NUMBER)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """;
     private static final UserDaoImpl instance = new UserDaoImpl();
     private static final UserMapper userMapper = UserMapperImpl.getInstance();
 
