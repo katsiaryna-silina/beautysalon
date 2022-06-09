@@ -1,7 +1,7 @@
 package by.silina.beautysalon.dao;
 
-import by.silina.beautysalon.entity.User;
 import by.silina.beautysalon.exception.DaoException;
+import by.silina.beautysalon.model.entity.User;
 
 import java.util.Optional;
 

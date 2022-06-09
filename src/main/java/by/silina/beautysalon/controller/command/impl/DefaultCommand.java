@@ -9,7 +9,6 @@ import static by.silina.beautysalon.controller.command.PagePath.INDEX;
 public class DefaultCommand implements Command {
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) {
-        //todo change "index.jsp" on smth or add constant
         return new Router(INDEX, Router.Type.FORWARD);
     }
 }

@@ -1,6 +1,6 @@
 package by.silina.beautysalon.validator;
 
-import by.silina.beautysalon.dto.UserRegistrationDto;
+import by.silina.beautysalon.model.dto.UserRegistrationDto;
 
 import java.util.Map;
 

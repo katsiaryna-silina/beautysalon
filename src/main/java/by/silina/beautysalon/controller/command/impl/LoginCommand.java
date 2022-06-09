@@ -2,39 +2,40 @@ package by.silina.beautysalon.controller.command.impl;
 
 import by.silina.beautysalon.controller.SessionRequestContent;
 import by.silina.beautysalon.controller.command.Command;
+import by.silina.beautysalon.controller.command.PagePath;
 import by.silina.beautysalon.controller.command.Router;
-import by.silina.beautysalon.dto.UserLoginDto;
-import by.silina.beautysalon.entity.User;
 import by.silina.beautysalon.exception.CommandException;
 import by.silina.beautysalon.exception.ServiceException;
+import by.silina.beautysalon.mapper.UserMapper;
+import by.silina.beautysalon.mapper.impl.UserMapperImpl;
+import by.silina.beautysalon.model.dto.UserLoginDto;
+import by.silina.beautysalon.model.entity.User;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.service.impl.UserServiceImpl;
-import by.silina.beautysalon.controller.command.AttributeAndParameterName;
-import by.silina.beautysalon.controller.command.PagePath;
 
 import java.util.Optional;
+
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.LOGIN_FAILED_MESSAGE;
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.USERNAME;
 
 public class LoginCommand implements Command {
 
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         UserService userService = UserServiceImpl.getInstance();
+        UserMapper userMapper = UserMapperImpl.getInstance();
 
-        String username = sessionRequestContent.getParameterByName(AttributeAndParameterName.USERNAME);
-        String password = sessionRequestContent.getParameterByName(AttributeAndParameterName.PASSWORD);
-        UserLoginDto userLoginDto = UserLoginDto.builder()
-                .username(username)
-                .password(password)
-                .build();
+        UserLoginDto userLoginDto = userMapper.toUserLoginDto(sessionRequestContent);
 
         String page = PagePath.LOGIN;
         try {
             Optional<User> optionalUser = userService.findUser(userLoginDto);
             if (optionalUser.isPresent()) {
-                sessionRequestContent.putSessionAttribute(AttributeAndParameterName.USERNAME, username);
-                page = fillSessionAttributesFrom(optionalUser.get(), sessionRequestContent);
+                var user = optionalUser.get();
+                sessionRequestContent.putSessionAttribute(USERNAME, user.getUsername());
+                page = fillSessionAttributesFrom(user, sessionRequestContent);
             } else {
-                sessionRequestContent.putRequestAttribute(AttributeAndParameterName.LOGIN_FAILED_MESSAGE, "Incorrect username or password");
+                sessionRequestContent.putRequestAttribute(LOGIN_FAILED_MESSAGE, "Incorrect username or password");
             }
         } catch (ServiceException e) {
             throw new CommandException(e);
@@ -45,7 +46,7 @@ public class LoginCommand implements Command {
     private String fillSessionAttributesFrom(User user, SessionRequestContent sessionRequestContent) {
         switch (user.getRole()) {
             case ADMIN -> {
-                //todo constants
+                //todo constants and difference
                 sessionRequestContent.putSessionAttribute("email", user.getEmail());
                 sessionRequestContent.putSessionAttribute("discount", user.getDiscountStatus().getDiscount());
                 sessionRequestContent.putSessionAttribute("discount_status", user.getDiscountStatus().getStatus());

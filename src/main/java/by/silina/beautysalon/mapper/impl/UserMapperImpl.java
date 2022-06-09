@@ -3,16 +3,20 @@ package by.silina.beautysalon.mapper.impl;
 import by.silina.beautysalon.controller.SessionRequestContent;
 import by.silina.beautysalon.controller.command.AttributeAndParameterName;
 import by.silina.beautysalon.dao.TableColumnName;
-import by.silina.beautysalon.dto.UserRegistrationDto;
-import by.silina.beautysalon.entity.DiscountStatus;
-import by.silina.beautysalon.entity.Role;
-import by.silina.beautysalon.entity.User;
-import by.silina.beautysalon.entity.UserStatus;
 import by.silina.beautysalon.mapper.UserMapper;
+import by.silina.beautysalon.model.dto.UserLoginDto;
+import by.silina.beautysalon.model.dto.UserRegistrationDto;
+import by.silina.beautysalon.model.entity.DiscountStatus;
+import by.silina.beautysalon.model.entity.Role;
+import by.silina.beautysalon.model.entity.User;
+import by.silina.beautysalon.model.entity.UserStatus;
 import by.silina.beautysalon.util.PasswordEncoder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.PASSWORD;
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.USERNAME;
 
 public class UserMapperImpl implements UserMapper {
     private static final UserMapperImpl instance = new UserMapperImpl();
@@ -57,19 +61,14 @@ public class UserMapperImpl implements UserMapper {
     }
 
     @Override
-    public UserRegistrationDto toDto(User user) {
-        return null;
-    }
-
-    @Override
-    public UserRegistrationDto toDto(SessionRequestContent sessionRequestContent) {
-        String username = sessionRequestContent.getParameterByName(AttributeAndParameterName.USERNAME).strip();
-        String password = sessionRequestContent.getParameterByName(AttributeAndParameterName.PASSWORD).strip();
-        String repeatedPassword = sessionRequestContent.getParameterByName(AttributeAndParameterName.REPEATED_PASSWORD).strip();
-        String email = sessionRequestContent.getParameterByName(AttributeAndParameterName.EMAIL);
-        String firstName = sessionRequestContent.getParameterByName(AttributeAndParameterName.FIRST_NAME);
-        String lastName = sessionRequestContent.getParameterByName(AttributeAndParameterName.LAST_NAME);
-        String phoneNumber = sessionRequestContent.getParameterByName(AttributeAndParameterName.PHONE_NUMBER);
+    public UserRegistrationDto toUserRegistrationDto(SessionRequestContent sessionRequestContent) {
+        var username = sessionRequestContent.getParameterByName(AttributeAndParameterName.USERNAME).strip();
+        var password = sessionRequestContent.getParameterByName(AttributeAndParameterName.PASSWORD).strip();
+        var repeatedPassword = sessionRequestContent.getParameterByName(AttributeAndParameterName.REPEATED_PASSWORD).strip();
+        var email = sessionRequestContent.getParameterByName(AttributeAndParameterName.EMAIL);
+        var firstName = sessionRequestContent.getParameterByName(AttributeAndParameterName.FIRST_NAME);
+        var lastName = sessionRequestContent.getParameterByName(AttributeAndParameterName.LAST_NAME);
+        var phoneNumber = sessionRequestContent.getParameterByName(AttributeAndParameterName.PHONE_NUMBER);
 
         return UserRegistrationDto.builder()
                 .username(username)
@@ -79,6 +78,16 @@ public class UserMapperImpl implements UserMapper {
                 .firstName(firstName)
                 .lastName(lastName)
                 .phoneNumber(phoneNumber)
+                .build();
+    }
+
+    @Override
+    public UserLoginDto toUserLoginDto(SessionRequestContent sessionRequestContent) {
+        var username = sessionRequestContent.getParameterByName(USERNAME);
+        var password = sessionRequestContent.getParameterByName(PASSWORD);
+        return UserLoginDto.builder()
+                .username(username)
+                .password(password)
                 .build();
     }
 }

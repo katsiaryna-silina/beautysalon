@@ -1,8 +1,9 @@
 package by.silina.beautysalon.mapper;
 
 import by.silina.beautysalon.controller.SessionRequestContent;
-import by.silina.beautysalon.dto.UserRegistrationDto;
-import by.silina.beautysalon.entity.User;
+import by.silina.beautysalon.model.dto.UserLoginDto;
+import by.silina.beautysalon.model.dto.UserRegistrationDto;
+import by.silina.beautysalon.model.entity.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +13,7 @@ public interface UserMapper {
 
     User toEntity(ResultSet resultSet) throws SQLException;
 
-    UserRegistrationDto toDto(User user);
+    UserRegistrationDto toUserRegistrationDto(SessionRequestContent sessionRequestContent);
 
-    UserRegistrationDto toDto(SessionRequestContent sessionRequestContent);
-
+    UserLoginDto toUserLoginDto(SessionRequestContent sessionRequestContent);
 }

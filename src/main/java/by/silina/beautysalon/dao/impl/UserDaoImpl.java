@@ -3,10 +3,10 @@ package by.silina.beautysalon.dao.impl;
 import by.silina.beautysalon.connection.ConnectionPool;
 import by.silina.beautysalon.dao.BaseDao;
 import by.silina.beautysalon.dao.UserDao;
-import by.silina.beautysalon.entity.User;
 import by.silina.beautysalon.exception.DaoException;
 import by.silina.beautysalon.mapper.UserMapper;
 import by.silina.beautysalon.mapper.impl.UserMapperImpl;
+import by.silina.beautysalon.model.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,14 +89,14 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
              PreparedStatement preparedStatement = connection.prepareStatement(select)) {
 
             preparedStatement.setString(1, parameter);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                log.debug("Parameter={} was found in database.", parameter);
-                return true;
-            } else {
-                log.debug("Parameter={} was not found in database.", parameter);
-                return false;
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    log.debug("Parameter={} was found in database.", parameter);
+                    return true;
+                } else {
+                    log.debug("Parameter={} was not found in database.", parameter);
+                    return false;
+                }
             }
         } catch (SQLException e) {
             throw new DaoException(e);

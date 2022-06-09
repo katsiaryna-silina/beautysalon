@@ -39,7 +39,7 @@ public class SessionRequestContent {
     }
 
     // added data for jsp
-    public void insertAttributes(HttpServletRequest request) {
+    public void insertRequestAttributes(HttpServletRequest request) {
         requestAttributes.forEach(request::setAttribute);
 
         HttpSession session = request.getSession(false);

@@ -1,9 +1,9 @@
 package by.silina.beautysalon.service;
 
-import by.silina.beautysalon.dto.UserLoginDto;
-import by.silina.beautysalon.dto.UserRegistrationDto;
-import by.silina.beautysalon.entity.User;
 import by.silina.beautysalon.exception.ServiceException;
+import by.silina.beautysalon.model.dto.UserLoginDto;
+import by.silina.beautysalon.model.dto.UserRegistrationDto;
+import by.silina.beautysalon.model.entity.User;
 
 import java.util.Map;
 import java.util.Optional;

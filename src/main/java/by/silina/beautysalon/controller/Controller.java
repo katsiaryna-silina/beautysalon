@@ -4,7 +4,6 @@ import by.silina.beautysalon.controller.command.Command;
 import by.silina.beautysalon.controller.command.CommandType;
 import by.silina.beautysalon.controller.command.Router;
 import by.silina.beautysalon.exception.CommandException;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -43,26 +42,17 @@ public class Controller extends HttpServlet {
 
         try {
             Router router = command.execute(sessionRequestContent);
+            sessionRequestContent.insertRequestAttributes(request);
             switch (router.getType()) {
+                case REDIRECT -> response.sendRedirect(router.getPage());
                 case FORWARD -> {
-                    //forward - pass request
-                    sessionRequestContent.insertAttributes(request); //todo
-                    RequestDispatcher requestDispatcher = request.getRequestDispatcher(router.getPage());
-                    requestDispatcher.forward(request, response);//todo
-                }
-                case REDIRECT -> {
-                    //sendRedirect - destroy request
-                    sessionRequestContent.insertAttributes(request);
-                    response.sendRedirect(router.getPage());
+                    var requestDispatcher = request.getRequestDispatcher(router.getPage());
+                    requestDispatcher.forward(request, response);
                 }
                 default -> {
                     log.error("Wrong Router type = {}", router.getType());
                     response.sendError(500, WRONG_ROUTER_TYPE);
                 }
-                //response.sendError(500, "text message"); //1
-                //throw new ServletException("ass", e); //2
-                    /* request.setAttribute("error_msg", e.getCause()); //3
-                       request.getRequestDispatcher("pages/error/error_500.jsp").forward(request, response);*/
             }
         } catch (CommandException e) {
             log.error("", e);

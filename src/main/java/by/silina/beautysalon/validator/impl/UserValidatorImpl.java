@@ -22,31 +22,31 @@ public class UserValidatorImpl implements UserValidator {
 
     @Override
     public boolean checkUsername(String username) {
-        return username.matches(USERNAME_REGEX);
+        return username != null && username.matches(USERNAME_REGEX);
     }
 
     @Override
     public boolean checkPassword(String password) {
-        return password.matches(PASSWORD_REGEX);
+        return password != null && password.matches(PASSWORD_REGEX);
     }
 
     @Override
     public boolean checkEmail(String email) {
-        return email.matches(EMAIL_REGEX);
+        return email != null && email.matches(EMAIL_REGEX);
     }
 
     @Override
     public boolean checkFirstname(String firstName) {
-        return firstName.matches(FIRST_AND_LAST_NAME_REGEX);
+        return firstName != null && firstName.matches(FIRST_AND_LAST_NAME_REGEX);
     }
 
     @Override
     public boolean checkLastName(String lastName) {
-        return lastName.matches(FIRST_AND_LAST_NAME_REGEX);
+        return lastName != null && lastName.matches(FIRST_AND_LAST_NAME_REGEX);
     }
 
     @Override
     public boolean checkPhoneNumber(String phoneNumber) {
-        return phoneNumber.matches(PHONE_NUMBER_REGEX);
+        return phoneNumber != null && phoneNumber.matches(PHONE_NUMBER_REGEX);
     }
 }

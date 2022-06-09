@@ -1,8 +1,8 @@
-package by.silina.beautysalon.dto;
+package by.silina.beautysalon.model.dto;
 
-import by.silina.beautysalon.entity.DiscountStatus;
-import by.silina.beautysalon.entity.Role;
-import by.silina.beautysalon.entity.UserStatus;
+import by.silina.beautysalon.model.entity.DiscountStatus;
+import by.silina.beautysalon.model.entity.Role;
+import by.silina.beautysalon.model.entity.UserStatus;
 
 import java.time.LocalDateTime;
 

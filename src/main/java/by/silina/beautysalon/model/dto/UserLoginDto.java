@@ -1,4 +1,4 @@
-package by.silina.beautysalon.dto;
+package by.silina.beautysalon.model.dto;
 
 public class UserLoginDto {
     private String username;

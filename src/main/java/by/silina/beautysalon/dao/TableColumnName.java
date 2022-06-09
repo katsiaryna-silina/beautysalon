@@ -13,8 +13,7 @@ public final class TableColumnName {
     public static final String ROLE = "ROLE";
     public static final String STATUS = "STATUS";
     public static final String DISCOUNT = "DISCOUNT";
-
-
+    
     private TableColumnName() {
     }
 }

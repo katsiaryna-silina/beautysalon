@@ -1,4 +1,4 @@
-package by.silina.beautysalon.entity;
+package by.silina.beautysalon.model.entity;
 
 import java.time.LocalDateTime;
 

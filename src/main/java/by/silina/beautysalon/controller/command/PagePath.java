@@ -8,7 +8,6 @@ public final class PagePath {
     public static final String REGISTRATION = "jsp/registration.jsp";
     public static final String WELCOME = "jsp/welcome.jsp";
 
-
     private PagePath() {
     }
 }

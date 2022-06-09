@@ -4,7 +4,6 @@ public class Router {
     private String page;
     private Type type;
 
-
     public Router(String page, Type type) {
         this.page = page;
         this.type = type;
