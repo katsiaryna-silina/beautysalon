@@ -7,6 +7,7 @@ import by.silina.beautysalon.model.entity.UserStatus;
 import java.time.LocalDateTime;
 
 public class UserAuthorizedDto {
+    private Long id;
     private String username;
     private String email;
     private String firstName;
@@ -22,6 +23,14 @@ public class UserAuthorizedDto {
 
     public static UserAuthorizedDto.UserAuthorizedDtoBuilder builder() {
         return new UserAuthorizedDto.UserAuthorizedDtoBuilder();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -97,6 +106,7 @@ public class UserAuthorizedDto {
     }
 
     public static class UserAuthorizedDtoBuilder {
+        private Long id;
         private String username;
         private String email;
         private String firstName;
@@ -108,6 +118,12 @@ public class UserAuthorizedDto {
         private UserStatus userStatus;
 
         UserAuthorizedDtoBuilder() {
+        }
+
+        public UserAuthorizedDto.UserAuthorizedDtoBuilder id(Long id) {
+            this.id = id;
+            return this;
+
         }
 
         public UserAuthorizedDto.UserAuthorizedDtoBuilder username(String username) {
@@ -157,6 +173,7 @@ public class UserAuthorizedDto {
 
         public UserAuthorizedDto build() {
             UserAuthorizedDto userAuthorizedDto = new UserAuthorizedDto();
+            userAuthorizedDto.id = this.id;
             userAuthorizedDto.role = this.role;
             userAuthorizedDto.email = this.email;
             userAuthorizedDto.firstName = this.firstName;

@@ -5,21 +5,26 @@ import by.silina.beautysalon.exception.DaoException;
 import by.silina.beautysalon.exception.ServiceException;
 import by.silina.beautysalon.mapper.UserMapper;
 import by.silina.beautysalon.mapper.impl.UserMapperImpl;
+import by.silina.beautysalon.model.dto.UserAuthorizedDto;
 import by.silina.beautysalon.model.dto.UserLoginDto;
+import by.silina.beautysalon.model.dto.UserPasswordsDto;
 import by.silina.beautysalon.model.dto.UserRegistrationDto;
 import by.silina.beautysalon.model.entity.User;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.util.PasswordEncoder;
+import by.silina.beautysalon.validator.UserPasswordsDtoValidator;
 import by.silina.beautysalon.validator.UserRegistrationDtoValidator;
 import by.silina.beautysalon.validator.UserValidator;
+import by.silina.beautysalon.validator.impl.UserPasswordsDtoValidatorImpl;
 import by.silina.beautysalon.validator.impl.UserRegistrationDtoValidatorImpl;
 import by.silina.beautysalon.validator.impl.UserValidatorImpl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static by.silina.beautysalon.controller.command.AttributeAndParameterName.EMAIL_ERROR_MESSAGE;
-import static by.silina.beautysalon.controller.command.AttributeAndParameterName.USERNAME_ERROR_MESSAGE;
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 
 public class UserServiceImpl implements UserService {
     private static final UserServiceImpl instance = new UserServiceImpl();
@@ -84,11 +89,75 @@ public class UserServiceImpl implements UserService {
         if (errorMap.isEmpty()) {
             User user = userMapper.toEntity(userRegistrationDto);
             try {
-                userDao.insert(user);
+                if (!userDao.insert(user)) {
+                    errorMap.put(CREATE_NEW_USER_ERROR_MESSAGE, "Cannot add new user.");
+                }
             } catch (DaoException e) {
                 throw new ServiceException(e);
             }
         }
         return errorMap;
+    }
+
+    @Override
+    public Optional<String> findUserPasswordById(Long userId) throws ServiceException {
+        Optional<String> optionalPassword;
+        try {
+            optionalPassword = userDao.findUserPasswordById(userId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return optionalPassword;
+    }
+
+    @Override
+    public Map<String, String> changePassword(UserPasswordsDto userPasswordsDto) throws ServiceException {
+        UserPasswordsDtoValidator userPasswordsDtoValidator = UserPasswordsDtoValidatorImpl.getInstance();
+
+        Map<String, String> errorMap = userPasswordsDtoValidator.checkUserPasswordsDto(userPasswordsDto);
+
+        if (errorMap.isEmpty()) {
+            var userId = userPasswordsDto.getUserId();
+            var currentPassword = userPasswordsDto.getCurrentPassword();
+            try {
+                var passwordFromDB = userDao.findUserPasswordById(userId);
+
+                if (passwordFromDB.isEmpty()) {
+                    errorMap.put(PASSWORD_ERROR_MESSAGE, "Cannot change password.");
+                } else if (!PasswordEncoder.verifyPasswords(currentPassword, passwordFromDB.get())) {
+                    errorMap.put(PASSWORD_ERROR_MESSAGE, "Password is not correct.");
+                } else {
+                    var newPassword = PasswordEncoder.encode(userPasswordsDto.getNewPassword());
+                    boolean isPasswordChanged = userDao.changeUserPassword(userId, newPassword);
+                    if (!isPasswordChanged) {
+                        errorMap.put(PASSWORD_ERROR_MESSAGE, "Cannot change password.");
+                    }
+                }
+            } catch (DaoException e) {
+                throw new ServiceException(e);
+            }
+        }
+        return errorMap;
+    }
+
+    @Override
+    public long findNumberOfUsers() throws ServiceException {
+        try {
+            return userDao.findNumberOfUsers();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<UserAuthorizedDto> findPagedUserDtoList(Long fromUserId, Integer numberOfUsers) throws ServiceException {
+        try {
+            List<User> pagedUsers = userDao.findPagedUsers(fromUserId, numberOfUsers);
+            return pagedUsers.stream()
+                    .map(userMapper::toUserAuthorizedDto)
+                    .collect(Collectors.toList());
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
     }
 }

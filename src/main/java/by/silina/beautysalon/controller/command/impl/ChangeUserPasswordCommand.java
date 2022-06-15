@@ -7,38 +7,30 @@ import by.silina.beautysalon.exception.CommandException;
 import by.silina.beautysalon.exception.ServiceException;
 import by.silina.beautysalon.mapper.UserMapper;
 import by.silina.beautysalon.mapper.impl.UserMapperImpl;
+import by.silina.beautysalon.model.dto.UserPasswordsDto;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.service.impl.UserServiceImpl;
 
 import java.util.Map;
 
-import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
-import static by.silina.beautysalon.controller.command.PagePath.REGISTRATION;
-import static by.silina.beautysalon.controller.command.PagePath.WELCOME;
+import static by.silina.beautysalon.controller.command.PagePath.CHANGE_PASSWORD;
+import static by.silina.beautysalon.controller.command.PagePath.SUCCESS_CHANGE_PASSWORD;
 
-public class RegistrationCommand implements Command {
+public class ChangeUserPasswordCommand implements Command {
 
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         UserService userService = UserServiceImpl.getInstance();
         UserMapper userMapper = UserMapperImpl.getInstance();
 
-        var userRegistrationDto = userMapper.toUserRegistrationDto(sessionRequestContent);
-
-        var page = REGISTRATION;
-
+        UserPasswordsDto userPasswordsDto = userMapper.toUserPasswordsDto(sessionRequestContent);
+        var page = CHANGE_PASSWORD;
         try {
-            var errorMap = userService.addUser(userRegistrationDto);
+            Map<String, String> errorMap = userService.changePassword(userPasswordsDto);
             if (errorMap.isEmpty()) {
-                sessionRequestContent.putSessionAttribute(USERNAME, userRegistrationDto.getFirstName());
-                page = WELCOME;
+                page = SUCCESS_CHANGE_PASSWORD;
             } else {
                 fillRequestAttributesFrom(errorMap, sessionRequestContent);
-                sessionRequestContent.putRequestAttribute(USERNAME, userRegistrationDto.getFirstName());
-                sessionRequestContent.putRequestAttribute(EMAIL, userRegistrationDto.getEmail());
-                sessionRequestContent.putRequestAttribute(FIRST_NAME, userRegistrationDto.getFirstName());
-                sessionRequestContent.putRequestAttribute(LAST_NAME, userRegistrationDto.getLastName());
-                sessionRequestContent.putRequestAttribute(PHONE_NUMBER, userRegistrationDto.getPhoneNumber());
             }
         } catch (ServiceException e) {
             throw new CommandException(e);

@@ -87,6 +87,7 @@
         <div style="clear: both"></div>
 
         <input class="btn btn-info btn-lg" type="submit" value="Sing Up!">
+        <div class="small" style="color: red">${create_new_user_error_message}</div>
     </form>
 </div>
 <jsp:include page="fragment/footer.jsp"/>

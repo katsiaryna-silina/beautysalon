@@ -35,7 +35,10 @@
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul class="navbar-nav ml-auto">
             <li class="ui-corner-right nav-item">
-                <a class="nav-link" href="controller?command=LogOut">LogOut</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/jsp/profile.jsp">Profile</a>
+            </li>
+            <li class="ui-corner-right nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=LogOut">LogOut</a>
             </li>
         </ul>
     </div>

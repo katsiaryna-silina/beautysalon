@@ -15,8 +15,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static by.silina.beautysalon.dao.TableColumnName.PASSWORD;
 
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -25,7 +28,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             FROM USERS U
             JOIN USER_ROLES UR ON UR.ID = U.ROLE_ID
             JOIN DISCOUNT_STATUSES DS ON DS.ID = U.DISCOUNT_STATUS_ID
-            JOIN USER_STATUSES US ON US.ID = U.STATUS_ID
+            JOIN USER_STATUSES US ON US.ID = U.USER_STATUS_ID
             WHERE U.USERNAME = ?
             """;
     private static final String SELECT_USERNAME_IN_USERS = """
@@ -42,6 +45,28 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             INSERT INTO USERS (USERNAME, PASSWORD, EMAIL, FIRST_NAME, LAST_NAME, PHONE_NUMBER)
             VALUES (?, ?, ?, ?, ?, ?)
             """;
+    private static final String SELECT_USER_PASSWORD = """
+            SELECT PASSWORD
+            FROM USERS
+            WHERE ID = ?
+            """;
+    private static final String UPDATE_USER_PASSWORD = """
+            UPDATE USERS
+            SET PASSWORD = ?
+            WHERE ID = ?
+            """;
+    private static final String SELECT_NUMBER_OF_USERS = """
+            SELECT COUNT(ID)
+            FROM USERS;
+            """;
+    private static final String SELECT_PAGED_USERS = """
+            SELECT U.ID, U.USERNAME, U.PASSWORD, U.EMAIL, U.FIRST_NAME, U.LAST_NAME, U.PHONE_NUMBER, U.LAST_LOGIN, DS.STATUS DISCOUNT_STATUS, DS.DISCOUNT, UR.ROLE, US.STATUS
+               FROM USERS U
+               JOIN USER_ROLES UR ON UR.ID = U.ROLE_ID
+               JOIN DISCOUNT_STATUSES DS ON DS.ID = U.DISCOUNT_STATUS_ID
+               JOIN USER_STATUSES US ON US.ID = U.USER_STATUS_ID
+               WHERE U.ID > ? LIMIT ?
+               """;
     private static final UserDaoImpl instance = new UserDaoImpl();
     private static final UserMapper userMapper = UserMapperImpl.getInstance();
 
@@ -59,14 +84,14 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_USERNAME)) {
 
             preparedStatement.setString(1, username);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                User userFromResultSet = userMapper.toEntity(resultSet);
-                optionalUser = Optional.of(userFromResultSet);
-                log.debug("User was found.");
-            } else {
-                log.debug("User was not found.");
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    User userFromResultSet = userMapper.toEntity(resultSet);
+                    optionalUser = Optional.of(userFromResultSet);
+                    log.debug("User was found.");
+                } else {
+                    log.debug("User was not found.");
+                }
             }
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -104,6 +129,106 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
+    public Optional<String> findUserPasswordById(Long userId) throws DaoException {
+        Optional<String> optionalPassword = Optional.empty();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_PASSWORD)) {
+
+            preparedStatement.setLong(1, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    optionalPassword = Optional.of(resultSet.getString(PASSWORD));
+                    log.debug("Password of user with id={} was found.", userId);
+                } else {
+                    log.debug("Password of user with id={} was not found.", userId);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return optionalPassword;
+    }
+
+    @Override
+    public boolean changeUserPassword(Long userId, String newPassword) throws DaoException {
+        Connection connection = null;
+        try {
+            connection = ConnectionPool.getInstance().getConnection();
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_PASSWORD)) {
+                preparedStatement.setString(1, newPassword);
+                preparedStatement.setLong(2, userId);
+
+                var rowCountDML = preparedStatement.executeUpdate();
+
+                if (rowCountDML == 1) {
+                    connection.commit();
+                    log.debug("Password of user with id={} was updated.", userId);
+                    return true;
+                } else {
+                    connection.rollback();
+                    log.debug("Password of user with id={} was not updated. Transaction has being rolled back", userId);
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                log.error("Cannot rollback transaction.", ex);
+            }
+            throw new DaoException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new DaoException(e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public long findNumberOfUsers() throws DaoException {
+        long numberOfUsers = 0L;
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NUMBER_OF_USERS)) {
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    numberOfUsers = resultSet.getLong(1);
+                }
+            }
+            return numberOfUsers;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<User> findPagedUsers(Long fromUserId, Integer numberOfUsers) throws DaoException {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PAGED_USERS)) {
+
+            preparedStatement.setLong(1, fromUserId);
+            preparedStatement.setInt(2, numberOfUsers);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    User userFromResultSet = userMapper.toEntity(resultSet);
+                    users.add(userFromResultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+        return users;
+    }
+
+    @Override
     public boolean insert(User user) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER)) {
@@ -122,6 +247,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 return true;
             } else {
                 log.debug("User was not inserted.");
+                connection.rollback();
                 return false;
             }
         } catch (SQLException e) {
@@ -136,7 +262,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
 
     @Override
     public List<User> findAll() {
-        //todo
+        //todo not supported
         return null;
     }
 

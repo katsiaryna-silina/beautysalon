@@ -2,7 +2,6 @@ package by.silina.beautysalon.controller.command.impl;
 
 import by.silina.beautysalon.controller.SessionRequestContent;
 import by.silina.beautysalon.controller.command.Command;
-import by.silina.beautysalon.controller.command.PagePath;
 import by.silina.beautysalon.controller.command.Router;
 import by.silina.beautysalon.exception.CommandException;
 import by.silina.beautysalon.exception.ServiceException;
@@ -15,8 +14,8 @@ import by.silina.beautysalon.service.impl.UserServiceImpl;
 
 import java.util.Optional;
 
-import static by.silina.beautysalon.controller.command.AttributeAndParameterName.LOGIN_FAILED_MESSAGE;
-import static by.silina.beautysalon.controller.command.AttributeAndParameterName.USERNAME;
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
+import static by.silina.beautysalon.controller.command.PagePath.*;
 
 public class LoginCommand implements Command {
 
@@ -27,7 +26,7 @@ public class LoginCommand implements Command {
 
         UserLoginDto userLoginDto = userMapper.toUserLoginDto(sessionRequestContent);
 
-        String page = PagePath.LOGIN;
+        var page = LOGIN;
         try {
             Optional<User> optionalUser = userService.findUser(userLoginDto);
             if (optionalUser.isPresent()) {
@@ -44,27 +43,32 @@ public class LoginCommand implements Command {
     }
 
     private String fillSessionAttributesFrom(User user, SessionRequestContent sessionRequestContent) {
-        switch (user.getRole()) {
+        var role = user.getRole();
+        switch (role) {
             case ADMIN -> {
-                //todo constants and difference
-                sessionRequestContent.putSessionAttribute("email", user.getEmail());
-                sessionRequestContent.putSessionAttribute("discount", user.getDiscountStatus().getDiscount());
-                sessionRequestContent.putSessionAttribute("discount_status", user.getDiscountStatus().getStatus());
-                sessionRequestContent.putSessionAttribute("first_name", user.getFirstName());
-                sessionRequestContent.putSessionAttribute("last_name", user.getLastName());
-                sessionRequestContent.putSessionAttribute("phone_number", user.getPhoneNumber());
-                return PagePath.MAIN_ADMIN;
+                //todo difference
+                sessionRequestContent.putSessionAttribute(ROLE, role);
+                sessionRequestContent.putSessionAttribute(USER_ID, user.getId());
+                sessionRequestContent.putSessionAttribute(EMAIL, user.getEmail());
+                sessionRequestContent.putSessionAttribute(DISCOUNT, user.getDiscountStatus().getDiscount());
+                sessionRequestContent.putSessionAttribute(DISCOUNT_STATUS, user.getDiscountStatus().getStatus());
+                sessionRequestContent.putSessionAttribute(FIRST_NAME, user.getFirstName());
+                sessionRequestContent.putSessionAttribute(LAST_NAME, user.getLastName());
+                sessionRequestContent.putSessionAttribute(PHONE_NUMBER, user.getPhoneNumber());
+                return MAIN_ADMIN;
             }
             case CLIENT -> {
-                sessionRequestContent.putSessionAttribute("email", user.getEmail());
-                sessionRequestContent.putSessionAttribute("discount", user.getDiscountStatus().getDiscount());
-                sessionRequestContent.putSessionAttribute("discount_status", user.getDiscountStatus().getStatus());
-                sessionRequestContent.putSessionAttribute("first_name", user.getFirstName());
-                sessionRequestContent.putSessionAttribute("last_name", user.getLastName());
-                sessionRequestContent.putSessionAttribute("phone_number", user.getPhoneNumber());
-                return PagePath.MAIN_CLIENT;
+                sessionRequestContent.putSessionAttribute(ROLE, role);
+                sessionRequestContent.putSessionAttribute(USER_ID, user.getId());
+                sessionRequestContent.putSessionAttribute(EMAIL, user.getEmail());
+                sessionRequestContent.putSessionAttribute(DISCOUNT, user.getDiscountStatus().getDiscount());
+                sessionRequestContent.putSessionAttribute(DISCOUNT_STATUS, user.getDiscountStatus().getStatus());
+                sessionRequestContent.putSessionAttribute(FIRST_NAME, user.getFirstName());
+                sessionRequestContent.putSessionAttribute(LAST_NAME, user.getLastName());
+                sessionRequestContent.putSessionAttribute(PHONE_NUMBER, user.getPhoneNumber());
+                return MAIN_CLIENT;
             }
         }
-        return PagePath.LOGIN;
+        return LOGIN;
     }
 }

@@ -1,9 +1,7 @@
 package by.silina.beautysalon.controller.command;
 
-import by.silina.beautysalon.controller.command.impl.DefaultCommand;
-import by.silina.beautysalon.controller.command.impl.LoginCommand;
-import by.silina.beautysalon.controller.command.impl.LogoutCommand;
-import by.silina.beautysalon.controller.command.impl.RegistrationCommand;
+import by.silina.beautysalon.controller.command.impl.*;
+import by.silina.beautysalon.controller.command.impl.admin.ShowAllUsersCommand;
 
 import java.util.Arrays;
 
@@ -11,6 +9,8 @@ public enum CommandType {
     REGISTRATION(new RegistrationCommand()),
     LOGIN(new LoginCommand()),
     LOGOUT(new LogoutCommand()),
+    CHANGE_PASSWORD(new ChangeUserPasswordCommand()),
+    SHOW_ALL_USERS(new ShowAllUsersCommand()),
     DEFAULT(new DefaultCommand());
 
     private final Command command;

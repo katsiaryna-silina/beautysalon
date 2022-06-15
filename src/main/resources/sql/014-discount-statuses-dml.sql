@@ -1,0 +1,12 @@
+--liquibase formatted sql
+--changeset katsiaryna.silina@gmail.com:populate-discount-statuses-table splitStatements:true
+INSERT INTO SALON.DISCOUNT_STATUSES (STATUS, DISCOUNT)
+VALUES ('bronze', 5.0);
+INSERT INTO SALON.DISCOUNT_STATUSES (STATUS, DISCOUNT)
+VALUES ('silver', 10.5);
+INSERT INTO SALON.DISCOUNT_STATUSES (STATUS, DISCOUNT)
+VALUES ('gold', 15.0);
+INSERT INTO SALON.DISCOUNT_STATUSES (STATUS, DISCOUNT)
+VALUES ('brilliant', 25.0);
+INSERT INTO SALON.DISCOUNT_STATUSES (STATUS, DISCOUNT)
+VALUES ('platinum', 40.0);

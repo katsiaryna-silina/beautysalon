@@ -3,6 +3,7 @@ package by.silina.beautysalon.dao;
 import by.silina.beautysalon.exception.DaoException;
 import by.silina.beautysalon.model.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDao {
@@ -11,4 +12,12 @@ public interface UserDao {
     boolean isUsernameExistInDB(String username) throws DaoException;
 
     boolean isEmailExistInDB(String email) throws DaoException;
+
+    Optional<String> findUserPasswordById(Long userId) throws DaoException;
+
+    boolean changeUserPassword(Long userId, String newPassword) throws DaoException;
+
+    long findNumberOfUsers() throws DaoException;
+
+    List<User> findPagedUsers(Long fromUserId, Integer numberOfUsers) throws DaoException;
 }
