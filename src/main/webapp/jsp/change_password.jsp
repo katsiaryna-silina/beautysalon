@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>2cat - registration</title>
@@ -23,10 +24,17 @@
     </style>
 </head>
 <body>
-<%--
-//todo change header by role
---%>
-<jsp:include page="fragment/header_default.jsp"/>
+<c:choose>
+    <c:when test="${role == 'ADMIN'}">
+        <jsp:include page="fragment/header_admin.jsp"/>
+    </c:when>
+    <c:when test="${role == 'CLIENT'}">
+        <jsp:include page="fragment/header_client.jsp"/>
+    </c:when>
+    <c:otherwise>
+        <jsp:include page="fragment/header_default.jsp"/>
+    </c:otherwise>
+</c:choose>
 <br/>
 <div class="container" style="width: 415pt">
 

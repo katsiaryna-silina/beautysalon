@@ -50,8 +50,7 @@ public class LoginCommand implements Command {
                 sessionRequestContent.putSessionAttribute(ROLE, role);
                 sessionRequestContent.putSessionAttribute(USER_ID, user.getId());
                 sessionRequestContent.putSessionAttribute(EMAIL, user.getEmail());
-                sessionRequestContent.putSessionAttribute(DISCOUNT, user.getDiscountStatus().getDiscount());
-                sessionRequestContent.putSessionAttribute(DISCOUNT_STATUS, user.getDiscountStatus().getStatus());
+                sessionRequestContent.putSessionAttribute(DISCOUNT_STATUS, user.getDiscountStatus());
                 sessionRequestContent.putSessionAttribute(FIRST_NAME, user.getFirstName());
                 sessionRequestContent.putSessionAttribute(LAST_NAME, user.getLastName());
                 sessionRequestContent.putSessionAttribute(PHONE_NUMBER, user.getPhoneNumber());
@@ -61,8 +60,7 @@ public class LoginCommand implements Command {
                 sessionRequestContent.putSessionAttribute(ROLE, role);
                 sessionRequestContent.putSessionAttribute(USER_ID, user.getId());
                 sessionRequestContent.putSessionAttribute(EMAIL, user.getEmail());
-                sessionRequestContent.putSessionAttribute(DISCOUNT, user.getDiscountStatus().getDiscount());
-                sessionRequestContent.putSessionAttribute(DISCOUNT_STATUS, user.getDiscountStatus().getStatus());
+                sessionRequestContent.putSessionAttribute(DISCOUNT_STATUS, user.getDiscountStatus());
                 sessionRequestContent.putSessionAttribute(FIRST_NAME, user.getFirstName());
                 sessionRequestContent.putSessionAttribute(LAST_NAME, user.getLastName());
                 sessionRequestContent.putSessionAttribute(PHONE_NUMBER, user.getPhoneNumber());

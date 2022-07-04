@@ -1,88 +1,106 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>All users</title>
-    <link href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css"
-          rel="stylesheet"
-          type="text/css"/>
-    <link crossorigin="anonymous"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
-          rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
 </head>
+
 <body>
 <jsp:include page="../fragment/header_admin.jsp"/>
-<div class="container">
-    <br/><br/>
-
-    <h3>Users</h3>
-
+<div class="container-fluid">
     <br/>
-    <table class="table table-busered table-striped" id="userTable">
-
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Phone number</th>
-            <th>Discount status</th>
-            <th>Discount</th>
-            <th>User status</th>
-            <th>Last login</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        <c:forEach var="user" items="${users}">
-            <td>${user.id.toString()}</td>
-            <td>${user.username}</td>
-            <td>${user.email}</td>
-            <td>${user.role}</td>
-            <td>${user.firstName}</td>
-            <td>${user.lastName}</td>
-            <td>${user.phoneNumber}</td>
-            <td>${user.discountStatus.discount}%</td>
-            <td>${user.discountStatus.status}</td>
-            <td>${user.userStatus}</td>
-            <td>${user.lastLogin.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))}
-                <fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${user.lastLogin}"/>
-            </td>
-
-
-            <td>
-                <a class="btn btn-info" href="#">Update</a>
-                    <%--
-                                    <a class="btn btn-info" href="@{/users/updateform(userId=${user.id})}">Update</a>
-                    --%>
-            </td>
-        </c:forEach>
-
-        </tbody>
-
+    <br/>
+    <h3>Users</h3>
+    <br/>
+    <table id="table" class="table table-bordered table-light table-hover">
+        <thead class="table-dark"/>
     </table>
 </div>
 
-<jsp:include page="../fragment/footer.jsp"/>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $("#userTable").DataTable({
-            'aoColumnDefs': [{
-                'bSortable': false,
-                'aTargets': [-1] /* 1st one, start by the right */
+    $(function () {
+        $('#table').bootstrapTable({
+            toggle: 'table',
+            pagination: true,
+            height: 520,
+            sidePagination: 'server',
+            showExtendedPagination: true,
+            totalNotFilteredField: 'totalNotFiltered',
+            url: '${pageContext.request.contextPath}/controller?command=get_users_json',
+            columns: [{
+                field: 'id',
+                title: 'ID'
+            }, {
+                field: 'username',
+                title: 'Username'
+            }, {
+                field: 'email',
+                title: 'Email'
+            }, {
+                field: 'role',
+                title: 'Role',
+                formatter: 'dataFormatter'
+            }, {
+                field: 'firstName',
+                title: 'First Name'
+            }, {
+                field: 'lastName',
+                title: 'Last Name'
+            }, {
+                field: 'phoneNumber',
+                title: 'Phone number'
+            }, {
+                field: 'lastLogin.value',
+                title: 'Last login',
+                formatter: 'dateFormatter'
+            }, {
+                field: 'discountStatus',
+                title: 'Discount status',
+                formatter: 'dataFormatter'
+            }, {
+                field: 'userStatus',
+                title: 'User status',
+                formatter: 'dataFormatter'
+            }, {
+                field: 'operate',
+                title: 'Item Operate',
+                align: 'center',
+                clickToSelect: false,
+                formatter: "operateFormatter"
             }]
-        });
-    })
+        })
+    });
+
+    function dataFormatter(value, row) {
+        return value.toLowerCase();
+    }
+
+    function dateFormatter(value, row) {
+        return new Date(value).toLocaleString();
+    }
+
+    function operateFormatter(value, row, index) {
+        return [
+            '<div class="right">',
+            '<a class="btn btn-info" href="${pageContext.request.contextPath}/controller?command=update_user&username=' + row.username + '">Update',
+            '</a>  ',
+            '</div>'
+        ].join('')
+    }
 </script>
+
+<jsp:include page="../fragment/footer.jsp"/>
 </body>
 
 </html>

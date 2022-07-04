@@ -21,8 +21,8 @@ public class UserAuthorizedDto {
     private UserAuthorizedDto() {
     }
 
-    public static UserAuthorizedDto.UserAuthorizedDtoBuilder builder() {
-        return new UserAuthorizedDto.UserAuthorizedDtoBuilder();
+    public static UserAuthorizedDtoBuilder builder() {
+        return new UserAuthorizedDtoBuilder();
     }
 
     public Long getId() {
@@ -120,53 +120,52 @@ public class UserAuthorizedDto {
         UserAuthorizedDtoBuilder() {
         }
 
-        public UserAuthorizedDto.UserAuthorizedDtoBuilder id(Long id) {
+        public UserAuthorizedDtoBuilder id(Long id) {
             this.id = id;
             return this;
-
         }
 
-        public UserAuthorizedDto.UserAuthorizedDtoBuilder username(String username) {
+        public UserAuthorizedDtoBuilder username(String username) {
             this.username = username;
             return this;
         }
 
-        public UserAuthorizedDto.UserAuthorizedDtoBuilder email(String email) {
+        public UserAuthorizedDtoBuilder email(String email) {
             this.email = email;
             return this;
         }
 
-        public UserAuthorizedDto.UserAuthorizedDtoBuilder firstName(String firstName) {
+        public UserAuthorizedDtoBuilder firstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public UserAuthorizedDto.UserAuthorizedDtoBuilder lastName(String lastName) {
+        public UserAuthorizedDtoBuilder lastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public UserAuthorizedDto.UserAuthorizedDtoBuilder phoneNumber(String phoneNumber) {
+        public UserAuthorizedDtoBuilder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
         }
 
-        public UserAuthorizedDto.UserAuthorizedDtoBuilder role(Role role) {
+        public UserAuthorizedDtoBuilder role(Role role) {
             this.role = role;
             return this;
         }
 
-        public UserAuthorizedDto.UserAuthorizedDtoBuilder discountStatus(DiscountStatus discountStatus) {
+        public UserAuthorizedDtoBuilder discountStatus(DiscountStatus discountStatus) {
             this.discountStatus = discountStatus;
             return this;
         }
 
-        public UserAuthorizedDto.UserAuthorizedDtoBuilder lastLogin(LocalDateTime lastLogin) {
+        public UserAuthorizedDtoBuilder lastLogin(LocalDateTime lastLogin) {
             this.lastLogin = lastLogin;
             return this;
         }
 
-        public UserAuthorizedDto.UserAuthorizedDtoBuilder userStatus(UserStatus userStatus) {
+        public UserAuthorizedDtoBuilder userStatus(UserStatus userStatus) {
             this.userStatus = userStatus;
             return this;
         }

@@ -1,7 +1,8 @@
 package by.silina.beautysalon.controller.command;
 
 import by.silina.beautysalon.controller.command.impl.*;
-import by.silina.beautysalon.controller.command.impl.admin.ShowAllUsersCommand;
+import by.silina.beautysalon.controller.command.impl.admin.*;
+import by.silina.beautysalon.controller.command.impl.order.*;
 
 import java.util.Arrays;
 
@@ -11,6 +12,16 @@ public enum CommandType {
     LOGOUT(new LogoutCommand()),
     CHANGE_PASSWORD(new ChangeUserPasswordCommand()),
     SHOW_ALL_USERS(new ShowAllUsersCommand()),
+    CHANGE_USER_ROLE(new ChangeUserRoleCommand()),
+    UPDATE_USER(new UpdateUserCommand()),
+    CHANGE_DISCOUNT(new ChangeDiscountCommand()),
+    CHANGE_USER_STATUS(new ChangeUserStatusCommand()),
+    GET_USERS_JSON(new GetUsersJsonCommand()),
+    PICK_SERVICE_IN_ORDER(new PickServiceInOrderCommand()),
+    PICK_DATE_IN_ORDER(new PickDateInOrderCommand()),
+    PICK_TIME_IN_ORDER(new PickTimeInOrderCommand()),
+    SHOW_NEW_ORDER_DATA(new ShowNewOrderDataCommand()),
+    CREATE_NEW_ORDER(new CreateOrderCommand()),
     DEFAULT(new DefaultCommand());
 
     private final Command command;

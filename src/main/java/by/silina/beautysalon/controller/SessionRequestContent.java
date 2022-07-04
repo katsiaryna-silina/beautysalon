@@ -38,7 +38,6 @@ public class SessionRequestContent {
         isSessionInvalid = true;
     }
 
-    // added data for jsp
     public void insertRequestAttributes(HttpServletRequest request) {
         requestAttributes.forEach(request::setAttribute);
 
@@ -53,7 +52,11 @@ public class SessionRequestContent {
 
     public String getParameterByName(String parameterName) {
         String[] parameters = requestParameters.get(parameterName);
-        return parameters.length == 0 ? null : parameters[0];
+        return (parameters == null || parameters.length == 0) ? null : parameters[0];
+    }
+
+    public String[] getParametersByName(String parameterName) {
+        return requestParameters.get(parameterName);
     }
 
     public Object getRequestAttributeByName(String attributeName) {

@@ -9,7 +9,10 @@ import by.silina.beautysalon.model.dto.UserAuthorizedDto;
 import by.silina.beautysalon.model.dto.UserLoginDto;
 import by.silina.beautysalon.model.dto.UserPasswordsDto;
 import by.silina.beautysalon.model.dto.UserRegistrationDto;
+import by.silina.beautysalon.model.entity.DiscountStatus;
+import by.silina.beautysalon.model.entity.Role;
 import by.silina.beautysalon.model.entity.User;
+import by.silina.beautysalon.model.entity.UserStatus;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.util.PasswordEncoder;
 import by.silina.beautysalon.validator.UserPasswordsDtoValidator;
@@ -22,7 +25,6 @@ import by.silina.beautysalon.validator.impl.UserValidatorImpl;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 
@@ -63,6 +65,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findUser(String username) throws ServiceException {
+        try {
+            return userDao.findUserByUsername(username);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public Map<String, String> addUser(UserRegistrationDto userRegistrationDto) throws ServiceException {
         UserRegistrationDtoValidator userRegistrationDtoValidator = UserRegistrationDtoValidatorImpl.getInstance();
         Map<String, String> errorMap = userRegistrationDtoValidator.checkUserRegistrationDto(userRegistrationDto);
@@ -97,17 +108,6 @@ public class UserServiceImpl implements UserService {
             }
         }
         return errorMap;
-    }
-
-    @Override
-    public Optional<String> findUserPasswordById(Long userId) throws ServiceException {
-        Optional<String> optionalPassword;
-        try {
-            optionalPassword = userDao.findUserPasswordById(userId);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-        return optionalPassword;
     }
 
     @Override
@@ -155,7 +155,34 @@ public class UserServiceImpl implements UserService {
             List<User> pagedUsers = userDao.findPagedUsers(fromUserId, numberOfUsers);
             return pagedUsers.stream()
                     .map(userMapper::toUserAuthorizedDto)
-                    .collect(Collectors.toList());
+                    .toList();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean changeDiscountById(Long userId, DiscountStatus discountStatus) throws ServiceException {
+        try {
+            return userDao.changeDiscountById(userId, discountStatus);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean changeUserRoleAndDiscountById(Long userId, Role role, DiscountStatus discountStatus) throws ServiceException {
+        try {
+            return userDao.changeUserRoleById(userId, role) && userDao.changeDiscountById(userId, discountStatus);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean changeUserStatusById(Long userId, UserStatus userStatus) throws ServiceException {
+        try {
+            return userDao.changeUserStatusById(userId, userStatus);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

@@ -9,8 +9,8 @@ public class UserPasswordsDto {
     private UserPasswordsDto() {
     }
 
-    public static UserPasswordsDto.UserPasswordsDtoBuilder builder() {
-        return new UserPasswordsDto.UserPasswordsDtoBuilder();
+    public static UserPasswordsDtoBuilder builder() {
+        return new UserPasswordsDtoBuilder();
     }
 
     public Long getUserId() {
@@ -54,22 +54,22 @@ public class UserPasswordsDto {
         UserPasswordsDtoBuilder() {
         }
 
-        public UserPasswordsDto.UserPasswordsDtoBuilder userId(Long userId) {
+        public UserPasswordsDtoBuilder userId(Long userId) {
             this.userId = userId;
             return this;
         }
 
-        public UserPasswordsDto.UserPasswordsDtoBuilder currentPassword(String currentPassword) {
+        public UserPasswordsDtoBuilder currentPassword(String currentPassword) {
             this.currentPassword = currentPassword;
             return this;
         }
 
-        public UserPasswordsDto.UserPasswordsDtoBuilder newPassword(String newPassword) {
+        public UserPasswordsDtoBuilder newPassword(String newPassword) {
             this.newPassword = newPassword;
             return this;
         }
 
-        public UserPasswordsDto.UserPasswordsDtoBuilder repeatedNewPassword(String repeatedNewPassword) {
+        public UserPasswordsDtoBuilder repeatedNewPassword(String repeatedNewPassword) {
             this.repeatedNewPassword = repeatedNewPassword;
             return this;
         }

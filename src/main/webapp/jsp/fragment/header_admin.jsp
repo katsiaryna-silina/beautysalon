@@ -25,6 +25,10 @@
                 <a class="nav-link"
                    href="${pageContext.request.contextPath}/controller?command=show_all_users">Users</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="${pageContext.request.contextPath}/controller?command=pick_service_in_order">New order</a>
+            </li>
         </ul>
     </div>
     <div class="mx-auto order-0">

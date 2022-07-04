@@ -11,8 +11,8 @@ public final class AttributeAndParameterName {
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
     public static final String PHONE_NUMBER = "phone_number";
-    public static final String DISCOUNT = "discount";
     public static final String DISCOUNT_STATUS = "discount_status";
+    public static final String DISCOUNT_STATUSES = "discount_statuses";
     public static final String ROLE = "role";
 
     public static final String LOGIN_FAILED_MESSAGE = "login_failed_message";
@@ -26,10 +26,40 @@ public final class AttributeAndParameterName {
     public static final String PHONE_NUMBER_ERROR_MESSAGE = "phone_number_error_message";
     public static final String CREATE_NEW_USER_ERROR_MESSAGE = "create_new_user_error_message";
 
-    public static final String NUMBER_OF_USERS_PER_PAGE = "number_of_users_per_page";
+    public static final String LIMIT = "limit";
+    public static final String OFFSET = "offset";
     public static final String NUMBER_OF_PAGES = "number_of_pages";
     public static final String USERS = "users";
-    public static final String FROM_USER_ID = "from_user_id";
+
+    public static final String USER = "user";
+    public static final String UPDATE_USER_ERROR_MESSAGE = "update_user_error_message";
+    public static final String ROLES = "roles";
+    public static final String CHANGE_USER_MESSAGE = "change_user_message";
+    public static final String USER_STATUSES = "user_statuses";
+    public static final String CURRENT_ROLE_NAME = "current_role_name";
+    public static final String NEW_ROLE_NAME = "new_role_name";
+    public static final String CURRENT_DISCOUNT_STATUS_NAME = "current_discount_status_name";
+    public static final String NEW_DISCOUNT_STATUS_NAME = "new_discount_status_name";
+    public static final String CURRENT_USER_STATUS_NAME = "current_user_status_name";
+    public static final String NEW_USER_STATUS_NAME = "new_user_status_name";
+
+    public static final String FULL_PRICE = "full_price";
+    public static final String PRICE_WITH_DISCOUNT = "price_with_discount";
+    public static final String COMPLEX_SERVICES = "complex_services";
+    public static final String NOT_COMPLEX_SERVICES = "not_complex_services";
+    public static final String COMPLEX_SERVICE_NAME = "complex_service_name";
+    public static final String NOT_COMPLEX_SERVICE_NAMES = "not_complex_service_names";
+    public static final String SERVICES_IDS = "services_ids";
+    public static final String DATES = "dates";
+    public static final String DATE = "date";
+    public static final String VISIT_TIMES = "visit_times";
+    public static final String VISIT_TIME = "visit_time";
+    public static final String VISIT_TIME_BEGIN = "visit_time_begin";
+    public static final String VISIT_TIME_END = "visit_time_end";
+    public static final String VISIT_TIME_IDS = "visit_time_ids";
+    public static final String NEEDED_TIME = "needed_time";
+    public static final String NO_VISIT_TIMES_MESSAGE = "no_visit_times_message";
+
 
     private AttributeAndParameterName() {
     }

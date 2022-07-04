@@ -1,11 +1,19 @@
 package by.silina.beautysalon.controller.command;
 
+import com.google.gson.JsonElement;
+
 public class Router {
     private String page;
     private Type type;
+    private JsonElement jsonElement;
 
     public Router(String page, Type type) {
         this.page = page;
+        this.type = type;
+    }
+
+    public Router(JsonElement jsonElement, Type type) {
+        this.jsonElement = jsonElement;
         this.type = type;
     }
 
@@ -25,8 +33,17 @@ public class Router {
         this.type = type;
     }
 
+    public JsonElement getJsonElement() {
+        return jsonElement;
+    }
+
+    public void setJsonElement(JsonElement jsonElement) {
+        this.jsonElement = jsonElement;
+    }
+
     public enum Type {
         FORWARD,
-        REDIRECT
+        REDIRECT,
+        JSON
     }
 }

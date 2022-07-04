@@ -6,7 +6,10 @@ import by.silina.beautysalon.dao.UserDao;
 import by.silina.beautysalon.exception.DaoException;
 import by.silina.beautysalon.mapper.UserMapper;
 import by.silina.beautysalon.mapper.impl.UserMapperImpl;
+import by.silina.beautysalon.model.entity.DiscountStatus;
+import by.silina.beautysalon.model.entity.Role;
 import by.silina.beautysalon.model.entity.User;
+import by.silina.beautysalon.model.entity.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +27,7 @@ import static by.silina.beautysalon.dao.TableColumnName.PASSWORD;
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String SELECT_USER_BY_USERNAME = """
-            SELECT U.ID, U.USERNAME, U.PASSWORD, U.EMAIL, U.FIRST_NAME, U.LAST_NAME, U.PHONE_NUMBER, DS.STATUS DISCOUNT_STATUS, DS.DISCOUNT, UR.ROLE, US.STATUS
+            SELECT U.ID, U.USERNAME, U.PASSWORD, U.EMAIL, U.FIRST_NAME, U.LAST_NAME, U.PHONE_NUMBER, U.LAST_LOGIN, DS.STATUS DISCOUNT_STATUS, DS.DISCOUNT, UR.ROLE, US.STATUS
             FROM USERS U
             JOIN USER_ROLES UR ON UR.ID = U.ROLE_ID
             JOIN DISCOUNT_STATUSES DS ON DS.ID = U.DISCOUNT_STATUS_ID
@@ -67,6 +70,33 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                JOIN USER_STATUSES US ON US.ID = U.USER_STATUS_ID
                WHERE U.ID > ? LIMIT ?
                """;
+    private static final String UPDATE_USER_ROLE = """
+            UPDATE USERS U
+            SET ROLE_ID = (
+                SELECT UR.ID
+                FROM USER_ROLES UR
+                WHERE UR.ROLE = ?
+                )
+            WHERE U.ID = ?
+            """;
+    private static final String UPDATE_USER_DISCOUNT = """
+            UPDATE USERS U
+            SET DISCOUNT_STATUS_ID = (
+                SELECT DS.ID
+                FROM DISCOUNT_STATUSES DS
+                WHERE DS.STATUS = ?
+                )
+            WHERE U.ID = ?
+            """;
+    private static final String UPDATE_USER_STATUS = """
+            UPDATE USERS U
+            SET USER_STATUS_ID = (
+                SELECT US.ID
+                FROM USER_STATUSES US
+                WHERE US.STATUS = ?
+                )
+            WHERE U.ID = ?
+            """;
     private static final UserDaoImpl instance = new UserDaoImpl();
     private static final UserMapper userMapper = UserMapperImpl.getInstance();
 
@@ -93,10 +123,10 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                     log.debug("User was not found.");
                 }
             }
+            return optionalUser;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return optionalUser;
     }
 
     @Override
@@ -143,10 +173,10 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                     log.debug("Password of user with id={} was not found.", userId);
                 }
             }
+            return optionalPassword;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return optionalPassword;
     }
 
     @Override
@@ -222,10 +252,136 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                     users.add(userFromResultSet);
                 }
             }
+            return users;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-        return users;
+    }
+
+    @Override
+    public boolean changeUserRoleById(Long userId, Role role) throws DaoException {
+        Connection connection = null;
+        try {
+            connection = ConnectionPool.getInstance().getConnection();
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_ROLE)) {
+                preparedStatement.setString(1, role.name().toLowerCase());
+                preparedStatement.setLong(2, userId);
+
+                var rowCountDML = preparedStatement.executeUpdate();
+
+                if (rowCountDML == 1) {
+                    connection.commit();
+                    log.debug("User role with id={} was updated.", userId);
+                    return true;
+                } else {
+                    connection.rollback();
+                    log.debug("User role with id={} was not updated. Transaction has being rolled back", userId);
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                log.error("Cannot rollback transaction.", ex);
+            }
+            throw new DaoException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new DaoException(e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean changeDiscountById(Long userId, DiscountStatus discountStatus) throws DaoException {
+        Connection connection = null;
+        try {
+            connection = ConnectionPool.getInstance().getConnection();
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_DISCOUNT)) {
+                preparedStatement.setString(1, discountStatus.name());
+                preparedStatement.setLong(2, userId);
+
+                var rowCountDML = preparedStatement.executeUpdate();
+
+                if (rowCountDML == 1) {
+                    connection.commit();
+                    log.debug("User discount status with id={} was updated.", userId);
+                    return true;
+                } else {
+                    connection.rollback();
+                    log.debug("User discount status with id={} was not updated. Transaction has being rolled back", userId);
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                log.error("Cannot rollback transaction.", ex);
+            }
+            throw new DaoException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new DaoException(e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean changeUserStatusById(Long userId, UserStatus userStatus) throws DaoException {
+        Connection connection = null;
+        try {
+            connection = ConnectionPool.getInstance().getConnection();
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS)) {
+                preparedStatement.setString(1, userStatus.name());
+                preparedStatement.setLong(2, userId);
+
+                var rowCountDML = preparedStatement.executeUpdate();
+
+                if (rowCountDML == 1) {
+                    connection.commit();
+                    log.debug("User status with id={} was updated.", userId);
+                    return true;
+                } else {
+                    connection.rollback();
+                    log.debug("User status with id={} was not updated. Transaction has being rolled back", userId);
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                log.error("Cannot rollback transaction.", ex);
+            }
+            throw new DaoException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new DaoException(e);
+                }
+            }
+        }
     }
 
     @Override
@@ -253,17 +409,6 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-    }
-
-    @Override
-    public boolean delete(User user) {
-        throw new UnsupportedOperationException("delete unsupported");
-    }
-
-    @Override
-    public List<User> findAll() {
-        //todo not supported
-        return null;
     }
 
     @Override

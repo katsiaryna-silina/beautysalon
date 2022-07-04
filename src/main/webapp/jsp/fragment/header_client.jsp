@@ -24,6 +24,10 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">About us</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="${pageContext.request.contextPath}/controller?command=show_order_form">New order</a>
+            </li>
         </ul>
     </div>
     <div class="mx-auto order-0">

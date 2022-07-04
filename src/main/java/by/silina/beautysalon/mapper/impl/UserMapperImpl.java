@@ -15,10 +15,13 @@ import by.silina.beautysalon.util.PasswordEncoder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 
 public class UserMapperImpl implements UserMapper {
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final UserMapperImpl instance = new UserMapperImpl();
 
     private UserMapperImpl() {
@@ -43,6 +46,10 @@ public class UserMapperImpl implements UserMapper {
 
     @Override
     public User toEntity(ResultSet resultSet) throws SQLException {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
+        String lastLoginString = resultSet.getString(TableColumnName.LAST_LOGIN);
+        LocalDateTime lastLogin = LocalDateTime.parse(lastLoginString, format);
+
         return User.builder()
                 .id(resultSet.getLong(TableColumnName.ID))
                 .username(resultSet.getString(TableColumnName.USERNAME))
@@ -51,10 +58,8 @@ public class UserMapperImpl implements UserMapper {
                 .firstName(resultSet.getString(TableColumnName.FIRST_NAME))
                 .lastName(resultSet.getString(TableColumnName.LAST_NAME))
                 .role(Role.valueOf(resultSet.getString(TableColumnName.ROLE).toUpperCase()))
-                .discountStatus(DiscountStatus.builder()
-                        .discount(resultSet.getDouble(TableColumnName.DISCOUNT))
-                        .status(resultSet.getString(TableColumnName.DISCOUNT_STATUS))
-                        .build())
+                .discountStatus(DiscountStatus.valueOf(resultSet.getString(DISCOUNT_STATUS).toUpperCase()))
+                .lastLogin(lastLogin)
                 .phoneNumber(resultSet.getString(TableColumnName.PHONE_NUMBER))
                 .userStatus(UserStatus.valueOf(resultSet.getString(TableColumnName.STATUS).toUpperCase()))
                 .build();
@@ -85,6 +90,7 @@ public class UserMapperImpl implements UserMapper {
     public UserLoginDto toUserLoginDto(SessionRequestContent sessionRequestContent) {
         var username = sessionRequestContent.getParameterByName(USERNAME);
         var password = sessionRequestContent.getParameterByName(PASSWORD);
+
         return UserLoginDto.builder()
                 .username(username)
                 .password(password)
@@ -93,11 +99,11 @@ public class UserMapperImpl implements UserMapper {
 
     @Override
     public UserPasswordsDto toUserPasswordsDto(SessionRequestContent sessionRequestContent) {
-        //todo is it possible to get error here?
         Long userId = (Long) sessionRequestContent.getSessionAttributeByName(USER_ID);
         String currentPassword = sessionRequestContent.getParameterByName(CURRENT_PASSWORD);
         String newPassword = sessionRequestContent.getParameterByName(NEW_PASSWORD);
         String repeatedNewPassword = sessionRequestContent.getParameterByName(REPEATED_PASSWORD);
+
         return UserPasswordsDto.builder()
                 .userId(userId)
                 .currentPassword(currentPassword)
@@ -109,6 +115,7 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public UserAuthorizedDto toUserAuthorizedDto(User user) {
         return UserAuthorizedDto.builder()
+                .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())

@@ -7,8 +7,8 @@ public class UserLoginDto {
     private UserLoginDto() {
     }
 
-    public static UserLoginDto.UserLoginDtoBuilder builder() {
-        return new UserLoginDto.UserLoginDtoBuilder();
+    public static UserLoginDtoBuilder builder() {
+        return new UserLoginDtoBuilder();
     }
 
     public String getUsername() {

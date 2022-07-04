@@ -13,12 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
 
 @WebServlet(name = "controller", urlPatterns = {"/controller", "*.do"})
 public class Controller extends HttpServlet {
     private static final String COMMAND = "command";
     private static final String CONTENT_TYPE_TEXT_HTML = "text/html";
+    private static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
+    private static final String CHARACTER_ENCODING = "UTF-8";
     private static final String WRONG_ROUTER_TYPE = "Wrong Router type.";
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -48,6 +51,14 @@ public class Controller extends HttpServlet {
                 case FORWARD -> {
                     var requestDispatcher = request.getRequestDispatcher(router.getPage());
                     requestDispatcher.forward(request, response);
+                }
+                case JSON -> {
+                    String jsonString = router.getJsonElement().toString();
+                    PrintWriter out = response.getWriter();
+                    response.setContentType(CONTENT_TYPE_APPLICATION_JSON);
+                    response.setCharacterEncoding(CHARACTER_ENCODING);
+                    out.print(jsonString);
+                    out.flush();
                 }
                 default -> {
                     log.error("Wrong Router type = {}", router.getType());

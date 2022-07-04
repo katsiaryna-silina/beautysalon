@@ -12,8 +12,8 @@ public class UserRegistrationDto {
     private UserRegistrationDto() {
     }
 
-    public static UserRegistrationDto.UserRegistrationDtoBuilder builder() {
-        return new UserRegistrationDto.UserRegistrationDtoBuilder();
+    public static UserRegistrationDtoBuilder builder() {
+        return new UserRegistrationDtoBuilder();
     }
 
     public String getUsername() {
@@ -84,37 +84,37 @@ public class UserRegistrationDto {
         UserRegistrationDtoBuilder() {
         }
 
-        public UserRegistrationDto.UserRegistrationDtoBuilder username(String username) {
+        public UserRegistrationDtoBuilder username(String username) {
             this.username = username;
             return this;
         }
 
-        public UserRegistrationDto.UserRegistrationDtoBuilder password(String password) {
+        public UserRegistrationDtoBuilder password(String password) {
             this.password = password;
             return this;
         }
 
-        public UserRegistrationDto.UserRegistrationDtoBuilder repeatedPassword(String repeatedPassword) {
+        public UserRegistrationDtoBuilder repeatedPassword(String repeatedPassword) {
             this.repeatedPassword = repeatedPassword;
             return this;
         }
 
-        public UserRegistrationDto.UserRegistrationDtoBuilder email(String email) {
+        public UserRegistrationDtoBuilder email(String email) {
             this.email = email;
             return this;
         }
 
-        public UserRegistrationDto.UserRegistrationDtoBuilder firstName(String firstName) {
+        public UserRegistrationDtoBuilder firstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public UserRegistrationDto.UserRegistrationDtoBuilder lastName(String lastName) {
+        public UserRegistrationDtoBuilder lastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public UserRegistrationDto.UserRegistrationDtoBuilder phoneNumber(String phoneNumber) {
+        public UserRegistrationDtoBuilder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
         }
