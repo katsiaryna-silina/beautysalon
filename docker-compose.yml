@@ -11,5 +11,7 @@ services:
       MYSQL_ROOT_PASSWORD: 1111
       MYSQL_USER: admin
       MYSQL_PASSWORD: adminPass
+    volumes:
+      - "./src/main/resources/dbinitializer.sql:/docker-entrypoint-initdb.d/1.sql"
     ports:
       - '3306:3306'

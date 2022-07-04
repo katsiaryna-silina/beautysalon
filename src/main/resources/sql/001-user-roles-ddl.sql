@@ -2,7 +2,7 @@
 --changeset katsiaryna.silina@gmail.com:add-user-roles-table splitStatements:true
 CREATE TABLE SALON.USER_ROLES
 (
-    ID   INT AUTO_INCREMENT PRIMARY KEY,
+    ID   INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     ROLE VARCHAR(20) NOT NULL
 );
 

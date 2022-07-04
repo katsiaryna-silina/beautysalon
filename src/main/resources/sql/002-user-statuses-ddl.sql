@@ -2,7 +2,7 @@
 --changeset katsiaryna.silina@gmail.com:add-user-statuses-table splitStatements:true
 CREATE TABLE SALON.USER_STATUSES
 (
-    ID     INT AUTO_INCREMENT PRIMARY KEY,
+    ID     INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     STATUS VARCHAR(20) NOT NULL
 );
 
