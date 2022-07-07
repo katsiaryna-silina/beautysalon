@@ -1,8 +1,10 @@
 package by.silina.beautysalon.model.entity;
 
 public class OrderFeedback extends AbstractEntity {
-    private Integer mark;
+    private byte mark;
     private String feedback;
+    private boolean isVerified;
+    private User user;
 
     private OrderFeedback() {
     }
@@ -11,11 +13,11 @@ public class OrderFeedback extends AbstractEntity {
         return new OrderFeedbackBuilder();
     }
 
-    public Integer getMark() {
+    public byte getMark() {
         return mark;
     }
 
-    public void setMark(Integer mark) {
+    public void setMark(byte mark) {
         this.mark = mark;
     }
 
@@ -27,6 +29,22 @@ public class OrderFeedback extends AbstractEntity {
         this.feedback = feedback;
     }
 
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -35,15 +53,19 @@ public class OrderFeedback extends AbstractEntity {
 
         OrderFeedback that = (OrderFeedback) o;
 
-        if (mark != null ? !mark.equals(that.mark) : that.mark != null) return false;
-        return feedback != null ? feedback.equals(that.feedback) : that.feedback == null;
+        if (mark != that.mark) return false;
+        if (isVerified != that.isVerified) return false;
+        if (feedback != null ? !feedback.equals(that.feedback) : that.feedback != null) return false;
+        return user != null ? user.equals(that.user) : that.user == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (mark != null ? mark.hashCode() : 0);
+        result = 31 * result + mark;
         result = 31 * result + (feedback != null ? feedback.hashCode() : 0);
+        result = 31 * result + (isVerified ? 1 : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
         return result;
     }
 
@@ -53,30 +75,44 @@ public class OrderFeedback extends AbstractEntity {
                 .append("OrderFeedback{")
                 .append("mark=").append(mark)
                 .append(", feedback='").append(feedback)
+                .append(", isVerified='").append(isVerified)
+                .append(", user='").append(user)
                 .append('}')
                 .toString();
     }
 
     public static class OrderFeedbackBuilder {
         private Long id;
-        private Integer mark;
+        private byte mark;
         private String feedback;
+        private boolean isVerified;
+        private User user;
 
         OrderFeedbackBuilder() {
         }
 
-        public OrderFeedback.OrderFeedbackBuilder id(Long id) {
+        public OrderFeedbackBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public OrderFeedback.OrderFeedbackBuilder mark(Integer mark) {
+        public OrderFeedbackBuilder mark(byte mark) {
             this.mark = mark;
             return this;
         }
 
-        public OrderFeedback.OrderFeedbackBuilder feedback(String feedback) {
+        public OrderFeedbackBuilder feedback(String feedback) {
             this.feedback = feedback;
+            return this;
+        }
+
+        public OrderFeedbackBuilder isVerified(boolean isVerified) {
+            this.isVerified = isVerified;
+            return this;
+        }
+
+        public OrderFeedbackBuilder user(User user) {
+            this.user = user;
             return this;
         }
 
@@ -85,6 +121,8 @@ public class OrderFeedback extends AbstractEntity {
             orderFeedback.setId(id);
             orderFeedback.setMark(mark);
             orderFeedback.setFeedback(feedback);
+            orderFeedback.setVerified(isVerified);
+            orderFeedback.setUser(user);
             return orderFeedback;
         }
     }

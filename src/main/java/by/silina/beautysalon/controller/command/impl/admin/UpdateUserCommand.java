@@ -12,7 +12,9 @@ import by.silina.beautysalon.model.entity.DiscountStatus;
 import by.silina.beautysalon.model.entity.Role;
 import by.silina.beautysalon.model.entity.User;
 import by.silina.beautysalon.model.entity.UserStatus;
+import by.silina.beautysalon.service.DiscountStatusService;
 import by.silina.beautysalon.service.UserService;
+import by.silina.beautysalon.service.impl.DiscountStatusServiceImpl;
 import by.silina.beautysalon.service.impl.UserServiceImpl;
 
 import java.util.Optional;
@@ -25,6 +27,7 @@ public class UpdateUserCommand implements Command {
 
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
+        DiscountStatusService discountStatusService = DiscountStatusServiceImpl.getInstance();
         UserService userService = UserServiceImpl.getInstance();
         UserMapper userMapper = UserMapperImpl.getInstance();
 
@@ -34,11 +37,16 @@ public class UpdateUserCommand implements Command {
         try {
             Optional<User> optionalUser = userService.findUser(username);
             if (optionalUser.isPresent()) {
+                var discountStatusNames = discountStatusService.findAll()
+                        .stream()
+                        .map(DiscountStatus::getStatus)
+                        .toList();
+
                 UserAuthorizedDto userDto = userMapper.toUserAuthorizedDto(optionalUser.get());
                 sessionRequestContent.putRequestAttribute(USER, userDto);
                 sessionRequestContent.putRequestAttribute(ROLES, Role.values());
                 sessionRequestContent.putRequestAttribute(USER_STATUSES, UserStatus.values());
-                sessionRequestContent.putRequestAttribute(DISCOUNT_STATUSES, DiscountStatus.values());
+                sessionRequestContent.putRequestAttribute(DISCOUNT_STATUSES, discountStatusNames);
             } else {
                 page = ALL_USERS;
                 sessionRequestContent.putRequestAttribute(UPDATE_USER_ERROR_MESSAGE, "Cannot find user with username=" + username);

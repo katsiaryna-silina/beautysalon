@@ -21,12 +21,16 @@
             <li class="nav-item active">
                 <a class="nav-link" href="#">Services</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">About us</a>
+            <li class="nav-item active">
+                <a class="nav-link"
+                   href="${pageContext.request.contextPath}/controller?command=show_client_orders">Orders</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link"
-                   href="${pageContext.request.contextPath}/controller?command=show_order_form">New order</a>
+                   href="${pageContext.request.contextPath}/controller?command=pick_service_in_order">New order</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About us</a>
             </li>
         </ul>
     </div>

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 public class Order extends AbstractEntity {
     private LocalDateTime orderDateTime;
@@ -11,6 +12,8 @@ public class Order extends AbstractEntity {
     private LocalTime visitBeginTime;
     private LocalTime visitEndTime;
     private User user;
+    private List<Serv> services;
+    private List<VisitTime> timeSlots;
     private OrderStatus orderStatus;
     private BigDecimal priceWithDiscount;
     private OrderFeedback orderFeedback;
@@ -62,6 +65,22 @@ public class Order extends AbstractEntity {
         this.user = user;
     }
 
+    public List<Serv> getServices() {
+        return services;
+    }
+
+    public void setServices(List<Serv> services) {
+        this.services = services;
+    }
+
+    public List<VisitTime> getTimeSlots() {
+        return timeSlots;
+    }
+
+    public void setTimeSlots(List<VisitTime> timeSlots) {
+        this.timeSlots = timeSlots;
+    }
+
     public OrderStatus getOrderStatus() {
         return orderStatus;
     }
@@ -101,7 +120,9 @@ public class Order extends AbstractEntity {
             return false;
         if (visitEndTime != null ? !visitEndTime.equals(order.visitEndTime) : order.visitEndTime != null) return false;
         if (user != null ? !user.equals(order.user) : order.user != null) return false;
-        if (orderStatus != order.orderStatus) return false;
+        if (services != null ? !services.equals(order.services) : order.services != null) return false;
+        if (timeSlots != null ? !timeSlots.equals(order.timeSlots) : order.timeSlots != null) return false;
+        if (orderStatus != null ? !orderStatus.equals(order.orderStatus) : order.orderStatus != null) return false;
         if (priceWithDiscount != null ? !priceWithDiscount.equals(order.priceWithDiscount) : order.priceWithDiscount != null)
             return false;
         return orderFeedback != null ? orderFeedback.equals(order.orderFeedback) : order.orderFeedback == null;
@@ -115,6 +136,8 @@ public class Order extends AbstractEntity {
         result = 31 * result + (visitBeginTime != null ? visitBeginTime.hashCode() : 0);
         result = 31 * result + (visitEndTime != null ? visitEndTime.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (services != null ? services.hashCode() : 0);
+        result = 31 * result + (timeSlots != null ? timeSlots.hashCode() : 0);
         result = 31 * result + (orderStatus != null ? orderStatus.hashCode() : 0);
         result = 31 * result + (priceWithDiscount != null ? priceWithDiscount.hashCode() : 0);
         result = 31 * result + (orderFeedback != null ? orderFeedback.hashCode() : 0);
@@ -130,6 +153,8 @@ public class Order extends AbstractEntity {
                 .append(", visitBeginTime=").append(visitBeginTime)
                 .append(", visitEndTime=").append(visitEndTime)
                 .append(", user=").append(user)
+                .append(", services=").append(services)
+                .append(", timeSlots=").append(timeSlots)
                 .append(", orderStatus=").append(orderStatus)
                 .append(", priceWithDiscount=").append(priceWithDiscount)
                 .append(", orderFeedback=").append(orderFeedback)
@@ -144,6 +169,8 @@ public class Order extends AbstractEntity {
         private LocalTime visitBeginTime;
         private LocalTime visitEndTime;
         private User user;
+        private List<Serv> services;
+        private List<VisitTime> timeSlots;
         private OrderStatus orderStatus;
         private BigDecimal priceWithDiscount;
         private OrderFeedback orderFeedback;
@@ -181,6 +208,16 @@ public class Order extends AbstractEntity {
             return this;
         }
 
+        public OrderBuilder services(List<Serv> services) {
+            this.services = services;
+            return this;
+        }
+
+        public OrderBuilder timeSlots(List<VisitTime> timeSlots) {
+            this.timeSlots = timeSlots;
+            return this;
+        }
+
         public OrderBuilder orderStatus(OrderStatus orderStatus) {
             this.orderStatus = orderStatus;
             return this;
@@ -204,6 +241,8 @@ public class Order extends AbstractEntity {
             order.setVisitBeginTime(visitBeginTime);
             order.setVisitEndTime(visitEndTime);
             order.setUser(user);
+            order.setServices(services);
+            order.setTimeSlots(timeSlots);
             order.setOrderStatus(orderStatus);
             order.setPriceWithDiscount(priceWithDiscount);
             order.setOrderFeedback(orderFeedback);

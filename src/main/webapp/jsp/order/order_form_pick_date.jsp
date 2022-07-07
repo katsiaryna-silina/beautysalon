@@ -26,8 +26,8 @@
             ${not_complex_service_name}
         </c:forEach>
     </h6>
-    <h6>Full price: ${full_price}</h6>
-    <h6>Price with discount: ${price_with_discount} (discount=${discount_status.getDiscount()}%)</h6>
+    <h6>Full price: ${full_price}$</h6>
+    <h6>Price with discount: ${price_with_discount}$ (discount=${discount_status.getDiscount()}%)</h6>
     <br/>
     <h5>Pick date you want</h5>
     <br/>

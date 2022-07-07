@@ -61,11 +61,6 @@ public class VisitTimeDaoImpl extends BaseDao<Order> implements VisitTimeDao {
 
     @Override
     public boolean insert(Order order) throws DaoException {
-        return false;
-    }
-
-    @Override
-    public Order update(Order order) throws DaoException {
-        return null;
+        throw new UnsupportedOperationException("Method insert() is unsupported.");
     }
 }

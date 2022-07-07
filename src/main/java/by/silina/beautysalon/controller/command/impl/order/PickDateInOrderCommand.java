@@ -22,6 +22,7 @@ import static by.silina.beautysalon.controller.command.PagePath.ORDER_FORM_PICK_
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 public class PickDateInOrderCommand implements Command {
+    public static final int DECIMAL_PLACES = 2;
 
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
@@ -79,8 +80,8 @@ public class PickDateInOrderCommand implements Command {
         return fullPrice;
     }
 
-    private BigDecimal getPriceWithDiscount(BigDecimal fUllPrice, SessionRequestContent sessionRequestContent) {
+    private BigDecimal getPriceWithDiscount(BigDecimal fullPrice, SessionRequestContent sessionRequestContent) {
         DiscountStatus discountStatus = (DiscountStatus) sessionRequestContent.getSessionAttributeByName(DISCOUNT_STATUS);
-        return fUllPrice.multiply(BigDecimal.valueOf(100).subtract(discountStatus.getDiscount())).divide(BigDecimal.valueOf(100));
+        return fullPrice.multiply(BigDecimal.valueOf(100).subtract(discountStatus.getDiscount())).divide(BigDecimal.valueOf(100)).setScale(DECIMAL_PLACES);
     }
 }

@@ -28,7 +28,6 @@ public final class AttributeAndParameterName {
 
     public static final String LIMIT = "limit";
     public static final String OFFSET = "offset";
-    public static final String NUMBER_OF_PAGES = "number_of_pages";
     public static final String USERS = "users";
 
     public static final String USER = "user";
@@ -59,7 +58,26 @@ public final class AttributeAndParameterName {
     public static final String VISIT_TIME_IDS = "visit_time_ids";
     public static final String NEEDED_TIME = "needed_time";
     public static final String NO_VISIT_TIMES_MESSAGE = "no_visit_times_message";
+    public static final String ID = "id";
+    public static final String STATUS = "status";
+    public static final String UPDATE_ORDER_ERROR_MESSAGE = "update_order_message";
+    public static final String ORDER_STATUSES = "order_statuses";
+    public static final String ORDER = "order";
+    public static final String ORDER_ID = "order_id";
+    public static final String CURRENT_ORDER_STATUS_NAME = "current_order_status_name";
+    public static final String NEW_ORDER_STATUS_NAME = "new_order_status_name";
+    public static final String IS_DEPRECATED = "is_deprecated";
 
+    public static final String FEEDBACK_ID = "feedback_id";
+    public static final String CURRENT_FEEDBACK = "current_feedback";
+    public static final String NEW_FEEDBACK = "new_feedback";
+    public static final String CURRENT_MARK = "current_mark";
+    public static final String NEW_MARK = "new_mark";
+    public static final String IS_VERIFIED = "is_verified";
+
+    public static final String FEEDBACK_UPDATE_ERROR_MESSAGE = "feedback_update_error_message";
+    public static final String MARK_ERROR_MESSAGE = "mark_error_message";
+    public static final String FEEDBACK_ERROR_MESSAGE = "feedback_error_message";
 
     private AttributeAndParameterName() {
     }

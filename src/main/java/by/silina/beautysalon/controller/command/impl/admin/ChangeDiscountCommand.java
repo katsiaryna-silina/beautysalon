@@ -5,7 +5,6 @@ import by.silina.beautysalon.controller.command.Command;
 import by.silina.beautysalon.controller.command.Router;
 import by.silina.beautysalon.exception.CommandException;
 import by.silina.beautysalon.exception.ServiceException;
-import by.silina.beautysalon.model.entity.DiscountStatus;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.service.impl.UserServiceImpl;
 
@@ -26,14 +25,13 @@ public class ChangeDiscountCommand implements Command {
 
         String currentDiscountStatusName = sessionRequestContent.getParameterByName(CURRENT_DISCOUNT_STATUS_NAME);
         String newDiscountStatusName = sessionRequestContent.getParameterByName(NEW_DISCOUNT_STATUS_NAME);
-        DiscountStatus newDiscountStatus = DiscountStatus.valueOf(newDiscountStatusName);
 
         if (currentDiscountStatusName != null && currentDiscountStatusName.equals(newDiscountStatusName)) {
             sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Picked discount status is the same as current.");
         } else {
             try {
-                if (userService.changeDiscountById(userId, newDiscountStatus)) {
-                    sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "User's discount status has changed on \"" + newDiscountStatusName + newDiscountStatus.getDiscount() + "%\"");
+                if (userService.changeDiscount(userId, newDiscountStatusName)) {
+                    sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "User's discount status has changed on \"" + newDiscountStatusName + "%\"");
                 } else {
                     sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Cannot change user's discount status.");
                 }

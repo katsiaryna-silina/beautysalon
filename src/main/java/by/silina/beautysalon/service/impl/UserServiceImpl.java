@@ -9,7 +9,6 @@ import by.silina.beautysalon.model.dto.UserAuthorizedDto;
 import by.silina.beautysalon.model.dto.UserLoginDto;
 import by.silina.beautysalon.model.dto.UserPasswordsDto;
 import by.silina.beautysalon.model.dto.UserRegistrationDto;
-import by.silina.beautysalon.model.entity.DiscountStatus;
 import by.silina.beautysalon.model.entity.Role;
 import by.silina.beautysalon.model.entity.User;
 import by.silina.beautysalon.model.entity.UserStatus;
@@ -151,38 +150,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserAuthorizedDto> findPagedUserDtoList(Long fromUserId, Integer numberOfUsers) throws ServiceException {
+        List<User> pagedUsers;
         try {
-            List<User> pagedUsers = userDao.findPagedUsers(fromUserId, numberOfUsers);
-            return pagedUsers.stream()
-                    .map(userMapper::toUserAuthorizedDto)
-                    .toList();
+            pagedUsers = userDao.findPagedUsers(fromUserId, numberOfUsers);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return pagedUsers.stream()
+                .map(userMapper::toUserAuthorizedDto)
+                .toList();
+    }
+
+    @Override
+    public boolean changeDiscount(Long userId, String discountStatusName) throws ServiceException {
+        try {
+            return userDao.changeDiscount(userId, discountStatusName);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public boolean changeDiscountById(Long userId, DiscountStatus discountStatus) throws ServiceException {
+    public boolean changeUserRoleAndDiscount(Long userId, Role role, String discountStatusName) throws ServiceException {
         try {
-            return userDao.changeDiscountById(userId, discountStatus);
+            return userDao.changeUserRole(userId, role) && userDao.changeDiscount(userId, discountStatusName);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public boolean changeUserRoleAndDiscountById(Long userId, Role role, DiscountStatus discountStatus) throws ServiceException {
+    public boolean changeUserStatus(Long userId, UserStatus userStatus) throws ServiceException {
         try {
-            return userDao.changeUserRoleById(userId, role) && userDao.changeDiscountById(userId, discountStatus);
-        } catch (DaoException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public boolean changeUserStatusById(Long userId, UserStatus userStatus) throws ServiceException {
-        try {
-            return userDao.changeUserStatusById(userId, userStatus);
+            return userDao.changeUserStatus(userId, userStatus);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

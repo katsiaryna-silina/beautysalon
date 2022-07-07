@@ -32,7 +32,7 @@
 
     <br/><br/>
 
-    <p>Discount status: ${discount_status}</p>
+    <p>Discount status: ${discount_status.getStatus()}</p>
     <p>Discount : ${discount_status.getDiscount()}%</p>
 
     <br/>

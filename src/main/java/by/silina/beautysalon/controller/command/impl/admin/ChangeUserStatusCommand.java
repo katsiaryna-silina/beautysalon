@@ -32,7 +32,7 @@ public class ChangeUserStatusCommand implements Command {
             sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Picked user status is the same as current.");
         } else {
             try {
-                if (userService.changeUserStatusById(userId, newUserStatus)) {
+                if (userService.changeUserStatus(userId, newUserStatus)) {
                     sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "User status has changed on " + newUserStatusName);
                 } else {
                     sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Cannot change user status.");

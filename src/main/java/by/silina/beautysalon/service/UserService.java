@@ -5,7 +5,6 @@ import by.silina.beautysalon.model.dto.UserAuthorizedDto;
 import by.silina.beautysalon.model.dto.UserLoginDto;
 import by.silina.beautysalon.model.dto.UserPasswordsDto;
 import by.silina.beautysalon.model.dto.UserRegistrationDto;
-import by.silina.beautysalon.model.entity.DiscountStatus;
 import by.silina.beautysalon.model.entity.Role;
 import by.silina.beautysalon.model.entity.User;
 import by.silina.beautysalon.model.entity.UserStatus;
@@ -27,9 +26,9 @@ public interface UserService {
 
     List<UserAuthorizedDto> findPagedUserDtoList(Long fromUserId, Integer numberOfUsers) throws ServiceException;
 
-    boolean changeDiscountById(Long userId, DiscountStatus discountStatus) throws ServiceException;
+    boolean changeDiscount(Long userId, String discountStatusName) throws ServiceException;
 
-    boolean changeUserRoleAndDiscountById(Long userId, Role role, DiscountStatus discountStatus) throws ServiceException;
+    boolean changeUserRoleAndDiscount(Long userId, Role role, String discountStatusName) throws ServiceException;
 
-    boolean changeUserStatusById(Long userId, UserStatus userStatus) throws ServiceException;
+    boolean changeUserStatus(Long userId, UserStatus userStatus) throws ServiceException;
 }

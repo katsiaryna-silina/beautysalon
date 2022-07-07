@@ -8,6 +8,7 @@ public class Serv extends AbstractEntity {
     private Integer minutesNeeded;
     private String description;
     private BigDecimal price;
+    private boolean isDeprecated;
 
     private Serv() {
     }
@@ -56,6 +57,14 @@ public class Serv extends AbstractEntity {
         this.price = price;
     }
 
+    public boolean isDeprecated() {
+        return isDeprecated;
+    }
+
+    public void setDeprecated(boolean deprecated) {
+        isDeprecated = deprecated;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,6 +74,7 @@ public class Serv extends AbstractEntity {
         Serv serv = (Serv) o;
 
         if (isComplex != serv.isComplex) return false;
+        if (isDeprecated != serv.isDeprecated) return false;
         if (name != null ? !name.equals(serv.name) : serv.name != null) return false;
         if (minutesNeeded != null ? !minutesNeeded.equals(serv.minutesNeeded) : serv.minutesNeeded != null)
             return false;
@@ -80,6 +90,7 @@ public class Serv extends AbstractEntity {
         result = 31 * result + (minutesNeeded != null ? minutesNeeded.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (isDeprecated ? 1 : 0);
         return result;
     }
 
@@ -92,6 +103,7 @@ public class Serv extends AbstractEntity {
                 .append(", minutesNeeded='").append(minutesNeeded)
                 .append(", description='").append(description)
                 .append(", price=").append(price)
+                .append(", isDeprecated=").append(isDeprecated)
                 .append('}')
                 .toString();
     }
@@ -103,37 +115,43 @@ public class Serv extends AbstractEntity {
         private Integer minutesNeeded;
         private String description;
         private BigDecimal price;
+        private boolean isDeprecated;
 
         ServBuilder() {
         }
 
-        public Serv.ServBuilder id(Long id) {
+        public ServBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public Serv.ServBuilder name(String name) {
+        public ServBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        public Serv.ServBuilder isComplex(boolean isComplex) {
+        public ServBuilder isComplex(boolean isComplex) {
             this.isComplex = isComplex;
             return this;
         }
 
-        public Serv.ServBuilder minutesNeeded(Integer minutesNeeded) {
+        public ServBuilder minutesNeeded(Integer minutesNeeded) {
             this.minutesNeeded = minutesNeeded;
             return this;
         }
 
-        public Serv.ServBuilder description(String description) {
+        public ServBuilder description(String description) {
             this.description = description;
             return this;
         }
 
-        public Serv.ServBuilder price(BigDecimal price) {
+        public ServBuilder price(BigDecimal price) {
             this.price = price;
+            return this;
+        }
+
+        public ServBuilder isDeprecated(boolean isDeprecated) {
+            this.isDeprecated = isDeprecated;
             return this;
         }
 
@@ -145,6 +163,7 @@ public class Serv extends AbstractEntity {
             serv.setMinutesNeeded(minutesNeeded);
             serv.setDescription(description);
             serv.setPrice(price);
+            serv.setDeprecated(isDeprecated);
             return serv;
         }
     }

@@ -27,8 +27,8 @@
     </h6>
     <h6>Date: ${date}</h6>
     <h6>Needed time for services: ${needed_time} minutes</h6>
-    <h6>Full price: ${full_price}</h6>
-    <h6>Price with discount: ${price_with_discount} (discount=${discount_status.getDiscount()}%)</h6>
+    <h6>Full price: ${full_price}$</h6>
+    <h6>Price with discount: ${price_with_discount}$ (discount=${discount_status.getDiscount()}%)</h6>
     <br/>
     <h5>Pick time you want</h5>
     <br/>

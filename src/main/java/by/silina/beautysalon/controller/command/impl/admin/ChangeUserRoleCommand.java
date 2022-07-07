@@ -5,9 +5,10 @@ import by.silina.beautysalon.controller.command.Command;
 import by.silina.beautysalon.controller.command.Router;
 import by.silina.beautysalon.exception.CommandException;
 import by.silina.beautysalon.exception.ServiceException;
-import by.silina.beautysalon.model.entity.DiscountStatus;
 import by.silina.beautysalon.model.entity.Role;
+import by.silina.beautysalon.service.DiscountStatusService;
 import by.silina.beautysalon.service.UserService;
+import by.silina.beautysalon.service.impl.DiscountStatusServiceImpl;
 import by.silina.beautysalon.service.impl.UserServiceImpl;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
@@ -18,6 +19,7 @@ public class ChangeUserRoleCommand implements Command {
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         UserService userService = UserServiceImpl.getInstance();
+        DiscountStatusService discountStatusService = DiscountStatusServiceImpl.getInstance();
 
         Long userId = Long.valueOf(sessionRequestContent.getParameterByName(USER_ID));
         sessionRequestContent.putRequestAttribute(USER_ID, userId);
@@ -32,8 +34,12 @@ public class ChangeUserRoleCommand implements Command {
             sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Picked role is the same as current.");
         } else if (Role.CLIENT.equals(currentRole) && Role.ADMIN.equals(newRole)) {
             try {
-                if (userService.changeUserRoleAndDiscountById(userId, Role.ADMIN, DiscountStatus.PLATINUM)) {
-                    sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "User's role has changed on \"admin\"");
+                var maximumDiscountOptional = discountStatusService.findMaximum();
+                if (maximumDiscountOptional.isPresent()) {
+                    var discountStatusName = maximumDiscountOptional.get().getStatus();
+                    if (userService.changeUserRoleAndDiscount(userId, Role.ADMIN, discountStatusName)) {
+                        sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "User's role has changed on \"admin\"");
+                    }
                 }
             } catch (ServiceException e) {
                 throw new CommandException(e);

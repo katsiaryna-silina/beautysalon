@@ -65,9 +65,13 @@
                 title: 'Last login',
                 formatter: 'dateFormatter'
             }, {
-                field: 'discountStatus',
+                field: 'discountStatus.status',
                 title: 'Discount status',
                 formatter: 'dataFormatter'
+            }, {
+                field: 'discountStatus.discount',
+                title: 'Discount',
+                formatter: 'discountFormatter'
             }, {
                 field: 'userStatus',
                 title: 'User status',
@@ -88,6 +92,10 @@
 
     function dateFormatter(value, row) {
         return new Date(value).toLocaleString();
+    }
+
+    function discountFormatter(value, row) {
+        return value + "%";
     }
 
     function operateFormatter(value, row, index) {

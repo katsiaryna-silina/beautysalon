@@ -11,6 +11,7 @@ import by.silina.beautysalon.model.dto.OrderFormDto;
 import by.silina.beautysalon.service.OrderService;
 import by.silina.beautysalon.service.impl.OrderServiceImpl;
 
+import static by.silina.beautysalon.controller.command.PagePath.FAILED_NEW_ORDER;
 import static by.silina.beautysalon.controller.command.PagePath.SUCCESS_NEW_ORDER;
 
 public class CreateOrderCommand implements Command {
@@ -20,12 +21,15 @@ public class CreateOrderCommand implements Command {
         OrderService orderService = OrderServiceImpl.getInstance();
         OrderMapper orderMapper = OrderMapperImpl.getInstance();
 
+        String page = SUCCESS_NEW_ORDER;
         OrderFormDto orderFormDto = orderMapper.toOrderFormDto(sessionRequestContent);
         try {
-            orderService.addOrder(orderFormDto);
+            if (!orderService.addOrder(orderFormDto)) {
+                page = FAILED_NEW_ORDER;
+            }
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return new Router(SUCCESS_NEW_ORDER, Router.Type.FORWARD);
+        return new Router(page, Router.Type.FORWARD);
     }
 }

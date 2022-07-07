@@ -19,11 +19,16 @@
         <ul class="navbar-nav mr-auto">
             <!-- Navbar links -->
             <li class="nav-item active">
-                <a class="nav-link" href="#">Orders</a>
+                <a class="nav-link"
+                   href="${pageContext.request.contextPath}/controller?command=show_all_orders_for_admin">Orders</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link"
                    href="${pageContext.request.contextPath}/controller?command=show_all_users">Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="${pageContext.request.contextPath}/controller?command=show_all_services_by_admin">Services</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link"

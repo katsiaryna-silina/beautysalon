@@ -23,6 +23,15 @@ public final class TableColumnName {
     public static final String END_TIME = "END_TIME";
     public static final String IS_DEPRECATED = "IS_DEPRECATED";
     public static final String ORDER_ID = "ORDER_ID";
+    public static final String ORDER_DATE_TIME = "ORDER_DATE_TIME";
+    public static final String VISIT_DATE = "VISIT_DATE";
+    public static final String VISIT_BEGIN_TIME = "VISIT_BEGIN_TIME";
+    public static final String VISIT_END_TIME = "VISIT_END_TIME";
+    public static final String PRICE_WITH_DISCOUNT = "PRICE_WITH_DISCOUNT";
+    public static final String SERVICE_NAME = "SERVICE_NAME";
+    public static final String FEEDBACK = "FEEDBACK";
+    public static final String MARK = "MARK";
+    public static final String IS_VERIFIED = "IS_VERIFIED";
 
     private TableColumnName() {
     }

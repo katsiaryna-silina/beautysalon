@@ -46,27 +46,27 @@ public class UserListJsonDto {
         UserJsonDtoBuilder() {
         }
 
-        public UserListJsonDto.UserJsonDtoBuilder recordsTotal(Long recordsTotal) {
+        public UserJsonDtoBuilder recordsTotal(Long recordsTotal) {
             this.total = recordsTotal;
             return this;
         }
 
-        public UserListJsonDto.UserJsonDtoBuilder recordsFiltered(Long recordsFiltered) {
+        public UserJsonDtoBuilder recordsFiltered(Long recordsFiltered) {
             this.totalNotFiltered = recordsFiltered;
             return this;
         }
 
-        public UserListJsonDto.UserJsonDtoBuilder rows(List<UserAuthorizedDto> data) {
+        public UserJsonDtoBuilder rows(List<UserAuthorizedDto> data) {
             this.data = data;
             return this;
         }
 
         public UserListJsonDto build() {
-            UserListJsonDto userJsonDto = new UserListJsonDto();
-            userJsonDto.total = this.total;
-            userJsonDto.totalNotFiltered = this.totalNotFiltered;
-            userJsonDto.rows = this.data;
-            return userJsonDto;
+            UserListJsonDto jsonDto = new UserListJsonDto();
+            jsonDto.total = this.total;
+            jsonDto.totalNotFiltered = this.totalNotFiltered;
+            jsonDto.rows = this.data;
+            return jsonDto;
         }
     }
 }

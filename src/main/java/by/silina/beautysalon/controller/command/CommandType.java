@@ -1,6 +1,7 @@
 package by.silina.beautysalon.controller.command;
 
 import by.silina.beautysalon.controller.command.impl.*;
+import by.silina.beautysalon.controller.command.impl.admin.ShowAllServicesCommand;
 import by.silina.beautysalon.controller.command.impl.admin.*;
 import by.silina.beautysalon.controller.command.impl.order.*;
 
@@ -22,6 +23,19 @@ public enum CommandType {
     PICK_TIME_IN_ORDER(new PickTimeInOrderCommand()),
     SHOW_NEW_ORDER_DATA(new ShowNewOrderDataCommand()),
     CREATE_NEW_ORDER(new CreateOrderCommand()),
+    SHOW_ALL_ORDERS_FOR_ADMIN(new ShowAllOrdersCommand()),
+    GET_ORDERS_FOR_ADMIN_JSON(new GetAllOrdersJsonCommand()),
+    UPDATE_ORDER_BY_ADMIN(new UpdateOrderStatusByAdminCommand()),
+    CHANGE_ORDER_STATUS(new ChangeOrderStatusCommand()),
+    SHOW_CLIENT_ORDERS(new ShowClientOrdersCommand()),
+    GET_ORDERS_FOR_CLIENT_JSON(new GetClientOrdersJsonCommand()),
+    UPDATE_ORDER_BY_CLIENT(new UpdateOrderStatusByClientCommand()),
+    SHOW_ALL_SERVICES_BY_ADMIN(new ShowAllServicesCommand()),
+    GET_ALL_SERVICES_JSON(new GetAllServicesJsonCommand()),
+    DELETE_SERVICE(new DeleteServiceCommand()),
+    UPDATE_SERVICE(new UpdateServiceCommand()),
+    SHOW_FEEDBACK(new ShowFeedbackCommand()),
+    UPDATE_FEEDBACK(new UpdateFeedbackCommand()),
     DEFAULT(new DefaultCommand());
 
     private final Command command;

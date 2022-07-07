@@ -1,6 +1,7 @@
 package by.silina.beautysalon.service;
 
 import by.silina.beautysalon.exception.ServiceException;
+import by.silina.beautysalon.model.dto.ServiceDto;
 import by.silina.beautysalon.model.entity.Serv;
 
 import java.util.List;
@@ -12,4 +13,12 @@ public interface ServService {
     List<Serv> findNotComplexServices() throws ServiceException;
 
     Optional<Serv> findServiceByName(String name) throws ServiceException;
+
+    boolean deleteById(Long id) throws ServiceException;
+
+    boolean updateById(Long id) throws ServiceException;
+
+    long findNumberOfServices() throws ServiceException;
+
+    List<ServiceDto> findPagedServiceDtoList(Long fromServiceId, Integer numberOfServicesPerPage) throws ServiceException;
 }

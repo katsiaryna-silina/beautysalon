@@ -1,7 +1,6 @@
 package by.silina.beautysalon.dao;
 
 import by.silina.beautysalon.exception.DaoException;
-import by.silina.beautysalon.model.entity.DiscountStatus;
 import by.silina.beautysalon.model.entity.Role;
 import by.silina.beautysalon.model.entity.User;
 import by.silina.beautysalon.model.entity.UserStatus;
@@ -24,9 +23,9 @@ public interface UserDao {
 
     List<User> findPagedUsers(Long fromUserId, Integer numberOfUsers) throws DaoException;
 
-    boolean changeUserRoleById(Long userId, Role role) throws DaoException;
+    boolean changeUserRole(Long userId, Role role) throws DaoException;
 
-    boolean changeDiscountById(Long userId, DiscountStatus discountStatus) throws DaoException;
+    boolean changeDiscount(Long userId, String discountStatusName) throws DaoException;
 
-    boolean changeUserStatusById(Long userId, UserStatus userStatus) throws DaoException;
+    boolean changeUserStatus(Long userId, UserStatus userStatus) throws DaoException;
 }

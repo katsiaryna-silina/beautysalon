@@ -6,7 +6,6 @@ import by.silina.beautysalon.dao.UserDao;
 import by.silina.beautysalon.exception.DaoException;
 import by.silina.beautysalon.mapper.UserMapper;
 import by.silina.beautysalon.mapper.impl.UserMapperImpl;
-import by.silina.beautysalon.model.entity.DiscountStatus;
 import by.silina.beautysalon.model.entity.Role;
 import by.silina.beautysalon.model.entity.User;
 import by.silina.beautysalon.model.entity.UserStatus;
@@ -252,14 +251,14 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                     users.add(userFromResultSet);
                 }
             }
-            return users;
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+        return users;
     }
 
     @Override
-    public boolean changeUserRoleById(Long userId, Role role) throws DaoException {
+    public boolean changeUserRole(Long userId, Role role) throws DaoException {
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
@@ -301,14 +300,14 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public boolean changeDiscountById(Long userId, DiscountStatus discountStatus) throws DaoException {
+    public boolean changeDiscount(Long userId, String discountStatusName) throws DaoException {
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
             connection.setAutoCommit(false);
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_DISCOUNT)) {
-                preparedStatement.setString(1, discountStatus.name());
+                preparedStatement.setString(1, discountStatusName);
                 preparedStatement.setLong(2, userId);
 
                 var rowCountDML = preparedStatement.executeUpdate();
@@ -343,7 +342,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public boolean changeUserStatusById(Long userId, UserStatus userStatus) throws DaoException {
+    public boolean changeUserStatus(Long userId, UserStatus userStatus) throws DaoException {
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
@@ -409,11 +408,5 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
-    }
-
-    @Override
-    public User update(User user) {
-        //todo
-        return null;
     }
 }
