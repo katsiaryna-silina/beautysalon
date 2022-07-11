@@ -1,8 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="locale.pagecontent"/>
 <html>
 <head>
-    <title>2cat - update order</title>
+    <title><fmt:message key="title.update.order"/></title>
 </head>
 <body>
 <c:choose>
@@ -16,20 +19,26 @@
         <jsp:include page="../fragment/header_default.jsp"/>
     </c:otherwise>
 </c:choose>
+
 <br/>
-<h3 class="text-center">Update order</h3>
+</br>
+<h3 class="text-center"><fmt:message key="table.header.update.order"/></h3>
 <br/>
 <div class="container">
-    <h5>Order's status with id=${order_id} has not successfully changed!</h5>
+    <h5><fmt:message key="description.order.status.with.id"/>${order_id}
+        <fmt:message key="description.order.not.changed"/>
+    </h5>
 
     <c:choose>
         <c:when test="${role == 'ADMIN'}">
-            <a href="${pageContext.request.contextPath}/controller?command=show_all_orders_for_admin">Back to order
-                list</a>
+            <a href="${pageContext.request.contextPath}/controller?command=show_all_orders_for_admin">
+                <fmt:message key="button.back.to.order.list"/>
+            </a>
         </c:when>
         <c:when test="${role == 'CLIENT'}">
-            <a href="${pageContext.request.contextPath}/controller?command=show_client_orders">Back to order
-                list</a>
+            <a href="${pageContext.request.contextPath}/controller?command=show_client_orders">
+                <fmt:message key="button.back.to.order.list"/>
+            </a>
         </c:when>
     </c:choose>
 </div>

@@ -1,8 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="locale.pagecontent"/>
 <html>
 <head>
-    <title>2cat - new order</title>
+    <title><fmt:message key="title.new.order"/></title>
 </head>
 <body>
 <c:choose>
@@ -16,20 +19,23 @@
         <jsp:include page="../fragment/header_default.jsp"/>
     </c:otherwise>
 </c:choose>
-<br/>
-<h3 class="text-center">New order</h3>
-<br/>
 
+<br/>
+<br/>
+<h3 class="text-center"><fmt:message key="table.new.order"/></h3>
+<br/>
 <div class="container">
-    <h6>Services: ${complex_service_name}
+    <h6><fmt:message key="order.data.services"/> ${complex_service_name}
         <c:forEach var="not_complex_service_name" items="${not_complex_service_names}">
             ${not_complex_service_name}
         </c:forEach>
     </h6>
-    <h6>Full price: ${full_price}$</h6>
-    <h6>Price with discount: ${price_with_discount}$ (discount=${discount_status.getDiscount()}%)</h6>
+    <h6><fmt:message key="order.data.price.full"/> ${full_price}$</h6>
+    <h6><fmt:message key="order.data.price.with.discount"/> ${price_with_discount}$
+        (<fmt:message key="order.data.discount"/>=${discount_status.getDiscount()}%)
+    </h6>
     <br/>
-    <h5>Pick date you want</h5>
+    <h5><fmt:message key="order.data.peek.date"/></h5>
     <br/>
     <form action="${pageContext.request.contextPath}/controller" method="POST">
         <input type="hidden" name="command" value="pick_time_in_order"/>
@@ -43,7 +49,7 @@
         <input type="hidden" name="full_price" value="${full_price}"/>
         <input type="hidden" name="price_with_discount" value="${price_with_discount}"/>
 
-        <label>Dates: </label>
+        <label><fmt:message key="order.data.dates"/> </label>
         <br/>
         <select name="date">
             <c:forEach var="date" items="${dates}">
@@ -54,9 +60,12 @@
         </select>
         <br/>
         <br/>
-        <button class="btn btn-primary col-2" type="submit">Next</button>
+        <button class="btn btn-primary col-2" type="submit">
+            <fmt:message key="button.next"/>
+        </button>
     </form>
 </div>
+
 <jsp:include page="../fragment/footer.jsp"/>
 </body>
 </html>

@@ -1,7 +1,6 @@
 package by.silina.beautysalon.controller.command;
 
 import by.silina.beautysalon.controller.command.impl.*;
-import by.silina.beautysalon.controller.command.impl.admin.ShowAllServicesCommand;
 import by.silina.beautysalon.controller.command.impl.admin.*;
 import by.silina.beautysalon.controller.command.impl.order.*;
 
@@ -36,6 +35,8 @@ public enum CommandType {
     UPDATE_SERVICE(new UpdateServiceCommand()),
     SHOW_FEEDBACK(new ShowFeedbackCommand()),
     UPDATE_FEEDBACK(new UpdateFeedbackCommand()),
+    DELETE_USER(new DeleteUserCommand()),
+    CHANGE_LOCALE(new ChangeLocaleCommand()),
     DEFAULT(new DefaultCommand());
 
     private final Command command;

@@ -23,8 +23,33 @@
         <ul class="navbar-nav mr-auto">
             <!-- Navbar links -->
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link"
+                   href="${pageContext.request.contextPath}/controller?command=show_all_orders_for_admin">
+                    <fmt:message key="header.orders.clients"/>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="${pageContext.request.contextPath}/controller?command=show_all_users">
+                    <fmt:message key="header.users"/>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="${pageContext.request.contextPath}/controller?command=show_all_services_by_admin">
                     <fmt:message key="header.services"/>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="${pageContext.request.contextPath}/controller?command=show_client_orders">
+                    <fmt:message key="header.orders"/>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   href="${pageContext.request.contextPath}/controller?command=pick_service_in_order">
+                    <fmt:message key="header.new.order"/>
                 </a>
             </li>
         </ul>
@@ -38,13 +63,13 @@
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul class="navbar-nav ml-auto">
             <li class="ui-corner-right nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/jsp/login.jsp">
-                    <fmt:message key="header.login"/>
+                <a class="nav-link" href="${pageContext.request.contextPath}/jsp/profile.jsp">
+                    <fmt:message key="header.profile"/>
                 </a>
             </li>
             <li class="ui-corner-right nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/jsp/registration.jsp">
-                    <fmt:message key="header.register"/>
+                <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=LogOut">
+                    <fmt:message key="header.logout"/>
                 </a>
             </li>
             <li class="ui-corner-right nav-item">
@@ -63,7 +88,7 @@
     </div>
 </nav>
 
-<script src=" https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>

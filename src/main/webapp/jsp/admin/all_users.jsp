@@ -1,7 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="locale.pagecontent"/>
 <html>
 <head>
-    <title>All users</title>
+    <title><fmt:message key="title.users"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
@@ -15,11 +18,11 @@
 </head>
 
 <body>
-<jsp:include page="../fragment/header_admin.jsp"/>
+<jsp:include page="../fragment/header_admin_with_locale.jsp"/>
 <div class="container-fluid">
     <br/>
     <br/>
-    <h3>Users</h3>
+    <h3><fmt:message key="table.header.users"/></h3>
     <br/>
     <table id="table" class="table table-bordered table-light table-hover">
         <thead class="table-dark"/>
@@ -40,45 +43,45 @@
             url: '${pageContext.request.contextPath}/controller?command=get_users_json',
             columns: [{
                 field: 'id',
-                title: 'ID'
+                title: '<fmt:message key="table.title.id"/>'
             }, {
                 field: 'username',
-                title: 'Username'
+                title: '<fmt:message key="table.title.username"/>'
             }, {
                 field: 'email',
-                title: 'Email'
+                title: '<fmt:message key="table.title.email"/>'
             }, {
                 field: 'role',
-                title: 'Role',
+                title: '<fmt:message key="table.title.role"/>',
                 formatter: 'dataFormatter'
             }, {
                 field: 'firstName',
-                title: 'First Name'
+                title: '<fmt:message key="table.title.first.name"/>'
             }, {
                 field: 'lastName',
-                title: 'Last Name'
+                title: '<fmt:message key="table.title.last.name"/>'
             }, {
                 field: 'phoneNumber',
-                title: 'Phone number'
+                title: '<fmt:message key="table.title.phone.number"/>'
             }, {
                 field: 'lastLogin.value',
-                title: 'Last login',
+                title: '<fmt:message key="table.title.last.login"/>',
                 formatter: 'dateFormatter'
             }, {
                 field: 'discountStatus.status',
-                title: 'Discount status',
+                title: '<fmt:message key="table.title.discount.status"/>',
                 formatter: 'dataFormatter'
             }, {
                 field: 'discountStatus.discount',
-                title: 'Discount',
+                title: '<fmt:message key="table.title.discount"/>',
                 formatter: 'discountFormatter'
             }, {
                 field: 'userStatus',
-                title: 'User status',
+                title: '<fmt:message key="table.title.user.status"/>',
                 formatter: 'dataFormatter'
             }, {
                 field: 'operate',
-                title: 'Item Operate',
+                title: '<fmt:message key="table.title.operate"/>',
                 align: 'center',
                 clickToSelect: false,
                 formatter: "operateFormatter"
@@ -101,7 +104,8 @@
     function operateFormatter(value, row, index) {
         return [
             '<div class="right">',
-            '<a class="btn btn-info" href="${pageContext.request.contextPath}/controller?command=update_user&username=' + row.username + '">Update',
+            '<a class="btn btn-info" href="${pageContext.request.contextPath}/controller?command=update_user&username=' + row.username +
+            '"><fmt:message key="button.update"/>',
             '</a>  ',
             '</div>'
         ].join('')
@@ -110,5 +114,4 @@
 
 <jsp:include page="../fragment/footer.jsp"/>
 </body>
-
 </html>

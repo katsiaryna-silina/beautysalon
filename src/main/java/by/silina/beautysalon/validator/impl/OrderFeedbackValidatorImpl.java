@@ -1,5 +1,6 @@
-package by.silina.beautysalon.validator;
+package by.silina.beautysalon.validator.impl;
 
+import by.silina.beautysalon.validator.OrderFeedbackValidator;
 import liquibase.util.StringUtil;
 
 public class OrderFeedbackValidatorImpl implements OrderFeedbackValidator {

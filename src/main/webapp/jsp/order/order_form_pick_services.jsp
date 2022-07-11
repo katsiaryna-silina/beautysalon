@@ -1,8 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="locale.pagecontent"/>
 <html>
 <head>
-    <title>2cat - new order</title>
+    <title><fmt:message key="title.new.order"/></title>
 </head>
 <body>
 <c:choose>
@@ -16,16 +19,18 @@
         <jsp:include page="../fragment/header_default.jsp"/>
     </c:otherwise>
 </c:choose>
+
 <br/>
-<h3 class="text-center">New order</h3>
+</br>
+<h3 class="text-center"><fmt:message key="table.new.order"/></h3>
 <br/>
 <div class="container">
-    <h5>Pick services you want</h5>
+    <h5><fmt:message key="order.data.peek.services"/></h5>
     <br/>
     <form action="${pageContext.request.contextPath}/controller" method="POST">
         <input type="hidden" name="command" value="pick_date_in_order"/>
 
-        <label>Complex services: </label>
+        <label><fmt:message key="order.data.services.complex"/> </label>
         <br/>
 
         <select name="complex_service_name">
@@ -37,17 +42,19 @@
         </select>
         <br/>
         <br/>
-        <button class="btn btn-primary col-2" type="submit">Next</button>
+        <button class="btn btn-primary col-2" type="submit">
+            <fmt:message key="button.next"/>
+        </button>
     </form>
 
     <br/>
-    <h5>or</h5>
+    <h5><fmt:message key="or"/></h5>
     <br/>
 
     <form action="${pageContext.request.contextPath}/controller" method="POST">
         <input type="hidden" name="command" value="pick_date_in_order"/>
 
-        <label>Not complex services: </label>
+        <label><fmt:message key="order.data.services.not.complex"/> </label>
 
         <fieldset>
             <c:forEach var="not_complex_service" items="${not_complex_services}">
@@ -61,10 +68,13 @@
                 </div>
             </c:forEach>
             <br/>
-            <button class="btn btn-primary col-2" type="submit">Next</button>
+            <button class="btn btn-primary col-2" type="submit">
+                <fmt:message key="button.next"/>
+            </button>
         </fieldset>
     </form>
 </div>
+
 <jsp:include page="../fragment/footer.jsp"/>
 </body>
 </html>

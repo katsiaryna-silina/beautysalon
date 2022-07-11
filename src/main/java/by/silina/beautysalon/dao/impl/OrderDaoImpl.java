@@ -51,7 +51,7 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
             """;
     private static final String SELECT_NUMBER_OF_USER_ORDERS = """
             SELECT COUNT(ID)
-            FROM ORDERS;
+            FROM ORDERS
             WHERE USER_ID = ?
             """;
     private static final String SELECT_PAGED_ORDERS = """

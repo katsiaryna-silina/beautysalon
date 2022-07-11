@@ -17,13 +17,18 @@ public class ServletContextListenerImpl implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         /* This method is called when the servlet context is initialized(when the Web application is deployed). */
         ConnectionPool.getInstance();
-        log.info("++++++ contextInitialized : {}", servletContextEvent.getServletContext().getServerInfo());
+
+        var serverInfo = servletContextEvent.getServletContext().getServerInfo();
+        var contextPath = servletContextEvent.getServletContext().getContextPath();
+        log.debug("Servlet context was initialized. Server info: {}. Context path: {}.", serverInfo, contextPath);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         /* This method is called when the servlet Context is undeployed or Application Server shuts down. */
         ConnectionPool.getInstance().destroyPool();
-        log.info("---------- contextDestroyed : {}", servletContextEvent.getServletContext().getContextPath());
+
+        var contextPath = servletContextEvent.getServletContext().getContextPath();
+        log.debug("Servlet context was destroyed. Context path: {}", contextPath);
     }
 }

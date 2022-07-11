@@ -31,4 +31,6 @@ public interface UserService {
     boolean changeUserRoleAndDiscount(Long userId, Role role, String discountStatusName) throws ServiceException;
 
     boolean changeUserStatus(Long userId, UserStatus userStatus) throws ServiceException;
+
+    boolean deleteUser(Long id) throws ServiceException;
 }

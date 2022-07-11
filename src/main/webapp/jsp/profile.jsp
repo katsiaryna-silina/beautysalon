@@ -1,55 +1,38 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="locale.pagecontent"/>
 <html>
 <head>
-    <title>Profile</title>
+    <title><fmt:message key="title.profile"/></title>
 </head>
 <body>
-<c:choose>
-    <c:when test="${role == 'ADMIN'}">
-        <jsp:include page="fragment/header_admin.jsp"/>
-    </c:when>
-    <c:when test="${role == 'CLIENT'}">
-        <jsp:include page="fragment/header_client.jsp"/>
-    </c:when>
-    <c:otherwise>
-        <jsp:include page="fragment/header_default.jsp"/>
-    </c:otherwise>
-</c:choose>
-
-<c:if test="${role.equals(Role.ADMIN)}">
+<c:if test="${role == 'ADMIN'}">
     <jsp:include page="fragment/header_admin.jsp"/>
 </c:if>
-<c:if test="${role.equals(Role.CLIENT)}">
+<c:if test="${role == 'CLIENT'}">
     <jsp:include page="fragment/header_client.jsp"/>
 </c:if>
-<br/>
-<br/>
 
 <div class="container">
-
-    <h3>User Info</h3>
-
-    <br/><br/>
-
-    <p>Discount status: ${discount_status.getStatus()}</p>
-    <p>Discount : ${discount_status.getDiscount()}%</p>
-
     <br/>
-
-    <p>First name: ${first_name}</p>
-    <p>Last name: ${last_name}</p>
-
     <br/>
+    <h3><fmt:message key="user.info"/></h3>
+    <br/>
+    <br/>
+    <p><fmt:message key="user.discount.status"/> ${discount_status.getStatus()}</p>
+    <p><fmt:message key="user.discount"/> ${discount_status.getDiscount()}%</p>
+    <br/>
+    <p><fmt:message key="user.first.name"/> ${first_name}</p>
+    <p><fmt:message key="user.last.name"/> ${last_name}</p>
+    <br/>
+    <p><fmt:message key="user.username"/> ${username}</p>
+    <p><fmt:message key="user.email"/> ${email}</p>
+    <p><fmt:message key="user.phone.number"/>Phone number: ${phone_number}</p>
 
-    <p>Username: ${username}</p>
-    <p>Email: ${email}</p>
-    <p>Phone number: ${phone_number}</p>
-
-
-    <a class="btn btn-info" href="#">Change user info</a>
-    <a class="btn btn-info" href="change_password.jsp">Change password</a>
-    <a class="btn btn-danger ml-2" href="#">Delete account</a>
+    <a class="btn btn-info" href="change_password.jsp"><fmt:message key="button.change.password"/></a>
+    <a class="btn btn-danger ml-2" href="delete_user.jsp"><fmt:message key="button.delete.account"/></a>
 </div>
 
 <jsp:include page="fragment/footer.jsp"/>

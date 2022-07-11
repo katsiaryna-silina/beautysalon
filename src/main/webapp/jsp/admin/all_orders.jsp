@@ -1,8 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="locale.pagecontent"/>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>All orders</title>
+    <title><fmt:message key="title.orders.clients"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
@@ -16,11 +19,11 @@
 </head>
 
 <body>
-<jsp:include page="../fragment/header_admin.jsp"/>
+<jsp:include page="../fragment/header_admin_with_locale.jsp"/>
 <div class="container-fluid">
     <br/>
     <br/>
-    <h3>Orders</h3>
+    <h3><fmt:message key="table.header.orders.clients"/></h3>
     <br/>
     <table id="table" class="table table-bordered table-light table-hover">
         <thead class="table-dark"/>
@@ -41,38 +44,38 @@
             url: '${pageContext.request.contextPath}/controller?command=get_orders_for_client_json',
             columns: [{
                 field: 'id',
-                title: 'ID'
+                title: '<fmt:message key="table.title.id"/>'
             }, {
                 field: 'orderDateTime.value',
-                title: 'Order date and time',
+                title: '<fmt:message key="table.title.order.date.time"/>',
                 formatter: 'dateFormatter'
             }, {
                 field: 'visitDate.value',
-                title: 'Visit date',
+                title: '<fmt:message key="table.title.visit.date"/>',
                 formatter: 'dateFormatter'
             }, {
                 field: 'visitBeginTime.value',
-                title: 'Visit begin time'
+                title: '<fmt:message key="table.title.visit.time.begin"/>'
             }, {
                 field: 'visitEndTime.value',
-                title: 'Visit end time'
+                title: '<fmt:message key="table.title.visit.time.end"/>'
             }, {
                 field: 'serviceNames',
-                title: 'Service names',
+                title: '<fmt:message key="table.title.service.names"/>',
                 formatter: 'listFormatter'
             }, {
                 field: 'priceWithDiscount',
-                title: 'Price with discount',
+                title: '<fmt:message key="table.title.price.with.discount"/>',
                 formatter: 'priceFormatter'
             }, {
                 field: 'status',
-                title: 'Order status'
+                title: '<fmt:message key="table.title.order.status"/>'
             }, {
                 field: 'description',
-                title: 'Description'
+                title: '<fmt:message key="table.title.description"/>'
             }, {
                 field: 'operate',
-                title: 'Operate',
+                title: '<fmt:message key="table.title.operate"/>',
                 align: 'center',
                 clickToSelect: false,
                 formatter: "operateFormatter"
@@ -98,7 +101,7 @@
     function operateFormatter(value, row, index) {
         return [
             '<div class="right">',
-            '<a class="btn btn-info" href="${pageContext.request.contextPath}/controller?command=update_order_by_client&id=' + row.id + '&status=' + row.status + '">Update',
+            '<a class="btn btn-info" href="${pageContext.request.contextPath}/controller?command=update_order_by_admin&id=' + row.id + '&status=' + row.status + '"><fmt:message key="button.update"/>',
             '</a>  ',
             '</div>'
         ].join('')
@@ -107,5 +110,4 @@
 
 <jsp:include page="../fragment/footer.jsp"/>
 </body>
-
 </html>

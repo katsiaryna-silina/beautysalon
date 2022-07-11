@@ -79,6 +79,13 @@ public final class AttributeAndParameterName {
     public static final String MARK_ERROR_MESSAGE = "mark_error_message";
     public static final String FEEDBACK_ERROR_MESSAGE = "feedback_error_message";
 
+    public static final String DELETE_USER_RESULT_MESSAGE = "delete_user_result_message";
+
+    public static final String CURRENT_PAGE = "current_page";
+    public static final String LOCALE = "locale";
+    public static final String LOCALE_RU = "ru_RU";
+    public static final String LOCALE_EN_US = "en_US";
+
     private AttributeAndParameterName() {
     }
 }

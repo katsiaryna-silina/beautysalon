@@ -5,7 +5,7 @@
 <fmt:setBundle basename="locale.pagecontent"/>
 <html>
 <head>
-    <title><fmt:message key="title.update.feedback"/></title>
+    <title><fmt:message key="title.delete.user"/></title>
 </head>
 <body>
 <c:choose>
@@ -25,13 +25,10 @@
     </br>
     <div class="row">
         <div class="col text-center">
+            <h3><fmt:message key="table.header.delete.user"/></h3>
             </br>
             </br>
-            <a><fmt:message key="description.feedback.update.failed"/></a>
-            <hr/>
-            <a href="${pageContext.request.contextPath}/controller?command=show_client_orders">
-                <fmt:message key="button.back.to.order.list"/>
-            </a>
+            <a>${delete_user_result_message}</a>
         </div>
     </div>
 </div>

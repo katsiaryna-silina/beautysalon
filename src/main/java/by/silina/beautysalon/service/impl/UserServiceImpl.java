@@ -187,4 +187,13 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public boolean deleteUser(Long id) throws ServiceException {
+        try {
+            return userDao.deleteById(id);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

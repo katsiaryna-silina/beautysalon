@@ -1,4 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="locale.pagecontent"/>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
@@ -16,11 +19,18 @@
 </head>
 
 <body>
-<jsp:include page="../fragment/header_client.jsp"/>
+<c:choose>
+    <c:when test="${role == 'ADMIN'}">
+        <jsp:include page="../fragment/header_admin_with_locale.jsp"/>
+    </c:when>
+    <c:when test="${role == 'CLIENT'}">
+        <jsp:include page="../fragment/header_client_with_locale.jsp"/>
+    </c:when>
+</c:choose>
 <div class="container-fluid">
     <br/>
     <br/>
-    <h3>Orders</h3>
+    <h3><fmt:message key="header.orders"/></h3>
     <br/>
     <table id="table" class="table table-bordered table-light table-hover">
         <thead class="table-dark"/>
@@ -41,43 +51,43 @@
             url: '${pageContext.request.contextPath}/controller?command=get_orders_for_client_json',
             columns: [{
                 field: 'id',
-                title: 'ID'
+                title: '<fmt:message key="table.title.id"/>'
             }, {
                 field: 'orderDateTime.value',
-                title: 'Order date and time',
+                title: '<fmt:message key="table.title.order.date.time"/>',
                 formatter: 'dateFormatter'
             }, {
                 field: 'visitDate.value',
-                title: 'Visit date'
+                title: '<fmt:message key="table.title.visit.date"/>',
             }, {
                 field: 'visitBeginTime.value',
-                title: 'Visit begin time'
+                title: '<fmt:message key="table.title.visit.time.begin"/>'
             }, {
                 field: 'visitEndTime.value',
-                title: 'Visit end time'
+                title: '<fmt:message key="table.title.visit.time.end"/>'
             }, {
                 field: 'serviceNames',
-                title: 'Service names',
+                title: '<fmt:message key="table.title.service.names"/>',
                 formatter: 'listFormatter'
             }, {
                 field: 'priceWithDiscount',
-                title: 'Price with discount',
+                title: '<fmt:message key="table.title.price.with.discount"/>',
                 formatter: 'priceFormatter'
             }, {
                 field: 'status',
-                title: 'Order status'
+                title: '<fmt:message key="table.title.order.status"/>'
             }, {
                 field: 'description',
-                title: 'Description'
+                title: '<fmt:message key="table.title.description"/>'
             }, {
                 field: 'feedback',
-                title: 'Feedback',
+                title: '<fmt:message key="table.title.feedback"/>',
                 align: 'center',
                 clickToSelect: false,
                 formatter: "feedbackFormatter"
             }, {
                 field: 'operate',
-                title: 'Operate',
+                title: '<fmt:message key="table.title.operate"/>',
                 align: 'center',
                 clickToSelect: false,
                 formatter: "operateFormatter"
@@ -107,23 +117,31 @@
     function feedbackFormatter(value, row, index) {
         return [
             '<div class="right">',
-            '<a class="btn btn-success" href="${pageContext.request.contextPath}/controller?command=show_feedback&id=' + row.id + '">Update feedback',
+            '<a class="btn btn-success" href="${pageContext.request.contextPath}/controller?command=show_feedback&id=' + row.id + '"><fmt:message key="button.update.feedback"/>',
             '</a>  ',
             '</div>'
         ].join('')
     }
 
     function operateFormatter(value, row, index) {
-        return [
-            '<div class="right">',
-            '<a class="btn btn-info" href="${pageContext.request.contextPath}/controller?command=update_order_by_client&id=' + row.id + '&status=' + row.status + '">Update',
-            '</a>  ',
-            '</div>'
-        ].join('')
+        if (${role == 'ADMIN'}) {
+            return [
+                '<div class="right">',
+                '<a class="btn btn-info" href="${pageContext.request.contextPath}/controller?command=update_order_by_admin&id=' + row.id + '&status=' + row.status + '"><fmt:message key="button.update"/>',
+                '</a>  ',
+                '</div>'
+            ].join('')
+        } else if (${role == 'CLIENT'}) {
+            return [
+                '<div class="right">',
+                '<a class="btn btn-info" href="${pageContext.request.contextPath}/controller?command=update_order_by_client&id=' + row.id + '&status=' + row.status + '"><fmt:message key="button.update"/>',
+                '</a>  ',
+                '</div>'
+            ].join('')
+        }
     }
 </script>
 
 <jsp:include page="../fragment/footer.jsp"/>
 </body>
-
 </html>

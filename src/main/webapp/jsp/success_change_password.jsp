@@ -1,10 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="locale.pagecontent"/>
 <html>
 <head>
-    <title>2cat - welcome</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-
+    <title><fmt:message key="title.update.user"/></title>
 </head>
 <body>
 <c:choose>
@@ -18,8 +19,16 @@
         <jsp:include page="fragment/header_default.jsp"/>
     </c:otherwise>
 </c:choose>
-<br/>
-<h3 class="text-center">Password is successfully changed.</h3>
+
+<div class="container">
+    </br>
+    </br>
+    <div class="row">
+        <div class="col text-center">
+            <a><fmt:message key="description.user.password.changed"/></a>
+        </div>
+    </div>
+</div>
 
 <jsp:include page="fragment/footer.jsp"/>
 </body>

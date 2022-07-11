@@ -1,7 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="locale.pagecontent"/>
 <html>
 <head>
-    <title>All users</title>
+    <title><fmt:message key="title.services"/></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
@@ -15,11 +18,11 @@
 </head>
 
 <body>
-<jsp:include page="../fragment/header_admin.jsp"/>
+<jsp:include page="../fragment/header_admin_with_locale.jsp"/>
 <div class="container-fluid">
     <br/>
     <br/>
-    <h3>Users</h3>
+    <h3><fmt:message key="table.header.services"/></h3>
     <br/>
     <table id="table" class="table table-bordered table-light table-hover">
         <thead class="table-dark"/>
@@ -40,29 +43,29 @@
             url: '${pageContext.request.contextPath}/controller?command=get_all_services_json',
             columns: [{
                 field: 'id',
-                title: 'ID'
+                title: '<fmt:message key="table.title.id"/>'
             }, {
                 field: 'name',
-                title: 'Name'
+                title: '<fmt:message key="table.title.name"/>'
             }, {
                 field: 'isComplex',
-                title: 'Is complex'
+                title: '<fmt:message key="table.title.is.complex"/>'
             }, {
                 field: 'description',
-                title: 'Description'
+                title: '<fmt:message key="table.title.description"/>'
             }, {
                 field: 'price',
-                title: 'Price',
+                title: '<fmt:message key="table.title.price"/>',
                 formatter: 'priceFormatter'
             }, {
                 field: 'minutesNeeded',
-                title: 'Minutes needed'
+                title: '<fmt:message key="table.title.minutes.needed"/>'
             }, {
                 field: 'isDeprecated',
-                title: 'Is deprecated'
+                title: '<fmt:message key="table.title.is.deprecated"/>'
             }, {
                 field: 'operate',
-                title: 'Item Operate',
+                title: '<fmt:message key="table.title.operate"/>',
                 align: 'center',
                 clickToSelect: false,
                 formatter: "operateFormatter"
@@ -78,14 +81,13 @@
         if (row.isDeprecated) {
             return [
                 '<div class="right">',
-                '<a class="btn btn-outline-success" href="${pageContext.request.contextPath}/controller?command=update_service&id=' + row.id + '&is_deprecated=' + row.isDeprecated + '">Return to client\'s select',
+                '<a class="btn btn-outline-success" ' + 'href="${pageContext.request.contextPath}/controller?command=update_service&id=' + row.id + '&is_deprecated=' + row.isDeprecated + '"><fmt:message key="button.return.to.client.selection"/>',
                 '</a>  ',
                 '</div>'
             ].join('')
         } else {
             return [
-                '<div class="right">',
-                '<a class="btn btn-outline-danger" href="${pageContext.request.contextPath}/controller?command=delete_service&id=' + row.id + '&is_deprecated=' + row.isDeprecated + '">Delete from client\'s select',
+                '<div class="right">', '<a class="btn btn-outline-danger" href="${pageContext.request.contextPath}/controller?command=delete_service&id=' + row.id + '&is_deprecated=' + row.isDeprecated + '"><fmt:message key="button.delete.from.client.selection"/>',
                 '</a>  ',
                 '</div>'
             ].join('')
@@ -95,5 +97,4 @@
 
 <jsp:include page="../fragment/footer.jsp"/>
 </body>
-
 </html>

@@ -30,6 +30,7 @@ public final class PagePath {
     public static final String UPDATE_FEEDBACK = "jsp/update_feedback.jsp";
     public static final String UPDATE_FEEDBACK_SUCCESS = "jsp/update_feedback_success.jsp";
     public static final String UPDATE_FEEDBACK_FAILED = "jsp/update_feedback_failed.jsp";
+    public static final String DELETE_USER_RESULT = "jsp/delete_user_result.jsp";
 
     private PagePath() {
     }

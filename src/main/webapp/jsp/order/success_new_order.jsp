@@ -1,8 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${locale}"/>
+<fmt:setBundle basename="locale.pagecontent"/>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>2cat - new order</title>
+    <title><fmt:message key="title.new.order"/></title>
 </head>
 <body>
 <c:choose>
@@ -16,12 +19,24 @@
         <jsp:include page="../fragment/header_default.jsp"/>
     </c:otherwise>
 </c:choose>
-<br/>
-<h3 class="text-center">New order</h3>
-<br/>
+
 <div class="container">
-    <h5>Your order has successfully registered!</h5>
+    </br>
+    </br>
+    <div class="row">
+        <div class="col text-center">
+            <h3><fmt:message key="table.new.order"/></h3>
+            </br>
+            </br>
+            <a><fmt:message key="description.order.registered"/></a>
+            <hr/>
+            <a href="${pageContext.request.contextPath}/controller?command=pick_service_in_order">
+                <fmt:message key="button.back.to.order.creation"/>
+            </a>
+        </div>
+    </div>
 </div>
+
 <jsp:include page="../fragment/footer.jsp"/>
 </body>
 </html>

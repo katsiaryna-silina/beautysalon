@@ -96,6 +96,11 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 )
             WHERE U.ID = ?
             """;
+    private static final String DELETE_USER = """
+            DELETE 
+            FROM USERS 
+            WHERE ID = ?         
+            """;
     private static final UserDaoImpl instance = new UserDaoImpl();
     private static final UserMapper userMapper = UserMapperImpl.getInstance();
 
@@ -407,6 +412,47 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             }
         } catch (SQLException e) {
             throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteById(Long userId) throws DaoException {
+        Connection connection = null;
+        try {
+            connection = ConnectionPool.getInstance().getConnection();
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER)) {
+                preparedStatement.setLong(1, userId);
+
+                var rowCountDML = preparedStatement.executeUpdate();
+
+                if (rowCountDML == 1) {
+                    connection.commit();
+                    log.debug("User with id={} was deleted.", userId);
+                    return true;
+                } else {
+                    connection.rollback();
+                    log.debug("User with id={} was not deleted. Transaction has being rolled back", userId);
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                log.error("Cannot rollback transaction.", ex);
+            }
+            throw new DaoException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new DaoException(e);
+                }
+            }
         }
     }
 }

@@ -3,7 +3,6 @@ package by.silina.beautysalon.validator.impl;
 import by.silina.beautysalon.model.dto.OrderFeedbackDto;
 import by.silina.beautysalon.validator.OrderFeedbackDtoValidator;
 import by.silina.beautysalon.validator.OrderFeedbackValidator;
-import by.silina.beautysalon.validator.OrderFeedbackValidatorImpl;
 
 import java.util.HashMap;
 import java.util.Map;
