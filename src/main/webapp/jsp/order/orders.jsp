@@ -48,7 +48,7 @@
             sidePagination: 'server',
             showExtendedPagination: true,
             totalNotFilteredField: 'totalNotFiltered',
-            url: '${pageContext.request.contextPath}/controller?command=get_orders_for_client_json',
+            url: '${pageContext.request.contextPath}/controller?command=get_orders_for_user_json',
             columns: [{
                 field: 'id',
                 title: '<fmt:message key="table.title.id"/>'

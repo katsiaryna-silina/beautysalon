@@ -27,7 +27,7 @@ public enum CommandType {
     UPDATE_ORDER_BY_ADMIN(new UpdateOrderStatusByAdminCommand()),
     CHANGE_ORDER_STATUS(new ChangeOrderStatusCommand()),
     SHOW_CLIENT_ORDERS(new ShowClientOrdersCommand()),
-    GET_ORDERS_FOR_CLIENT_JSON(new GetClientOrdersJsonCommand()),
+    GET_ORDERS_FOR_USER_JSON(new GetUserOrdersJsonCommand()),
     UPDATE_ORDER_BY_CLIENT(new UpdateOrderStatusByClientCommand()),
     SHOW_ALL_SERVICES_BY_ADMIN(new ShowAllServicesCommand()),
     GET_ALL_SERVICES_JSON(new GetAllServicesJsonCommand()),

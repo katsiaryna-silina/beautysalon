@@ -16,12 +16,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
 
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.COMMAND;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.CURRENT_PAGE;
 
 @WebServlet(name = "controller", urlPatterns = {"/controller", "*.do"})
 public class Controller extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final String COMMAND = "command";
     private static final String CONTENT_TYPE_TEXT_HTML = "text/html";
     private static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
     private static final String CHARACTER_ENCODING = "UTF-8";

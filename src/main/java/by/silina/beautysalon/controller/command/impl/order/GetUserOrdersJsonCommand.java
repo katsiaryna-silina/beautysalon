@@ -17,7 +17,7 @@ import java.util.List;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 
-public class GetClientOrdersJsonCommand implements Command {
+public class GetUserOrdersJsonCommand implements Command {
 
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {

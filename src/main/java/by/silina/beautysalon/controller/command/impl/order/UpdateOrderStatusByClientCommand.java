@@ -32,7 +32,7 @@ public class UpdateOrderStatusByClientCommand implements Command {
         Long orderId = Long.valueOf(sessionRequestContent.getParameterByName(ID));
         String orderStatus = sessionRequestContent.getParameterByName(STATUS);
 
-        var page = UPDATE_ORDER_FORM_BY_CLIENT;
+        var page = UPDATE_ORDER_FORM_BY_USER;
         try {
             Optional<Order> orderOptional = orderService.findById(orderId);
             if (orderOptional.isPresent()) {
@@ -51,7 +51,7 @@ public class UpdateOrderStatusByClientCommand implements Command {
                 sessionRequestContent.putRequestAttribute(ORDER, orderDto);
                 sessionRequestContent.putRequestAttribute(ORDER_STATUSES, orderStatusNames);
             } else {
-                page = ALL_ORDERS_FOR_CLIENT;
+                page = ALL_ORDERS_FOR_USER;
                 sessionRequestContent.putRequestAttribute(UPDATE_ORDER_ERROR_MESSAGE, "Cannot update order with id=" + orderId);
             }
         } catch (ServiceException e) {

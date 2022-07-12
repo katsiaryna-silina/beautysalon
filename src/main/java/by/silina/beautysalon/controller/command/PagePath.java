@@ -23,8 +23,8 @@ public final class PagePath {
     public static final String UPDATE_ORDER_FORM_BY_ADMIN = "jsp/admin/update_order_form.jsp";
     public static final String ORDER_STATUS_SUCCESS_CHANGE = "jsp/order/order_status_success_change.jsp";
     public static final String ORDER_STATUS_FAILED_CHANGE = "jsp/order/order_status_failed_change.jsp";
-    public static final String ALL_ORDERS_FOR_CLIENT = "jsp/order/orders.jsp";
-    public static final String UPDATE_ORDER_FORM_BY_CLIENT = "jsp/order/update_order_form.jsp";
+    public static final String ALL_ORDERS_FOR_USER = "jsp/order/orders.jsp";
+    public static final String UPDATE_ORDER_FORM_BY_USER = "jsp/order/update_order_form.jsp";
     public static final String IMPOSSIBLE_TO_UPDATE_ORDER = "jsp/order/impossible_to_update_order.jsp";
     public static final String ALL_SERVICES_FOR_ADMIN = "jsp/admin/all_services.jsp";
     public static final String UPDATE_FEEDBACK = "jsp/update_feedback.jsp";

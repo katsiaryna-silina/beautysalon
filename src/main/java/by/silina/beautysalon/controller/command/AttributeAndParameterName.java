@@ -1,6 +1,8 @@
 package by.silina.beautysalon.controller.command;
 
 public final class AttributeAndParameterName {
+    public static final String COMMAND = "command";
+
     public static final String USER_ID = "user_id";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
