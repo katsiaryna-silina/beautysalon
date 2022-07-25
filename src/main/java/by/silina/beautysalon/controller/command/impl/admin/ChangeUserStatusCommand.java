@@ -12,13 +12,25 @@ import by.silina.beautysalon.service.impl.UserServiceImpl;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_RESULT;
 
+/**
+ * The ChangeUserStatusCommand class for change user's status command by admin.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ChangeUserStatusCommand implements Command {
 
+    /**
+     * Executes change user's status command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains page, type constant(FORWARD).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         UserService userService = UserServiceImpl.getInstance();
 
-        Long userId = Long.valueOf(sessionRequestContent.getParameterByName(USER_ID));
+        var userId = Long.valueOf(sessionRequestContent.getParameterByName(USER_ID));
         sessionRequestContent.putRequestAttribute(USER_ID, userId);
 
         String username = sessionRequestContent.getParameterByName(USERNAME);
@@ -26,7 +38,7 @@ public class ChangeUserStatusCommand implements Command {
 
         String currentUserStatusName = sessionRequestContent.getParameterByName(CURRENT_USER_STATUS_NAME);
         String newUserStatusName = sessionRequestContent.getParameterByName(NEW_USER_STATUS_NAME);
-        UserStatus newUserStatus = UserStatus.valueOf(newUserStatusName);
+        var newUserStatus = UserStatus.valueOf(newUserStatusName);
 
         if (currentUserStatusName != null && currentUserStatusName.equals(newUserStatusName)) {
             sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Picked user status is the same as current.");

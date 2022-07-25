@@ -12,13 +12,23 @@ import java.util.Set;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.ROLE;
 import static by.silina.beautysalon.controller.command.PagePath.*;
 
-//forbids direct access to the JSP and redirect to the specified page (index.jsp) if page is not allowed
+/**
+ * The PageSecurityFilter class.
+ * Forbids direct access to the jsp and redirect to the specified page (index.jsp) if page is not allowed.
+ *
+ * @author Silina Katsiaryna
+ */
 @WebFilter(urlPatterns = "/jsp/*")
-public class PageRedirectSecurityFilter implements Filter {
+public class PageSecurityFilter implements Filter {
     private Set<String> adminPages;
     private Set<String> clientPages;
     private Set<String> guestPages;
 
+    /**
+     * Initializes the filter.
+     *
+     * @param config FilterConfig. The filter config.
+     */
     @Override
     public void init(FilterConfig config) {
         adminPages = Set.of(
@@ -81,8 +91,17 @@ public class PageRedirectSecurityFilter implements Filter {
         );
     }
 
+    /**
+     * Does page security filter.
+     *
+     * @param request  ServletRequest. The servlet request.
+     * @param response ServletResponse. The servlet response.
+     * @param chain    FilterChain. The filter chain.
+     * @throws IOException      if a IOException occurs.
+     * @throws ServletException if a ServletException occurs.
+     */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         var httpServletRequest = (HttpServletRequest) request;
         var httpServletResponse = (HttpServletResponse) response;
         var session = httpServletRequest.getSession();
@@ -105,7 +124,7 @@ public class PageRedirectSecurityFilter implements Filter {
                 };
 
         if (isAllowed) {
-            filterChain.doFilter(request, response);
+            chain.doFilter(request, response);
         } else {
             httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
         }

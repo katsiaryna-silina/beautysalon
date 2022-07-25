@@ -12,13 +12,16 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The ServDaoImpl class that responsible for getting data of services from datasource.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final ServiceMapper serviceMapper = ServiceMapperImpl.getInstance();
@@ -53,21 +56,36 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
             WHERE ID = ?
             """;
 
+    /**
+     * Initializes a new ServDaoImpl.
+     */
     private ServDaoImpl() {
     }
 
+    /**
+     * Gets the single instance of ServDaoImpl.
+     *
+     * @return DiscountStatusDaoImpl
+     */
     public static ServDaoImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Finds all complex or not complex services.
+     *
+     * @param complex complex. True if needed to find complex services; false otherwise.
+     * @return List of Serv. List of services.
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public List<Serv> findServices(boolean complex) throws DaoException {
         List<Serv> complexServices = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SERVICES)) {
+        try (var connection = ConnectionPool.getInstance().getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_SERVICES)) {
 
             preparedStatement.setString(1, complex ? "Y" : "N");
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     Serv serviceFromResultSet = serviceMapper.toEntity(resultSet);
                     complexServices.add(serviceFromResultSet);
@@ -79,14 +97,21 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
         }
     }
 
+    /**
+     * Finds service by its name.
+     *
+     * @param name String. The name of service.
+     * @return Optional of Serv
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public Optional<Serv> findServiceByName(String name) throws DaoException {
         Optional<Serv> optionalService = Optional.empty();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SERVICE_BY_NAME)) {
+        try (var connection = ConnectionPool.getInstance().getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_SERVICE_BY_NAME)) {
 
             preparedStatement.setString(1, name);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     Serv serviceFromResultSet = serviceMapper.toEntity(resultSet);
                     optionalService = Optional.of(serviceFromResultSet);
@@ -98,13 +123,19 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
         }
     }
 
+    /**
+     * Finds number of services.
+     *
+     * @return long. Number of services.
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public long findNumberOfServices() throws DaoException {
         long numberOfServices = 0L;
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NUMBER_OF_SERVICES)) {
+        try (var connection = ConnectionPool.getInstance().getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_NUMBER_OF_SERVICES)) {
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     numberOfServices = resultSet.getLong(1);
                 }
@@ -115,15 +146,23 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
         return numberOfServices;
     }
 
+    /**
+     * Finds paged services.
+     *
+     * @param fromServiceId           Long. The first service to find.
+     * @param numberOfServicesPerPage Integer. Number of services.
+     * @return List of Serv. List of found services.
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public List<Serv> findPagedServiceList(Long fromServiceId, Integer numberOfServicesPerPage) throws DaoException {
         List<Serv> services = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PAGED_SERVICES)) {
+        try (var connection = ConnectionPool.getInstance().getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_PAGED_SERVICES)) {
 
             preparedStatement.setLong(1, fromServiceId);
             preparedStatement.setInt(2, numberOfServicesPerPage);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     Serv service = serviceMapper.toEntity(resultSet);
                     services.add(service);
@@ -135,6 +174,13 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
         return services;
     }
 
+    /**
+     * Updates service status to not deprecated by service id.
+     *
+     * @param id Long. The id of service.
+     * @return boolean. True if this service is updated; false otherwise.
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public boolean updateById(Long id) throws DaoException {
         Connection connection = null;
@@ -142,7 +188,7 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
             connection = ConnectionPool.getInstance().getConnection();
             connection.setAutoCommit(false);
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SERVICE_TO_NOT_DEPRECATED)) {
+            try (var preparedStatement = connection.prepareStatement(UPDATE_SERVICE_TO_NOT_DEPRECATED)) {
 
                 preparedStatement.setLong(1, id);
 
@@ -160,7 +206,9 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
             }
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                if (connection != null) {
+                    connection.rollback();
+                }
             } catch (SQLException ex) {
                 log.error("Cannot rollback transaction.", ex);
             }
@@ -177,6 +225,14 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
         }
     }
 
+    /**
+     * Updates service to deprecated status by its id.
+     * In order to delete the service from user's select.
+     *
+     * @param id Long. The id of service.
+     * @return boolean. True if this service is deleted; false otherwise.
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public boolean deleteById(Long id) throws DaoException {
         Connection connection = null;
@@ -184,7 +240,7 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
             connection = ConnectionPool.getInstance().getConnection();
             connection.setAutoCommit(false);
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SERVICE_TO_DEPRECATED)) {
+            try (var preparedStatement = connection.prepareStatement(UPDATE_SERVICE_TO_DEPRECATED)) {
 
                 preparedStatement.setLong(1, id);
 
@@ -202,7 +258,9 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
             }
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                if (connection != null) {
+                    connection.rollback();
+                }
             } catch (SQLException ex) {
                 log.error("Cannot rollback transaction.", ex);
             }
@@ -219,8 +277,14 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
         }
     }
 
+    /**
+     * Inserts a service. For this version it is unsupported method.
+     *
+     * @param serv Serv. The service to insert.
+     * @return boolean. True if this service is inserted; false otherwise.
+     */
     @Override
-    public boolean insert(Serv serv) throws DaoException {
+    public boolean insert(Serv serv) {
         throw new UnsupportedOperationException("Method insert() is unsupported.");
     }
 }

@@ -9,16 +9,36 @@ import java.util.Map;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 
+/**
+ * The UserRegistrationDtoValidatorImpl class that responsible for validation UserRegistrationDto.
+ *
+ * @author Silina Katsiaryna
+ */
 public class UserRegistrationDtoValidatorImpl implements UserRegistrationDtoValidator {
     private static final UserRegistrationDtoValidatorImpl instance = new UserRegistrationDtoValidatorImpl();
 
+    /**
+     * Initializes a new UserRegistrationDtoValidatorImpl.
+     */
     private UserRegistrationDtoValidatorImpl() {
     }
 
+
+    /**
+     * Gets the single instance of UserRegistrationDtoValidatorImpl.
+     *
+     * @return UserRegistrationDtoValidatorImpl
+     */
     public static UserRegistrationDtoValidatorImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Checks UserRegistrationDto.
+     *
+     * @param userRegistrationDto UserRegistrationDto
+     * @return Map of String. Error map.
+     */
     @Override
     public Map<String, String> checkUserRegistrationDto(UserRegistrationDto userRegistrationDto) {
         UserValidator userValidator = UserValidatorImpl.getInstance();

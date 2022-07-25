@@ -1,5 +1,10 @@
 package by.silina.beautysalon.model.dto;
 
+/**
+ * The OrderFeedbackDto class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class OrderFeedbackDto {
     private Long id;
     private byte mark;

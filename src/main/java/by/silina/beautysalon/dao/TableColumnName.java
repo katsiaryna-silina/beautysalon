@@ -1,5 +1,10 @@
 package by.silina.beautysalon.dao;
 
+/**
+ * The TableColumnName final class with column names of tables constants.
+ *
+ * @author Silina Katsiaryna
+ */
 public final class TableColumnName {
     public static final String ID = "ID";
     public static final String USERNAME = "USERNAME";
@@ -33,6 +38,9 @@ public final class TableColumnName {
     public static final String MARK = "MARK";
     public static final String IS_VERIFIED = "IS_VERIFIED";
 
+    /**
+     * Initializes a TableColumnName class.
+     */
     private TableColumnName() {
     }
 }

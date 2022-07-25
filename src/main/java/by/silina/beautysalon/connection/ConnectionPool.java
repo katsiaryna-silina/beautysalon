@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -18,6 +17,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * The ConnectionPool class is responsible for granting connection to user and returning it back to the connection pool.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ConnectionPool {
     public static final String NUMBER_OF_CONNECTIONS = "number_of_connections";
     public static final String URL = "url";
@@ -31,12 +35,15 @@ public class ConnectionPool {
     private final BlockingQueue<ProxyConnection> occupiedConnections;
     private int numberOfConnections;
 
+    /**
+     * Initializes a ConnectionPool class.
+     */
     private ConnectionPool() {
         try (InputStream dbPropertiesStream = ConnectionPool.class.getClassLoader().getResourceAsStream(DATABASE_PROPERTIES_PATH)) {
             if (dbPropertiesStream == null) {
                 throw new FileNotFoundException("Unable to find " + DATABASE_PROPERTIES_PATH);
             }
-            Properties properties = new Properties();
+            var properties = new Properties();
             properties.load(dbPropertiesStream);
 
             try {
@@ -48,13 +55,13 @@ public class ConnectionPool {
             freeConnections = new LinkedBlockingQueue<>(numberOfConnections);
             occupiedConnections = new LinkedBlockingQueue<>(numberOfConnections);
 
-            Driver driver = new com.mysql.cj.jdbc.Driver();
+            var driver = new com.mysql.cj.jdbc.Driver();
             DriverManager.registerDriver(driver);
 
-            String url = properties.getProperty(URL);
+            var url = properties.getProperty(URL);
             for (int i = 0; i < numberOfConnections; i++) {
-                Connection connection = DriverManager.getConnection(url, properties);
-                ProxyConnection proxyConnection = new ProxyConnection(connection);
+                var connection = DriverManager.getConnection(url, properties);
+                var proxyConnection = new ProxyConnection(connection);
                 freeConnections.add(proxyConnection);
             }
         } catch (SQLException | IOException e) {
@@ -63,6 +70,11 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * Gets a single instance of ConnectionPool.
+     *
+     * @return ConnectionPool
+     */
     public static ConnectionPool getInstance() {
         if (!connectionPoolInstanceExists.get()) {
             lock.lock();
@@ -79,6 +91,11 @@ public class ConnectionPool {
         return instance;
     }
 
+    /**
+     * Gets a connection from connection pool.
+     *
+     * @return Connection
+     */
     public Connection getConnection() {
         ProxyConnection proxyConnection = null;
         try {
@@ -91,6 +108,12 @@ public class ConnectionPool {
         return proxyConnection;
     }
 
+    /**
+     * Releases connection to connection pool.
+     *
+     * @param connection Connection to release.
+     * @return boolean. True if connection released; false otherwise.
+     */
     public boolean releaseConnection(Connection connection) {
         if (connection instanceof ProxyConnection proxyConnection) {
             occupiedConnections.remove(proxyConnection);
@@ -105,16 +128,22 @@ public class ConnectionPool {
         return false;
     }
 
+    /**
+     * Destroys the connection pool. Closes all connections and unregisters drivers.
+     */
     public void destroyPool() {
         closeAllConnections();
         deregisterDrivers();
         log.debug("Connection pool was destroyed.");
     }
 
+    /**
+     * Closes all connections.
+     */
     private void closeAllConnections() {
         for (int i = 0; i < numberOfConnections; i++) {
             try {
-                ProxyConnection proxyConnection = freeConnections.take();
+                var proxyConnection = freeConnections.take();
                 proxyConnection.reallyClose();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -125,6 +154,9 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * Unregisters all drivers.
+     */
     private void deregisterDrivers() {
         DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
             try {

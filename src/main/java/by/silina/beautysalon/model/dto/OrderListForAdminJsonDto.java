@@ -2,6 +2,11 @@ package by.silina.beautysalon.model.dto;
 
 import java.util.List;
 
+/**
+ * The OrderListForAdminJsonDto class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class OrderListForAdminJsonDto {
     private Long total;
     private Long totalNotFiltered;

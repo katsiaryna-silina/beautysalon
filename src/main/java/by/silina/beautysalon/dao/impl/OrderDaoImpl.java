@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,9 +22,14 @@ import java.util.Optional;
 
 import static by.silina.beautysalon.dao.TableColumnName.*;
 
+/**
+ * The OrderDaoImpl class that responsible for getting data of orders from datasource.
+ *
+ * @author Silina Katsiaryna
+ */
 public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final OrderDaoImpl instance = new OrderDaoImpl();
+    private static final OrderDaoImpl instance = new OrderDaoImpl(ConnectionPool.getInstance());
     private static final String SELECT_ORDER_ID = """
             SELECT NEXTVAL('ORDERS') AS ORDER_ID
             """;
@@ -98,32 +102,46 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
             WHERE O.USER_ID = ? AND O.ID > ? LIMIT ?
             """;
     private final OrderMapper orderMapper = OrderMapperImpl.getInstance();
+    private final ConnectionPool connectionPool;
 
-    private OrderDaoImpl() {
+    /**
+     * Initializes a new OrderDaoImpl.
+     */
+    private OrderDaoImpl(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
+    /**
+     * Gets the single instance of OrderDaoImpl.
+     *
+     * @return OrderDaoImpl
+     */
     public static OrderDaoImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Inserts an order.
+     *
+     * @param order Order. The order to insert.
+     * @return boolean. True if this order is inserted; false otherwise.
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public boolean insert(Order order) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
             Long orderId = null;
-            Long userId = order.getUser().getId();
-            Long feedbackId = null;
+            try (var selectOrderId = connection.prepareStatement(SELECT_ORDER_ID);
+                 var insertFeedback = connection.prepareStatement(INSERT_FEEDBACK);
+                 var insertOrder = connection.prepareStatement(INSERT_ORDER);
+                 var insertOrdersServices = connection.prepareStatement(INSERT_ORDERS_SERVICES);
+                 var insertOrdersVisitTimes = connection.prepareStatement(INSERT_ORDERS_VISIT_TIMES)) {
 
-            try (PreparedStatement selectOrderId = connection.prepareStatement(SELECT_ORDER_ID);
-                 PreparedStatement insertFeedback = connection.prepareStatement(INSERT_FEEDBACK);
-                 PreparedStatement insertOrder = connection.prepareStatement(INSERT_ORDER);
-                 PreparedStatement insertOrdersServices = connection.prepareStatement(INSERT_ORDERS_SERVICES);
-                 PreparedStatement insertOrdersVisitTimes = connection.prepareStatement(INSERT_ORDERS_VISIT_TIMES)) {
-
-                try (ResultSet resultSet = selectOrderId.executeQuery()) {
+                try (var resultSet = selectOrderId.executeQuery()) {
                     if (resultSet.next()) {
                         orderId = resultSet.getLong(ORDER_ID);
                     }
@@ -132,7 +150,8 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
                 if (orderId == null) {
                     throw new DaoException("Cannot get new order id.");
                 }
-                feedbackId = orderId;
+                var feedbackId = orderId;
+                var userId = order.getUser().getId();
 
                 insertFeedback.setLong(1, feedbackId);
                 insertFeedback.setLong(2, userId);
@@ -191,7 +210,9 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
             return true;
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                if (connection != null) {
+                    connection.rollback();
+                }
             } catch (SQLException ex) {
                 log.error("Cannot rollback transaction.", ex);
             }
@@ -208,14 +229,21 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
         }
     }
 
+    /**
+     * Finds an order by order id.
+     *
+     * @param orderId Long. The order id.
+     * @return Optional of Order
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public Optional<Order> findById(Long orderId) throws DaoException {
         Optional<Order> orderOptional = Optional.empty();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ORDER_BY_ID)) {
+        try (var connection = connectionPool.getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_ORDER_BY_ID)) {
 
             preparedStatement.setLong(1, orderId);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 Order order = null;
                 while (resultSet.next()) {
                     if (order == null) {
@@ -237,14 +265,19 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
         return orderOptional;
     }
 
-
+    /**
+     * Finds number of all orders.
+     *
+     * @return long. Number of orders.
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public long findNumberOfOrders() throws DaoException {
         long numberOfOrders = 0L;
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NUMBER_OF_ORDERS)) {
+        try (var connection = connectionPool.getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_NUMBER_OF_ORDERS)) {
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     numberOfOrders = resultSet.getLong(1);
                 }
@@ -255,15 +288,22 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
         return numberOfOrders;
     }
 
+    /**
+     * Finds number of user's orders by user id.
+     *
+     * @param userId Long. The user id.
+     * @return long. Number of orders.
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public long findNumberOfOrders(Long userId) throws DaoException {
         long numberOfOrders = 0L;
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NUMBER_OF_USER_ORDERS)) {
+        try (var connection = connectionPool.getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_NUMBER_OF_USER_ORDERS)) {
 
             preparedStatement.setLong(1, userId);
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     numberOfOrders = resultSet.getLong(1);
                 }
@@ -274,15 +314,23 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
         return numberOfOrders;
     }
 
+    /**
+     * Finds paged orders.
+     *
+     * @param fromOrderId    Long. The first order to find.
+     * @param numberOfOrders Integer. Number of orders.
+     * @return List of Order
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public List<Order> findPagedOrders(Long fromOrderId, Integer numberOfOrders) throws DaoException {
         List<Order> orders = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PAGED_ORDERS)) {
+        try (var connection = connectionPool.getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_PAGED_ORDERS)) {
 
             preparedStatement.setLong(1, fromOrderId);
             preparedStatement.setInt(2, numberOfOrders);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 long orderId = 0;
                 Order order = null;
                 while (resultSet.next()) {
@@ -307,11 +355,20 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
         return orders;
     }
 
+    /**
+     * Finds paged orders of user.
+     *
+     * @param fromOrderId    Long. The first order to find.
+     * @param numberOfOrders Integer. Number of orders.
+     * @param userId         Long. Number of orders.
+     * @return List of Order
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public List<Order> findPagedOrders(Long fromOrderId, Integer numberOfOrders, Long userId) throws DaoException {
         List<Order> orders = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PAGED_ORDERS_FOR_USER)) {
+        try (var connection = connectionPool.getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_PAGED_ORDERS_FOR_USER)) {
 
             preparedStatement.setLong(1, userId);
             preparedStatement.setLong(2, fromOrderId);
@@ -341,14 +398,22 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
         return orders;
     }
 
+    /**
+     * Changes status of the order.
+     *
+     * @param orderId    Long. The id of order.
+     * @param statusName String. Change to this status name.
+     * @return boolean. True if this status is changed; false otherwise.
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public boolean changeStatus(Long orderId, String statusName) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS)) {
+            try (var preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS)) {
                 preparedStatement.setString(1, statusName);
                 preparedStatement.setLong(2, orderId);
 
@@ -366,7 +431,9 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
             }
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                if (connection != null) {
+                    connection.rollback();
+                }
             } catch (SQLException ex) {
                 log.error("Cannot rollback transaction.", ex);
             }

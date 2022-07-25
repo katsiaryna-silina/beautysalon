@@ -1,5 +1,10 @@
 package by.silina.beautysalon.controller.command;
 
+/**
+ * The PagePath class is responsible for store page path constants.
+ *
+ * @author Silina Katsiaryna
+ */
 public final class PagePath {
     public static final String INDEX = "index.jsp";
     public static final String LOGIN = "jsp/login.jsp";
@@ -32,6 +37,9 @@ public final class PagePath {
     public static final String UPDATE_FEEDBACK_FAILED = "jsp/update_feedback_failed.jsp";
     public static final String DELETE_USER_RESULT = "jsp/delete_user_result.jsp";
 
+    /**
+     * Initializes a new PagePath class.
+     */
     private PagePath() {
     }
 }

@@ -2,6 +2,11 @@ package by.silina.beautysalon.model.entity;
 
 import java.util.Objects;
 
+/**
+ * The AbstractEntity class.
+ *
+ * @author Silina Katsiaryna
+ */
 public abstract class AbstractEntity {
     private Long id;
 

@@ -2,6 +2,11 @@ package by.silina.beautysalon.model.entity;
 
 import java.time.LocalTime;
 
+/**
+ * The VisitTime class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class VisitTime extends AbstractEntity {
     private LocalTime beginTime;
     private LocalTime endTime;

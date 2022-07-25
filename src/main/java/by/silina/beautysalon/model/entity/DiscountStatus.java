@@ -2,6 +2,11 @@ package by.silina.beautysalon.model.entity;
 
 import java.math.BigDecimal;
 
+/**
+ * The DiscountStatus class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class DiscountStatus extends AbstractEntity {
     private String status;
     private BigDecimal discount;

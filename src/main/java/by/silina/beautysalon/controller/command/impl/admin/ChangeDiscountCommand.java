@@ -11,13 +11,25 @@ import by.silina.beautysalon.service.impl.UserServiceImpl;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_RESULT;
 
+/**
+ * The ChangeDiscountCommand class for change user's discount command by admin.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ChangeDiscountCommand implements Command {
 
+    /**
+     * Executes change discount command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains page, type constant(FORWARD).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         UserService userService = UserServiceImpl.getInstance();
 
-        Long userId = Long.valueOf(sessionRequestContent.getParameterByName(USER_ID));
+        var userId = Long.valueOf(sessionRequestContent.getParameterByName(USER_ID));
         sessionRequestContent.putRequestAttribute(USER_ID, userId);
 
         String username = sessionRequestContent.getParameterByName(USERNAME);

@@ -6,12 +6,22 @@ import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The SessionRequestContent class for session attributes, request parameters and attributes.
+ *
+ * @author Silina Katsiaryna
+ */
 public class SessionRequestContent {
     private final Map<String, Object> requestAttributes = new HashMap<>();
     private final Map<String, String[]> requestParameters = new HashMap<>();
     private final Map<String, Object> sessionAttributes = new HashMap<>();
     private boolean isSessionInvalid;
 
+    /**
+     * Initializes a new session request content.
+     *
+     * @param request the request
+     */
     public SessionRequestContent(HttpServletRequest request) {
         request.getAttributeNames()
                 .asIterator()
@@ -30,18 +40,23 @@ public class SessionRequestContent {
         }
     }
 
-    public Map<String, Object> getSessionAttributes() {
-        return sessionAttributes;
-    }
-
+    /**
+     * Invalidates the session.
+     */
     public void invalidateSession() {
         isSessionInvalid = true;
     }
 
+
+    /**
+     * Inserts request attributes.
+     *
+     * @param request the request
+     */
     public void insertRequestAttributes(HttpServletRequest request) {
         requestAttributes.forEach(request::setAttribute);
 
-        HttpSession session = request.getSession(false);
+        var session = request.getSession(false);
         if (session != null) {
             sessionAttributes.forEach(session::setAttribute);
         }
@@ -50,27 +65,55 @@ public class SessionRequestContent {
         }
     }
 
+    /**
+     * Gets request parameter by name.
+     *
+     * @param parameterName String. The name of request parameter.
+     * @return String
+     */
     public String getParameterByName(String parameterName) {
         String[] parameters = requestParameters.get(parameterName);
         return (parameters == null || parameters.length == 0) ? null : parameters[0];
     }
 
+    /**
+     * Gets request parameters by name.
+     *
+     * @param parameterName String. The name of request parameters.
+     * @return String[]
+     */
     public String[] getParametersByName(String parameterName) {
         return requestParameters.get(parameterName);
     }
 
-    public Object getRequestAttributeByName(String attributeName) {
-        return requestAttributes.get(attributeName);
-    }
-
+    /**
+     * Puts request attribute.
+     *
+     * @param attributeName String. The name of request attribute.
+     * @param object        Object. The parameter.
+     * @return Object
+     */
     public Object putRequestAttribute(String attributeName, Object object) {
         return requestAttributes.put(attributeName, object);
     }
 
+    /**
+     * Gets session attribute by name.
+     *
+     * @param sessionAttributeName String. The name of session attribute.
+     * @return Object
+     */
     public Object getSessionAttributeByName(String sessionAttributeName) {
         return sessionAttributes.get(sessionAttributeName);
     }
 
+    /**
+     * Puts session attribute.
+     *
+     * @param sessionAttributeName String. The name of session attribute.
+     * @param object               Object. The attribute.
+     * @return Object
+     */
     public Object putSessionAttribute(String sessionAttributeName, Object object) {
         return sessionAttributes.put(sessionAttributeName, object);
     }

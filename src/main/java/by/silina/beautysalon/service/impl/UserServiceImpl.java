@@ -15,7 +15,6 @@ import by.silina.beautysalon.model.entity.UserStatus;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.util.PasswordEncoder;
 import by.silina.beautysalon.validator.UserPasswordsDtoValidator;
-import by.silina.beautysalon.validator.UserRegistrationDtoValidator;
 import by.silina.beautysalon.validator.UserValidator;
 import by.silina.beautysalon.validator.impl.UserPasswordsDtoValidatorImpl;
 import by.silina.beautysalon.validator.impl.UserRegistrationDtoValidatorImpl;
@@ -27,19 +26,39 @@ import java.util.Optional;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 
+/**
+ * The UserServiceImpl class that responsible for processing User.
+ *
+ * @author Silina Katsiaryna
+ */
 public class UserServiceImpl implements UserService {
     private static final UserServiceImpl instance = new UserServiceImpl();
     private final UserValidator userValidator = UserValidatorImpl.getInstance();
     private final UserDaoImpl userDao = UserDaoImpl.getInstance();
     private final UserMapper userMapper = UserMapperImpl.getInstance();
 
+    /**
+     * Initializes a new UserServiceImpl.
+     */
     private UserServiceImpl() {
     }
 
+    /**
+     * Gets the single instance of UserServiceImpl.
+     *
+     * @return UserServiceImpl
+     */
     public static UserServiceImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Finds a user using data from dto.
+     *
+     * @param userLoginDto UserLoginDto
+     * @return Optional of User
+     * @throws ServiceException if a service exception occurs.
+     */
     public Optional<User> findUser(UserLoginDto userLoginDto) throws ServiceException {
         Optional<User> optionalUser = Optional.empty();
 
@@ -63,6 +82,13 @@ public class UserServiceImpl implements UserService {
         return optionalUser;
     }
 
+    /**
+     * Finds a user by username.
+     *
+     * @param username String
+     * @return Optional of User
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public Optional<User> findUser(String username) throws ServiceException {
         try {
@@ -72,9 +98,16 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Adds a new user using data from dto.
+     *
+     * @param userRegistrationDto UserRegistrationDto
+     * @return Map of Strings
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public Map<String, String> addUser(UserRegistrationDto userRegistrationDto) throws ServiceException {
-        UserRegistrationDtoValidator userRegistrationDtoValidator = UserRegistrationDtoValidatorImpl.getInstance();
+        var userRegistrationDtoValidator = UserRegistrationDtoValidatorImpl.getInstance();
         Map<String, String> errorMap = userRegistrationDtoValidator.checkUserRegistrationDto(userRegistrationDto);
 
         if (errorMap.isEmpty()) {
@@ -109,6 +142,13 @@ public class UserServiceImpl implements UserService {
         return errorMap;
     }
 
+    /**
+     * Changes password using data from dto.
+     *
+     * @param userPasswordsDto UserPasswordsDto
+     * @return Map of Strings
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public Map<String, String> changePassword(UserPasswordsDto userPasswordsDto) throws ServiceException {
         UserPasswordsDtoValidator userPasswordsDtoValidator = UserPasswordsDtoValidatorImpl.getInstance();
@@ -139,6 +179,12 @@ public class UserServiceImpl implements UserService {
         return errorMap;
     }
 
+    /**
+     * Finds number of users.
+     *
+     * @return long. Number of users.
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public long findNumberOfUsers() throws ServiceException {
         try {
@@ -148,6 +194,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Finds paged users.
+     *
+     * @param fromUserId    Long. The first user to find.
+     * @param numberOfUsers Integer. Number of users.
+     * @return List of UserAuthorizedDto
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public List<UserAuthorizedDto> findPagedUserDtoList(Long fromUserId, Integer numberOfUsers) throws ServiceException {
         List<User> pagedUsers;
@@ -161,6 +215,14 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    /**
+     * Changes user's discount.
+     *
+     * @param userId             Long. User id.
+     * @param discountStatusName String. Name of new discount status.
+     * @return boolean. True if discount is changed; false otherwise.
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public boolean changeDiscount(Long userId, String discountStatusName) throws ServiceException {
         try {
@@ -170,6 +232,15 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Changes user's discount and role.
+     *
+     * @param userId             Long. User id.
+     * @param role               Role. New user's role.
+     * @param discountStatusName String. Name of new discount status.
+     * @return boolean. True if discount is changed; false otherwise.
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public boolean changeUserRoleAndDiscount(Long userId, Role role, String discountStatusName) throws ServiceException {
         try {
@@ -179,6 +250,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Changes user's status.
+     *
+     * @param userId     Long. User id.
+     * @param userStatus UserStatus. New user status.
+     * @return boolean. True if discount is changed; false otherwise.
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public boolean changeUserStatus(Long userId, UserStatus userStatus) throws ServiceException {
         try {
@@ -188,6 +267,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Deletes user by id.
+     *
+     * @param id Long. User id.
+     * @return boolean. True if user is deleted; false otherwise.
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public boolean deleteUser(Long id) throws ServiceException {
         try {

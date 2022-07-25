@@ -12,9 +12,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,18 +29,37 @@ import static by.silina.beautysalon.dao.TableColumnName.STATUS;
 import static by.silina.beautysalon.dao.TableColumnName.USERNAME;
 import static by.silina.beautysalon.dao.TableColumnName.*;
 
+/**
+ * The OrderMapperImpl class responsible for mapping Order.
+ *
+ * @author Silina Katsiaryna
+ */
 public class OrderMapperImpl implements OrderMapper {
     public static final String DIGITS_REGEX = "\\d+";
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final OrderMapperImpl instance = new OrderMapperImpl();
 
+    /**
+     * Initializes a new OrderMapperImpl.
+     */
     private OrderMapperImpl() {
     }
 
+    /**
+     * Gets the single instance of OrderMapperImpl.
+     *
+     * @return OrderMapperImpl
+     */
     public static OrderMapperImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Maps passed Order entity to OrderForClientDto.
+     *
+     * @param order Order
+     * @return OrderForClientDto
+     */
     @Override
     public OrderForClientDto toOrderForClientDto(Order order) {
         List<String> serviceNames = order.getServices().stream()
@@ -61,6 +78,12 @@ public class OrderMapperImpl implements OrderMapper {
                 .build();
     }
 
+    /**
+     * Maps passed Order entity to OrderForAdminDto.
+     *
+     * @param order Order
+     * @return OrderForAdminDto
+     */
     @Override
     public OrderForAdminDto toOrderForAdminDto(Order order) {
         List<String> serviceNames = order.getServices().stream()
@@ -84,6 +107,12 @@ public class OrderMapperImpl implements OrderMapper {
                 .build();
     }
 
+    /**
+     * Maps passed OrderFormDto to Order entity.
+     *
+     * @param orderFormDto OrderFormDto
+     * @return Order
+     */
     @Override
     public Order toEntity(OrderFormDto orderFormDto) {
         List<Serv> services = new ArrayList<>();
@@ -107,11 +136,17 @@ public class OrderMapperImpl implements OrderMapper {
                 .build();
     }
 
+    /**
+     * Maps passed ResultSet to Order entity.
+     *
+     * @param resultSet ResultSet
+     * @return Order
+     * @throws SQLException if a sql exception occurs.
+     */
     @Override
     public Order toEntity(ResultSet resultSet) throws SQLException {
-        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
-        String orderDateTimeString = resultSet.getString(ORDER_DATE_TIME);
-        LocalDateTime orderDateTime = LocalDateTime.parse(orderDateTimeString, dateTimeFormat);
+        var orderDateTimeString = resultSet.getTimestamp(ORDER_DATE_TIME);
+        var orderDateTime = orderDateTimeString.toLocalDateTime();
 
         List<Serv> services = new ArrayList<>();
         services.add(Serv.builder()
@@ -121,9 +156,9 @@ public class OrderMapperImpl implements OrderMapper {
         return Order.builder()
                 .id(resultSet.getLong(ID))
                 .orderDateTime(orderDateTime)
-                .visitDate(LocalDate.parse(resultSet.getString(VISIT_DATE)))
-                .visitBeginTime(LocalTime.parse(resultSet.getString(VISIT_BEGIN_TIME)))
-                .visitEndTime(LocalTime.parse(resultSet.getString(VISIT_END_TIME)))
+                .visitDate(resultSet.getDate(VISIT_DATE).toLocalDate())
+                .visitBeginTime(resultSet.getTime(VISIT_BEGIN_TIME).toLocalTime())
+                .visitEndTime(resultSet.getTime(VISIT_END_TIME).toLocalTime())
                 .services(services)
                 .priceWithDiscount(resultSet.getBigDecimal(TableColumnName.PRICE_WITH_DISCOUNT))
                 .user(User.builder()
@@ -140,6 +175,12 @@ public class OrderMapperImpl implements OrderMapper {
                 .build();
     }
 
+    /**
+     * Maps passed SessionRequestContent to OrderFormDto.
+     *
+     * @param sessionRequestContent SessionRequestContent
+     * @return OrderFormDto
+     */
     @Override
     public OrderFormDto toOrderFormDto(SessionRequestContent sessionRequestContent) {
         var servicesIdsString = sessionRequestContent.getParameterByName(SERVICES_IDS);
@@ -159,6 +200,12 @@ public class OrderMapperImpl implements OrderMapper {
                 .build();
     }
 
+    /**
+     * Gets ids from String.
+     *
+     * @param visitTimeIdsString String
+     * @return List of Long. Ids.
+     */
     private List<Long> getIds(String visitTimeIdsString) {
         List<Long> ids = new ArrayList<>();
 
@@ -166,7 +213,7 @@ public class OrderMapperImpl implements OrderMapper {
         Matcher matcher = integerPattern.matcher(visitTimeIdsString);
 
         while (matcher.find()) {
-            Long id = Long.valueOf(matcher.group());
+            var id = Long.valueOf(matcher.group());
             ids.add(id);
         }
         return ids;

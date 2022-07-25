@@ -1,5 +1,10 @@
 package by.silina.beautysalon.model.dto;
 
+/**
+ * The UserRegistrationDto class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class UserRegistrationDto {
     private String username;
     private String password;

@@ -2,6 +2,11 @@ package by.silina.beautysalon.model.entity;
 
 import java.time.LocalDateTime;
 
+/**
+ * The User class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class User extends AbstractEntity {
     private String username;
     private String password;

@@ -15,8 +15,20 @@ import java.util.Map;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 import static by.silina.beautysalon.controller.command.PagePath.*;
 
+/**
+ * The UpdateFeedbackCommand class for update feedback command.
+ *
+ * @author Silina Katsiaryna
+ */
 public class UpdateFeedbackCommand implements Command {
 
+    /**
+     * Executes update feedback command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains page, type constant(FORWARD).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         OrderFeedbackService feedbackService = OrderFeedbackServiceImpl.getInstance();
@@ -49,6 +61,12 @@ public class UpdateFeedbackCommand implements Command {
         return new Router(page, Router.Type.FORWARD);
     }
 
+    /**
+     * Fills request attributes.
+     *
+     * @param errorMap              Map. Contains data of errors.
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     */
     private void fillRequestAttributesFrom(Map<String, String> errorMap, SessionRequestContent sessionRequestContent) {
         errorMap.forEach(sessionRequestContent::putRequestAttribute);
     }

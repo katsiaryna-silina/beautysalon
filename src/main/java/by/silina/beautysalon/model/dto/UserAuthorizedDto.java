@@ -6,6 +6,11 @@ import by.silina.beautysalon.model.entity.UserStatus;
 
 import java.time.LocalDateTime;
 
+/**
+ * The UserAuthorizedDto class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class UserAuthorizedDto {
     private Long id;
     private String username;

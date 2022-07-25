@@ -17,8 +17,20 @@ import java.util.List;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.LIMIT;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.OFFSET;
 
+/**
+ * The GetAllServicesJsonCommand class for getting all services json command by admin.
+ *
+ * @author Silina Katsiaryna
+ */
 public class GetAllServicesJsonCommand implements Command {
 
+    /**
+     * Executes get all services json command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains jsonElement, type constant(JSON).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         ServService servService = ServServiceImpl.getInstance();
@@ -27,8 +39,8 @@ public class GetAllServicesJsonCommand implements Command {
         try {
             long numberOfServices = servService.findNumberOfServices();
             if (numberOfServices != 0L) {
-                Integer numberOfServicesPerPage = Integer.valueOf(sessionRequestContent.getParameterByName(LIMIT));
-                Long fromServiceId = Long.valueOf(sessionRequestContent.getParameterByName(OFFSET));
+                var numberOfServicesPerPage = Integer.valueOf(sessionRequestContent.getParameterByName(LIMIT));
+                var fromServiceId = Long.valueOf(sessionRequestContent.getParameterByName(OFFSET));
                 List<ServiceDto> pagedServiceDtoList = servService.findPagedServiceDtoList(fromServiceId, numberOfServicesPerPage);
 
                 ServiceListJsonDto serviceListJsonDto = ServiceListJsonDto.builder()

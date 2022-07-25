@@ -1,5 +1,10 @@
 package by.silina.beautysalon.model.entity;
 
+/**
+ * The OrderFeedback class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class OrderFeedback extends AbstractEntity {
     private byte mark;
     private String feedback;

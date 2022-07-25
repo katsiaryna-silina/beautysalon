@@ -15,14 +15,25 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
 import static by.silina.beautysalon.controller.command.CommandType.*;
 import static by.silina.beautysalon.controller.command.PagePath.INDEX;
 
+/**
+ * The ServletSecurityFilter class.
+ * Limits available commands depending on the role.
+ *
+ * @author Silina Katsiaryna
+ */
 @WebFilter(urlPatterns = "/controller", servletNames = "controller")
 public class ServletSecurityFilter implements Filter {
     private Set<CommandType> adminCommandSet;
     private Set<CommandType> clientCommandSet;
     private Set<CommandType> guestCommandSet;
 
+    /**
+     * Initializes the filter.
+     *
+     * @param config FilterConfig. The filter config.
+     */
     @Override
-    public void init(FilterConfig filterConfig) {
+    public void init(FilterConfig config) {
         adminCommandSet = Set.of(
                 LOGOUT,
                 CHANGE_PASSWORD,
@@ -41,7 +52,7 @@ public class ServletSecurityFilter implements Filter {
                 GET_ORDERS_FOR_ADMIN_JSON,
                 UPDATE_ORDER_BY_ADMIN,
                 CHANGE_ORDER_STATUS,
-                SHOW_CLIENT_ORDERS,
+                SHOW_USER_ORDERS,
                 GET_ORDERS_FOR_USER_JSON,
                 SHOW_ALL_SERVICES_BY_ADMIN,
                 GET_ALL_SERVICES_JSON,
@@ -62,7 +73,7 @@ public class ServletSecurityFilter implements Filter {
                 SHOW_NEW_ORDER_DATA,
                 CREATE_NEW_ORDER,
                 CHANGE_ORDER_STATUS,
-                SHOW_CLIENT_ORDERS,
+                SHOW_USER_ORDERS,
                 GET_ORDERS_FOR_USER_JSON,
                 UPDATE_ORDER_BY_CLIENT,
                 SHOW_FEEDBACK,
@@ -80,8 +91,17 @@ public class ServletSecurityFilter implements Filter {
         );
     }
 
+    /**
+     * Does servlet security filter.
+     *
+     * @param request  ServletRequest. The servlet request.
+     * @param response ServletResponse. The servlet response.
+     * @param chain    FilterChain. The filter chain.
+     * @throws IOException      if a IOException occurs.
+     * @throws ServletException if a ServletException occurs.
+     */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         var httpServletRequest = (HttpServletRequest) request;
         var httpServletResponse = (HttpServletResponse) response;
         var session = httpServletRequest.getSession();
@@ -89,6 +109,7 @@ public class ServletSecurityFilter implements Filter {
         var commandName = httpServletRequest.getParameter(COMMAND);
         if (commandName == null) {
             httpServletResponse.sendRedirect(INDEX);
+            return;
         }
 
         var commandType = valueOf(commandName.toUpperCase());
@@ -109,7 +130,7 @@ public class ServletSecurityFilter implements Filter {
                 };
 
         if (isAllowed) {
-            filterChain.doFilter(request, response);
+            chain.doFilter(request, response);
         } else {
             httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
         }

@@ -29,7 +29,7 @@
             </br>
             <a><fmt:message key="description.feedback.update.failed"/></a>
             <hr/>
-            <a href="${pageContext.request.contextPath}/controller?command=show_client_orders">
+            <a href="${pageContext.request.contextPath}/controller?command=show_user_orders">
                 <fmt:message key="button.back.to.order.list"/>
             </a>
         </div>

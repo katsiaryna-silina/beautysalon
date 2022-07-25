@@ -11,9 +11,21 @@ import java.lang.invoke.MethodHandles;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 
+/**
+ * The ChangeLocaleCommand class for change locale command.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ChangeLocaleCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    /**
+     * Executes  change locale command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains page, type constant(FORWARD).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         var sessionLocale = (String) sessionRequestContent.getSessionAttributeByName(LOCALE);

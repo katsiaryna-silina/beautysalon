@@ -6,6 +6,11 @@ import by.silina.beautysalon.controller.command.impl.order.*;
 
 import java.util.Arrays;
 
+/**
+ * The CommandType enum is responsible for store command constants.
+ *
+ * @author Silina Katsiaryna
+ */
 public enum CommandType {
     REGISTRATION(new RegistrationCommand()),
     LOGIN(new LoginCommand()),
@@ -26,7 +31,7 @@ public enum CommandType {
     GET_ORDERS_FOR_ADMIN_JSON(new GetAllOrdersJsonCommand()),
     UPDATE_ORDER_BY_ADMIN(new UpdateOrderStatusByAdminCommand()),
     CHANGE_ORDER_STATUS(new ChangeOrderStatusCommand()),
-    SHOW_CLIENT_ORDERS(new ShowClientOrdersCommand()),
+    SHOW_USER_ORDERS(new ShowUserOrdersCommand()),
     GET_ORDERS_FOR_USER_JSON(new GetUserOrdersJsonCommand()),
     UPDATE_ORDER_BY_CLIENT(new UpdateOrderStatusByClientCommand()),
     SHOW_ALL_SERVICES_BY_ADMIN(new ShowAllServicesCommand()),
@@ -41,14 +46,25 @@ public enum CommandType {
 
     private final Command command;
 
+    /**
+     * Initializes a new command type.
+     *
+     * @param command Command
+     */
     CommandType(Command command) {
         this.command = command;
     }
 
-    public static Command of(String commandStr) {
-        if (commandStr != null) {
-            String commandTypeName = commandStr.toUpperCase();
-            CommandType commandType = Arrays.stream(values())
+    /**
+     * Gets the command by its name.
+     *
+     * @param commandString String. Command name.
+     * @return Command
+     */
+    public static Command of(String commandString) {
+        if (commandString != null) {
+            var commandTypeName = commandString.toUpperCase();
+            var commandType = Arrays.stream(values())
                     .filter(el -> el.name().equals(commandTypeName))
                     .findFirst().orElse(DEFAULT);
             return commandType.command;

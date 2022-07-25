@@ -12,8 +12,20 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
 import static by.silina.beautysalon.controller.command.PagePath.UPDATE_FEEDBACK;
 import static by.silina.beautysalon.controller.command.PagePath.UPDATE_FEEDBACK_FAILED;
 
+/**
+ * The ShowFeedbackCommand class for show feedback command.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ShowFeedbackCommand implements Command {
 
+    /**
+     * Executes show feedback command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains page, type constant(FORWARD).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         OrderFeedbackService feedbackService = OrderFeedbackServiceImpl.getInstance();

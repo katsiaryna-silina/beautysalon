@@ -13,31 +13,45 @@ import by.silina.beautysalon.service.impl.UserServiceImpl;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_RESULT;
+import static by.silina.beautysalon.model.entity.Role.ADMIN;
+import static by.silina.beautysalon.model.entity.Role.CLIENT;
 
+/**
+ * The ChangeUserRoleCommand class for change user's role command by admin.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ChangeUserRoleCommand implements Command {
 
+    /**
+     * Executes change role command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains page, type constant(FORWARD).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         UserService userService = UserServiceImpl.getInstance();
         DiscountStatusService discountStatusService = DiscountStatusServiceImpl.getInstance();
 
-        Long userId = Long.valueOf(sessionRequestContent.getParameterByName(USER_ID));
+        var userId = Long.valueOf(sessionRequestContent.getParameterByName(USER_ID));
         sessionRequestContent.putRequestAttribute(USER_ID, userId);
 
         String username = sessionRequestContent.getParameterByName(USERNAME);
         sessionRequestContent.putRequestAttribute(USERNAME, username);
 
-        Role currentRole = Role.valueOf(sessionRequestContent.getParameterByName(CURRENT_ROLE_NAME));
-        Role newRole = Role.valueOf(sessionRequestContent.getParameterByName(NEW_ROLE_NAME));
+        var currentRole = Role.valueOf(sessionRequestContent.getParameterByName(CURRENT_ROLE_NAME));
+        var newRole = Role.valueOf(sessionRequestContent.getParameterByName(NEW_ROLE_NAME));
 
         if (newRole.equals(currentRole)) {
             sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Picked role is the same as current.");
-        } else if (Role.CLIENT.equals(currentRole) && Role.ADMIN.equals(newRole)) {
+        } else if (CLIENT.equals(currentRole) && ADMIN.equals(newRole)) {
             try {
                 var maximumDiscountOptional = discountStatusService.findMaximum();
                 if (maximumDiscountOptional.isPresent()) {
                     var discountStatusName = maximumDiscountOptional.get().getStatus();
-                    if (userService.changeUserRoleAndDiscount(userId, Role.ADMIN, discountStatusName)) {
+                    if (userService.changeUserRoleAndDiscount(userId, ADMIN, discountStatusName)) {
                         sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "User's role has changed on \"admin\"");
                     }
                 }

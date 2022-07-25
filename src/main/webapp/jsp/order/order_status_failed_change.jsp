@@ -36,7 +36,7 @@
             </a>
         </c:when>
         <c:when test="${role == 'CLIENT'}">
-            <a href="${pageContext.request.contextPath}/controller?command=show_client_orders">
+            <a href="${pageContext.request.contextPath}/controller?command=show_user_orders">
                 <fmt:message key="button.back.to.order.list"/>
             </a>
         </c:when>

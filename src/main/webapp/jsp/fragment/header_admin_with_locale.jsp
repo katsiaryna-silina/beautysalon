@@ -42,7 +42,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link"
-                   href="${pageContext.request.contextPath}/controller?command=show_client_orders">
+                   href="${pageContext.request.contextPath}/controller?command=show_user_orders">
                     <fmt:message key="header.orders"/>
                 </a>
             </li>

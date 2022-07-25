@@ -51,8 +51,7 @@
                 formatter: 'dateFormatter'
             }, {
                 field: 'visitDate.value',
-                title: '<fmt:message key="table.title.visit.date"/>',
-                formatter: 'dateFormatter'
+                title: '<fmt:message key="table.title.visit.date"/>'
             }, {
                 field: 'visitBeginTime.value',
                 title: '<fmt:message key="table.title.visit.time.begin"/>'

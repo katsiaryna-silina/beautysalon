@@ -18,8 +18,20 @@ import java.util.List;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.LIMIT;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.OFFSET;
 
+/**
+ * The GetUsersJsonCommand class for getting users json command by admin.
+ *
+ * @author Silina Katsiaryna
+ */
 public class GetUsersJsonCommand implements Command {
 
+    /**
+     * Executes get users json command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains jsonElement, type constant(JSON).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         UserService userService = UserServiceImpl.getInstance();
@@ -28,8 +40,8 @@ public class GetUsersJsonCommand implements Command {
         try {
             long numberOfUsers = userService.findNumberOfUsers();
             if (numberOfUsers != 0L) {
-                Integer numberOfUsersPerPage = Integer.valueOf(sessionRequestContent.getParameterByName(LIMIT));
-                Long fromUserId = Long.valueOf(sessionRequestContent.getParameterByName(OFFSET));
+                var numberOfUsersPerPage = Integer.valueOf(sessionRequestContent.getParameterByName(LIMIT));
+                var fromUserId = Long.valueOf(sessionRequestContent.getParameterByName(OFFSET));
                 List<UserAuthorizedDto> pagedUserDtoList = userService.findPagedUserDtoList(fromUserId, numberOfUsersPerPage);
 
                 UserListJsonDto userListJsonDto = UserListJsonDto.builder()

@@ -1,5 +1,10 @@
 package by.silina.beautysalon.model.entity;
 
+/**
+ * The OrderStatus class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class OrderStatus extends AbstractEntity {
     private String status;
     private String description;

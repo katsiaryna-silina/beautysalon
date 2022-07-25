@@ -19,6 +19,11 @@ import java.lang.invoke.MethodHandles;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.COMMAND;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.CURRENT_PAGE;
 
+/**
+ * The Controller class.
+ *
+ * @author Silina Katsiaryna
+ */
 @WebServlet(name = "controller", urlPatterns = {"/controller", "*.do"})
 public class Controller extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -27,16 +32,40 @@ public class Controller extends HttpServlet {
     private static final String CHARACTER_ENCODING = "UTF-8";
     private static final String WRONG_ROUTER_TYPE = "Wrong Router type.";
 
+    /**
+     * Does get.
+     *
+     * @param request  HttpServletRequest. The http servlet request.
+     * @param response HttpServletResponse. The http servlet response.
+     * @throws ServletException if a ServletException exception occurs.
+     * @throws IOException      if a IOException exception occurs.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processCommand(request, response);
     }
 
+    /**
+     * Does post.
+     *
+     * @param request  HttpServletRequest. The http servlet request.
+     * @param response HttpServletResponse. The http servlet response.
+     * @throws ServletException if a ServletException exception occurs.
+     * @throws IOException      if a IOException exception occurs.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processCommand(request, response);
     }
 
+    /**
+     * Processes command.
+     *
+     * @param request  HttpServletRequest. The http servlet request.
+     * @param response HttpServletResponse. The http servlet response.
+     * @throws ServletException if a ServletException exception occurs.
+     * @throws IOException      if a IOException exception occurs.
+     */
     private void processCommand(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(CONTENT_TYPE_TEXT_HTML);
 

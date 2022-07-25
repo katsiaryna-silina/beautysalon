@@ -20,17 +20,36 @@ import java.time.format.DateTimeFormatter;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 
+/**
+ * The UserMapperImpl class responsible for mapping User.
+ *
+ * @author Silina Katsiaryna
+ */
 public class UserMapperImpl implements UserMapper {
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final UserMapperImpl instance = new UserMapperImpl();
 
+    /**
+     * Initializes a new UserMapperImpl.
+     */
     private UserMapperImpl() {
     }
 
+    /**
+     * Gets the single instance of UserMapperImpl.
+     *
+     * @return UserMapperImpl
+     */
     public static UserMapperImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Maps passed UserRegistrationDto to User entity.
+     *
+     * @param userRegistrationDto UserRegistrationDto
+     * @return User
+     */
     @Override
     public User toEntity(UserRegistrationDto userRegistrationDto) {
         var encodePassword = PasswordEncoder.encode(userRegistrationDto.getPassword());
@@ -44,11 +63,18 @@ public class UserMapperImpl implements UserMapper {
                 .build();
     }
 
+    /**
+     * Maps passed ResultSet to User entity.
+     *
+     * @param resultSet ResultSet
+     * @return User
+     * @throws SQLException if a sql exception occurs.
+     */
     @Override
     public User toEntity(ResultSet resultSet) throws SQLException {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
-        String lastLoginString = resultSet.getString(TableColumnName.LAST_LOGIN);
-        LocalDateTime lastLogin = LocalDateTime.parse(lastLoginString, format);
+        var format = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
+        var lastLoginString = resultSet.getString(TableColumnName.LAST_LOGIN);
+        var lastLogin = LocalDateTime.parse(lastLoginString, format);
 
         return User.builder()
                 .id(resultSet.getLong(TableColumnName.ID))
@@ -68,6 +94,12 @@ public class UserMapperImpl implements UserMapper {
                 .build();
     }
 
+    /**
+     * Maps passed SessionRequestContent to UserRegistrationDto.
+     *
+     * @param sessionRequestContent SessionRequestContent
+     * @return UserRegistrationDto
+     */
     @Override
     public UserRegistrationDto toUserRegistrationDto(SessionRequestContent sessionRequestContent) {
         var username = sessionRequestContent.getParameterByName(USERNAME).strip();
@@ -89,6 +121,12 @@ public class UserMapperImpl implements UserMapper {
                 .build();
     }
 
+    /**
+     * Maps passed SessionRequestContent to UserLoginDto.
+     *
+     * @param sessionRequestContent SessionRequestContent
+     * @return UserLoginDto
+     */
     @Override
     public UserLoginDto toUserLoginDto(SessionRequestContent sessionRequestContent) {
         var username = sessionRequestContent.getParameterByName(USERNAME);
@@ -100,12 +138,18 @@ public class UserMapperImpl implements UserMapper {
                 .build();
     }
 
+    /**
+     * Maps passed SessionRequestContent to UserPasswordsDto.
+     *
+     * @param sessionRequestContent SessionRequestContent
+     * @return UserPasswordsDto
+     */
     @Override
     public UserPasswordsDto toUserPasswordsDto(SessionRequestContent sessionRequestContent) {
-        Long userId = (Long) sessionRequestContent.getSessionAttributeByName(USER_ID);
-        String currentPassword = sessionRequestContent.getParameterByName(CURRENT_PASSWORD);
-        String newPassword = sessionRequestContent.getParameterByName(NEW_PASSWORD);
-        String repeatedNewPassword = sessionRequestContent.getParameterByName(REPEATED_PASSWORD);
+        var userId = (Long) sessionRequestContent.getSessionAttributeByName(USER_ID);
+        var currentPassword = sessionRequestContent.getParameterByName(CURRENT_PASSWORD);
+        var newPassword = sessionRequestContent.getParameterByName(NEW_PASSWORD);
+        var repeatedNewPassword = sessionRequestContent.getParameterByName(REPEATED_PASSWORD);
 
         return UserPasswordsDto.builder()
                 .userId(userId)
@@ -115,6 +159,12 @@ public class UserMapperImpl implements UserMapper {
                 .build();
     }
 
+    /**
+     * Maps passed User entity to UserAuthorizedDto.
+     *
+     * @param user User
+     * @return UserAuthorizedDto
+     */
     @Override
     public UserAuthorizedDto toUserAuthorizedDto(User user) {
         return UserAuthorizedDto.builder()

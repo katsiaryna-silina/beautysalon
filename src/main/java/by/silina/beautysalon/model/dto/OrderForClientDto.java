@@ -6,6 +6,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * The OrderForClientDto class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class OrderForClientDto {
     private Long id;
     private LocalDateTime orderDateTime;

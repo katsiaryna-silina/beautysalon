@@ -8,22 +8,42 @@ import by.silina.beautysalon.model.entity.Serv;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * The ServiceMapperImpl class responsible for mapping Service.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ServiceMapperImpl implements ServiceMapper {
     private static final ServiceMapperImpl instance = new ServiceMapperImpl();
 
+    /**
+     * Initializes a new ServiceMapperImpl.
+     */
     private ServiceMapperImpl() {
     }
 
+    /**
+     * Gets the single instance of ServiceMapperImpl.
+     *
+     * @return ServiceMapperImpl
+     */
     public static ServiceMapperImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Maps passed ResultSet to service entity.
+     *
+     * @param resultSet ResultSet
+     * @return Serv
+     * @throws SQLException if a sql exception occurs.
+     */
     @Override
     public Serv toEntity(ResultSet resultSet) throws SQLException {
-        String isComplexString = resultSet.getString(TableColumnName.IS_COMPLEX);
+        var isComplexString = resultSet.getString(TableColumnName.IS_COMPLEX);
         boolean isComplex = "Y".equalsIgnoreCase(isComplexString);
 
-        String isDeprecatedString = resultSet.getString(TableColumnName.IS_DEPRECATED);
+        var isDeprecatedString = resultSet.getString(TableColumnName.IS_DEPRECATED);
         boolean isDeprecated = "Y".equalsIgnoreCase(isDeprecatedString);
 
         return Serv.builder()
@@ -37,6 +57,12 @@ public class ServiceMapperImpl implements ServiceMapper {
                 .build();
     }
 
+    /**
+     * Maps passed Serv to ServiceDto.
+     *
+     * @param service Serv
+     * @return ServiceDto
+     */
     @Override
     public ServiceDto toDto(Serv service) {
         return ServiceDto.builder()

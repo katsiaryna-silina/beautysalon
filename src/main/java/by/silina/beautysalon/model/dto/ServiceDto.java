@@ -2,6 +2,11 @@ package by.silina.beautysalon.model.dto;
 
 import java.math.BigDecimal;
 
+/**
+ * The ServiceDto class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ServiceDto {
     Integer minutesNeeded;
     private Long id;

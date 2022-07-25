@@ -2,6 +2,11 @@ package by.silina.beautysalon.model.entity;
 
 import java.math.BigDecimal;
 
+/**
+ * The Serv class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class Serv extends AbstractEntity {
     private String name;
     private boolean isComplex;

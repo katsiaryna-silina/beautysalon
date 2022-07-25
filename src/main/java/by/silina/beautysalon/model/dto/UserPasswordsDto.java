@@ -1,5 +1,10 @@
 package by.silina.beautysalon.model.dto;
 
+/**
+ * The UserPasswordsDto class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class UserPasswordsDto {
     private Long userId;
     private String currentPassword;

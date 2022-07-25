@@ -10,16 +10,35 @@ import java.util.Map;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.NEW_PASSWORD_ERROR_MESSAGE;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.PASSWORD_ERROR_MESSAGE;
 
+/**
+ * The UserPasswordsDtoValidatorImpl class that responsible for validation UserPasswordsDto.
+ *
+ * @author Silina Katsiaryna
+ */
 public class UserPasswordsDtoValidatorImpl implements UserPasswordsDtoValidator {
     private static final UserPasswordsDtoValidatorImpl instance = new UserPasswordsDtoValidatorImpl();
 
+    /**
+     * Initializes a new UserPasswordsDtoValidatorImpl.
+     */
     private UserPasswordsDtoValidatorImpl() {
     }
 
+    /**
+     * Gets the single instance of UserPasswordsDtoValidatorImpl.
+     *
+     * @return UserPasswordsDtoValidatorImpl
+     */
     public static UserPasswordsDtoValidatorImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Checks UserPasswordsDto.
+     *
+     * @param userPasswordsDto UserPasswordsDto
+     * @return Map of String. Error map.
+     */
     @Override
     public Map<String, String> checkUserPasswordsDto(UserPasswordsDto userPasswordsDto) {
         UserValidator userValidator = UserValidatorImpl.getInstance();

@@ -18,8 +18,20 @@ import java.util.List;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.LIMIT;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.OFFSET;
 
+/**
+ * The GetAllOrdersJsonCommand class for getting all orders json command by admin.
+ *
+ * @author Silina Katsiaryna
+ */
 public class GetAllOrdersJsonCommand implements Command {
 
+    /**
+     * Executes get all orders json command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains jsonElement, type constant(JSON).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         OrderService orderService = OrderServiceImpl.getInstance();
@@ -28,8 +40,8 @@ public class GetAllOrdersJsonCommand implements Command {
         try {
             long numberOfOrders = orderService.findNumberOfOrders();
             if (numberOfOrders != 0L) {
-                Integer numberOfOrdersPerPage = Integer.valueOf(sessionRequestContent.getParameterByName(LIMIT));
-                Long fromOrderId = Long.valueOf(sessionRequestContent.getParameterByName(OFFSET));
+                var numberOfOrdersPerPage = Integer.valueOf(sessionRequestContent.getParameterByName(LIMIT));
+                var fromOrderId = Long.valueOf(sessionRequestContent.getParameterByName(OFFSET));
                 List<OrderForAdminDto> pagedOrderDtoList = orderService.findPagedOrderForAdminDtoList(fromOrderId, numberOfOrdersPerPage);
 
                 OrderListForAdminJsonDto orderListJsonDto = OrderListForAdminJsonDto.builder()

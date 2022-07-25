@@ -12,11 +12,14 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+/**
+ * The OrderFeedbackDaoImpl class that responsible for getting order feedback data from datasource.
+ *
+ * @author Silina Katsiaryna
+ */
 public class OrderFeedbackDaoImpl extends BaseDao<OrderFeedback> implements OrderFeedbackDao {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final OrderFeedbackDaoImpl instance = new OrderFeedbackDaoImpl();
@@ -32,18 +35,38 @@ public class OrderFeedbackDaoImpl extends BaseDao<OrderFeedback> implements Orde
             """;
     private final OrderFeedbackMapper feedbackMapper = OrderFeedbackMapperImpl.getInstance();
 
+    /**
+     * Initializes a new OrderFeedbackDaoImpl.
+     */
     private OrderFeedbackDaoImpl() {
     }
 
+    /**
+     * Gets the single instance of OrderFeedbackDaoImpl.
+     *
+     * @return OrderFeedbackDaoImpl
+     */
     public static OrderFeedbackDaoImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Inserts an order feedback.
+     *
+     * @param orderFeedback OrderFeedback. The order feedback to insert.
+     * @return boolean. True if this order feedback is inserted; false otherwise.
+     */
     @Override
-    public boolean insert(OrderFeedback orderFeedback) throws DaoException {
+    public boolean insert(OrderFeedback orderFeedback) {
         throw new UnsupportedOperationException("Method insert() is unsupported.");
     }
 
+    /**
+     * Updates an order feedback.
+     *
+     * @param orderFeedback OrderFeedback. The order feedback to update.
+     * @return boolean. True if this order feedback is inserted; false otherwise.
+     */
     @Override
     public boolean update(OrderFeedback orderFeedback) throws DaoException {
         Connection connection = null;
@@ -51,7 +74,7 @@ public class OrderFeedbackDaoImpl extends BaseDao<OrderFeedback> implements Orde
             connection = ConnectionPool.getInstance().getConnection();
             connection.setAutoCommit(false);
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_FEEDBACK)) {
+            try (var preparedStatement = connection.prepareStatement(UPDATE_FEEDBACK)) {
                 var feedbackId = orderFeedback.getId();
 
                 preparedStatement.setByte(1, orderFeedback.getMark());
@@ -72,7 +95,9 @@ public class OrderFeedbackDaoImpl extends BaseDao<OrderFeedback> implements Orde
             }
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                if (connection != null) {
+                    connection.rollback();
+                }
             } catch (SQLException ex) {
                 log.error("Cannot rollback transaction.", ex);
             }
@@ -89,14 +114,21 @@ public class OrderFeedbackDaoImpl extends BaseDao<OrderFeedback> implements Orde
         }
     }
 
+    /**
+     * Finds an order feedback by feedback id.
+     *
+     * @param id Long. The feedback id.
+     * @return Optional of OrderFeedback
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public Optional<OrderFeedback> findById(Long id) throws DaoException {
         Optional<OrderFeedback> optionalFeedback = Optional.empty();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ORDER_FEEDBACK_BY_ID)) {
+        try (var connection = ConnectionPool.getInstance().getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_ORDER_FEEDBACK_BY_ID)) {
 
             preparedStatement.setLong(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     OrderFeedback orderFeedback = feedbackMapper.toEntity(resultSet);
                     optionalFeedback = Optional.of(orderFeedback);

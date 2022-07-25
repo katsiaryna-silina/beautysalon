@@ -14,14 +14,26 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.USER_ID;
 import static by.silina.beautysalon.controller.command.PagePath.DELETE_USER_RESULT;
 
+/**
+ * The DeleteUserCommand class for delete user command.
+ *
+ * @author Silina Katsiaryna
+ */
 public class DeleteUserCommand implements Command {
 
+    /**
+     * Executes delete user command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains page, type constant(FORWARD).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         UserService userService = UserServiceImpl.getInstance();
         OrderService orderService = OrderServiceImpl.getInstance();
 
-        Long userId = (Long) sessionRequestContent.getSessionAttributeByName(USER_ID);
+        var userId = (Long) sessionRequestContent.getSessionAttributeByName(USER_ID);
 
         try {
             long numberOfOrders = orderService.findNumberOfOrders(userId);

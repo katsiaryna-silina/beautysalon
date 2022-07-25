@@ -12,15 +12,27 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
 import static by.silina.beautysalon.controller.command.PagePath.ORDER_STATUS_FAILED_CHANGE;
 import static by.silina.beautysalon.controller.command.PagePath.ORDER_STATUS_SUCCESS_CHANGE;
 
+/**
+ * The ChangeOrderStatusCommand class for change order status command.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ChangeOrderStatusCommand implements Command {
 
+    /**
+     * Executes change order status command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains page, type constant(FORWARD).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         OrderService orderService = OrderServiceImpl.getInstance();
 
-        Long orderId = Long.valueOf(sessionRequestContent.getParameterByName(ORDER_ID));
+        var orderId = Long.valueOf(sessionRequestContent.getParameterByName(ORDER_ID));
         sessionRequestContent.putRequestAttribute(ORDER_ID, orderId);
-        
+
         String newOrderStatusName = sessionRequestContent.getParameterByName(NEW_ORDER_STATUS_NAME);
 
         var page = ORDER_STATUS_SUCCESS_CHANGE;

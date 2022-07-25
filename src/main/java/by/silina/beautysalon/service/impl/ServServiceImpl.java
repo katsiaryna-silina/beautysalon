@@ -12,18 +12,38 @@ import by.silina.beautysalon.service.ServService;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The ServServiceImpl class that responsible for processing Serv.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ServServiceImpl implements ServService {
     private static final ServServiceImpl instance = new ServServiceImpl();
     private static final ServDaoImpl serviceDao = ServDaoImpl.getInstance();
     private final ServiceMapper serviceMapper = ServiceMapperImpl.getInstance();
 
+    /**
+     * Initializes a new ServServiceImpl.
+     */
     private ServServiceImpl() {
     }
 
+    /**
+     * Gets the single instance of ServServiceImpl.
+     *
+     * @return ServServiceImpl
+     */
     public static ServServiceImpl getInstance() {
         return instance;
     }
 
+
+    /**
+     * Finds complex services.
+     *
+     * @return List of Serv. List of services.
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public List<Serv> findComplexServices() throws ServiceException {
         try {
@@ -33,6 +53,12 @@ public class ServServiceImpl implements ServService {
         }
     }
 
+    /**
+     * Finds not complex services.
+     *
+     * @return List of Serv. List of services.
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public List<Serv> findNotComplexServices() throws ServiceException {
         try {
@@ -42,6 +68,13 @@ public class ServServiceImpl implements ServService {
         }
     }
 
+    /**
+     * Finds service by its name.
+     *
+     * @param name String. Service name.
+     * @return Optional of Serv
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public Optional<Serv> findServiceByName(String name) throws ServiceException {
         try {
@@ -51,6 +84,13 @@ public class ServServiceImpl implements ServService {
         }
     }
 
+    /**
+     * Deletes a service by its id.
+     *
+     * @param id Long. Service id.
+     * @return boolean. True if the service is deleted; false otherwise.
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public boolean deleteById(Long id) throws ServiceException {
         try {
@@ -60,6 +100,13 @@ public class ServServiceImpl implements ServService {
         }
     }
 
+    /**
+     * Updates a service by its id.
+     *
+     * @param id Long. Service id.
+     * @return boolean. True if the service is updated; false otherwise.
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public boolean updateById(Long id) throws ServiceException {
         try {
@@ -69,6 +116,12 @@ public class ServServiceImpl implements ServService {
         }
     }
 
+    /**
+     * Finds number of services.
+     *
+     * @return long. Number of services.
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public long findNumberOfServices() throws ServiceException {
         try {
@@ -78,6 +131,14 @@ public class ServServiceImpl implements ServService {
         }
     }
 
+    /**
+     * Finds paged services.
+     *
+     * @param fromServiceId           Long. The first service to find.
+     * @param numberOfServicesPerPage Integer. Number of services.
+     * @return List of ServiceDto
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public List<ServiceDto> findPagedServiceDtoList(Long fromServiceId, Integer numberOfServicesPerPage) throws ServiceException {
         try {

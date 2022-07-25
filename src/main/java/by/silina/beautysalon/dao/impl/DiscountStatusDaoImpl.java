@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +19,14 @@ import java.util.Optional;
 
 import static by.silina.beautysalon.dao.TableColumnName.STATUS;
 
+/**
+ * The DiscountStatusDaoImpl class that responsible for getting data of discount statuses from datasource.
+ *
+ * @author Silina Katsiaryna
+ */
 public class DiscountStatusDaoImpl extends BaseDao<DiscountStatus> implements DiscountStatusDao {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final DiscountStatusDaoImpl instance = new DiscountStatusDaoImpl();
+    private static final DiscountStatusDaoImpl instance = new DiscountStatusDaoImpl(ConnectionPool.getInstance());
     private static final String SELECT_ALL_DISCOUNT_STATUSES = """
             SELECT ID, STATUS, DISCOUNT
             FROM DISCOUNT_STATUSES
@@ -37,21 +40,37 @@ public class DiscountStatusDaoImpl extends BaseDao<DiscountStatus> implements Di
                 )
             """;
     private final DiscountStatusMapper discountStatusMapper = DiscountStatusMapperImpl.getInstance();
+    private final ConnectionPool connectionPool;
 
-    private DiscountStatusDaoImpl() {
+    /**
+     * Initializes a new DiscountStatusDaoImpl.
+     */
+    private DiscountStatusDaoImpl(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
+    /**
+     * Gets the single instance of DiscountStatusDaoImpl.
+     *
+     * @return DiscountStatusDaoImpl
+     */
     public static DiscountStatusDaoImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Finds all discount statuses.
+     *
+     * @return List of DiscountStatus
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public List<DiscountStatus> findAll() throws DaoException {
         List<DiscountStatus> discountStatuses = new ArrayList<>();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_DISCOUNT_STATUSES)) {
+        try (Connection connection = connectionPool.getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_ALL_DISCOUNT_STATUSES)) {
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     var discountStatus = discountStatusMapper.toEntity(resultSet);
                     discountStatuses.add(discountStatus);
@@ -63,18 +82,30 @@ public class DiscountStatusDaoImpl extends BaseDao<DiscountStatus> implements Di
         return discountStatuses;
     }
 
+    /**
+     * Inserts a discount statuses. For this version it is unsupported method.
+     *
+     * @param discountStatus DiscountStatus. The discount status to insert.
+     * @return boolean. True if this discount status is inserted; false otherwise.
+     */
     @Override
     public boolean insert(DiscountStatus discountStatus) {
         throw new UnsupportedOperationException("Method insert() is unsupported.");
     }
 
+    /**
+     * Finds maximum discount status.
+     *
+     * @return Optional of DiscountStatus
+     * @throws DaoException if a dao exception occurs.
+     */
     @Override
     public Optional<DiscountStatus> findMaximum() throws DaoException {
         Optional<DiscountStatus> optionalDiscountStatus = Optional.empty();
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_MAXIMUM_DISCOUNT_STATUS)) {
+        try (var connection = connectionPool.getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_MAXIMUM_DISCOUNT_STATUS)) {
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (var resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     var discountStatus = DiscountStatus.builder()
                             .status(resultSet.getString(STATUS))

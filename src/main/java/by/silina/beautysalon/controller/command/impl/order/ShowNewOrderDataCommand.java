@@ -9,9 +9,21 @@ import liquibase.util.StringUtil;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 import static by.silina.beautysalon.controller.command.PagePath.ORDER_FORM_ORDER_DATA;
 
+/**
+ * The ShowNewOrderDataCommand class for showing new order data command.
+ *
+ * @author Silina Katsiaryna
+ */
 public class ShowNewOrderDataCommand implements Command {
     public static final String REGEX_SPLITTER = "_";
 
+    /**
+     * Executes show new order data command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains page, type constant(FORWARD).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         String servicesIds = sessionRequestContent.getParameterByName(SERVICES_IDS);
@@ -36,10 +48,14 @@ public class ShowNewOrderDataCommand implements Command {
         String neededTime = sessionRequestContent.getParameterByName(NEEDED_TIME);
         sessionRequestContent.putRequestAttribute(NEEDED_TIME, neededTime);
 
-
         return new Router(ORDER_FORM_ORDER_DATA, Router.Type.FORWARD);
     }
 
+    /**
+     * Processes order services from session and request content.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     */
     private void processOrderServicesFrom(SessionRequestContent sessionRequestContent) {
         String complexServiceName = sessionRequestContent.getParameterByName(COMPLEX_SERVICE_NAME);
         if (!StringUtil.isEmpty(complexServiceName)) {

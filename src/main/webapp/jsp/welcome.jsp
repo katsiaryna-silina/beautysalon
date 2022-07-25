@@ -19,7 +19,7 @@
             <a><fmt:message key="hi"/>, ${username}! <fmt:message key="description.user.registered"/></a>
             <a><fmt:message key="description.login"/></a>
             <hr/>
-            <a href="${pageContext.request.contextPath}/controller?command=show_client_orders">
+            <a href="${pageContext.request.contextPath}/controller?command=show_user_orders">
                 <fmt:message key="button.back.to.order.list"/>
             </a>
         </div>

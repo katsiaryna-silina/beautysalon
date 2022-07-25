@@ -30,9 +30,21 @@
             </br>
             <a><fmt:message key="description.order.not.updated"/></a>
             <hr/>
-            <a href="${pageContext.request.contextPath}/controller?command=show_client_orders">
-                <fmt:message key="button.back.to.order.list"/>
-            </a>
+            <c:choose>
+                <c:when test="${role == 'ADMIN'}">
+                    <a href="${pageContext.request.contextPath}/controller?command=show_user_orders">
+                        <fmt:message key="button.back.to.user.order"/>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/controller?command=show_all_orders_for_admin">
+                        <fmt:message key="button.back.to.all.order.list"/>
+                    </a>
+                </c:when>
+                <c:when test="${role == 'CLIENT'}">
+                    <a href="${pageContext.request.contextPath}/controller?command=show_user_orders">
+                        <fmt:message key="button.back.to.order.list"/>
+                    </a>
+                </c:when>
+            </c:choose>
         </div>
     </div>
 </div>

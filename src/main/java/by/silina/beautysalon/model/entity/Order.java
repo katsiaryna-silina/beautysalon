@@ -6,6 +6,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * The Order class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class Order extends AbstractEntity {
     private LocalDateTime orderDateTime;
     private LocalDate visitDate;

@@ -5,6 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * The OrderFormDto class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class OrderFormDto {
     private LocalDate visitDate;
     private Long userId;

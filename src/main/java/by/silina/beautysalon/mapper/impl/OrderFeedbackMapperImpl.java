@@ -14,16 +14,36 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
 import static by.silina.beautysalon.dao.TableColumnName.FEEDBACK;
 import static by.silina.beautysalon.dao.TableColumnName.MARK;
 
+/**
+ * The OrderFeedbackMapperImpl class responsible for mapping OrderFeedback.
+ *
+ * @author Silina Katsiaryna
+ */
 public class OrderFeedbackMapperImpl implements OrderFeedbackMapper {
     private static final OrderFeedbackMapperImpl instance = new OrderFeedbackMapperImpl();
 
+    /**
+     * Initializes a new OrderFeedbackMapperImpl.
+     */
     private OrderFeedbackMapperImpl() {
     }
 
+    /**
+     * Gets the single instance of OrderFeedbackMapperImpl.
+     *
+     * @return OrderFeedbackMapperImpl
+     */
     public static OrderFeedbackMapperImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Maps passed ResultSet to OrderFeedback entity.
+     *
+     * @param resultSet ResultSet
+     * @return OrderFeedback
+     * @throws SQLException if a sql exception occurs.
+     */
     @Override
     public OrderFeedback toEntity(ResultSet resultSet) throws SQLException {
         return OrderFeedback.builder()
@@ -34,6 +54,12 @@ public class OrderFeedbackMapperImpl implements OrderFeedbackMapper {
                 .build();
     }
 
+    /**
+     * Maps passed OrderFeedbackDto to OrderFeedback entity.
+     *
+     * @param feedbackDto OrderFeedbackDto
+     * @return OrderFeedback
+     */
     @Override
     public OrderFeedback toEntity(OrderFeedbackDto feedbackDto) {
         return OrderFeedback.builder()
@@ -43,6 +69,12 @@ public class OrderFeedbackMapperImpl implements OrderFeedbackMapper {
                 .build();
     }
 
+    /**
+     * Maps passed SessionRequestContent to OrderFeedbackDto.
+     *
+     * @param sessionRequestContent SessionRequestContent
+     * @return OrderFeedbackDto
+     */
     @Override
     public OrderFeedbackDto toDto(SessionRequestContent sessionRequestContent) {
         String newMarkString = sessionRequestContent.getParameterByName(NEW_MARK);
@@ -60,6 +92,12 @@ public class OrderFeedbackMapperImpl implements OrderFeedbackMapper {
                 .build();
     }
 
+    /**
+     * Maps passed OrderFeedback to OrderFeedbackDto.
+     *
+     * @param orderFeedback OrderFeedback
+     * @return OrderFeedbackDto
+     */
     @Override
     public OrderFeedbackDto toDto(OrderFeedback orderFeedback) {
         return OrderFeedbackDto.builder()

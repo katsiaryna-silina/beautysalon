@@ -16,18 +16,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The VisitTimeServiceImpl class that responsible for processing VisitTime.
+ *
+ * @author Silina Katsiaryna
+ */
 public class VisitTimeServiceImpl implements VisitTimeService {
     private static final VisitTimeServiceImpl instance = new VisitTimeServiceImpl();
     private final VisitTimeDaoImpl visitTimeDao = VisitTimeDaoImpl.getInstance();
     private final VisitTimeMapper visitTimeMapper = VisitTimeMapperImpl.getInstance();
 
+    /**
+     * Initializes a new VisitTimeServiceImpl.
+     */
     private VisitTimeServiceImpl() {
     }
 
+    /**
+     * Gets the single instance of VisitTimeServiceImpl.
+     *
+     * @return VisitTimeServiceImpl
+     */
     public static VisitTimeServiceImpl getInstance() {
         return instance;
     }
 
+    /**
+     * Finds visit time slots and maps them to dtos.
+     *
+     * @param visitDate     LocalDate. Date of visit.
+     * @param neededMinutes Integer. Needed time for services in minutes.
+     * @return List of VisitTimeSlotDto
+     * @throws ServiceException if a service exception occurs.
+     */
     @Override
     public List<VisitTimeSlotDto> getVisitTimeSlotDtos(LocalDate visitDate, Integer neededMinutes) throws ServiceException {
         List<VisitTimeSlotDto> visitTimeSlotDtos = new ArrayList<>();
@@ -46,12 +67,27 @@ public class VisitTimeServiceImpl implements VisitTimeService {
         return visitTimeSlotDtos;
     }
 
+    /**
+     * Filters lister of free time slots.
+     * Adds to result list a time slot which begin time is after then now.
+     *
+     * @param timeSlots List of VisitTime. List of free visit time slots.
+     * @return List of VisitTime
+     */
     private List<VisitTime> filterTimeSlots(List<VisitTime> timeSlots) {
         return timeSlots.stream()
                 .filter(timeStol -> timeStol.getBeginTime().isAfter(LocalTime.now()))
                 .toList();
     }
 
+    /**
+     * Gets time slots which time is enough for services.
+     * Processes that time and return list of dto.
+     *
+     * @param freeTimeSlots List of VisitTime. List of free visit time slots.
+     * @param neededMinutes Integer. Number of needed minutes for services.
+     * @return List of VisitTimeSlotDto
+     */
     private List<VisitTimeSlotDto> getTimeSlotsForClient(List<VisitTime> freeTimeSlots, final Integer neededMinutes) {
         List<VisitTimeSlotDto> dtoList = new ArrayList<>();
 
@@ -98,6 +134,12 @@ public class VisitTimeServiceImpl implements VisitTimeService {
         return dtoList;
     }
 
+    /**
+     * Sorts time slots by begin time.
+     *
+     * @param freeTimeList List of VisitTime. List of free visit time slots.
+     * @return List of VisitTime
+     */
     private List<VisitTime> sortByBeginTime(List<VisitTime> freeTimeList) {
         return freeTimeList.stream()
                 .sorted(((o1, o2) -> {
@@ -115,6 +157,12 @@ public class VisitTimeServiceImpl implements VisitTimeService {
                 .toList();
     }
 
+    /**
+     * Gets duration of time slot in minutes.
+     *
+     * @param visitTime VisitTime. Visit time slot.
+     * @return long
+     */
     private long getDurationInMinutes(VisitTime visitTime) {
         return visitTime.getBeginTime().until(visitTime.getEndTime(), ChronoUnit.MINUTES);
     }

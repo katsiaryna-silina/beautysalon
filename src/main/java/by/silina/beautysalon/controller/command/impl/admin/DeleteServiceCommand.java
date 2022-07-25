@@ -12,14 +12,26 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.IS_DEPRECATED;
 import static by.silina.beautysalon.controller.command.PagePath.ALL_SERVICES_FOR_ADMIN;
 
+/**
+ * The DeleteServiceCommand class for delete service command by admin.
+ *
+ * @author Silina Katsiaryna
+ */
 public class DeleteServiceCommand implements Command {
 
+    /**
+     * Executes delete service command.
+     *
+     * @param sessionRequestContent SessionRequestContent. The session and request content.
+     * @return Router. The class contains page, type constant(FORWARD).
+     * @throws CommandException if a command exception occurs.
+     */
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         ServService servService = ServServiceImpl.getInstance();
 
-        Long serviceId = Long.valueOf(sessionRequestContent.getParameterByName(ID));
-        boolean isDeprecated = Boolean.parseBoolean(sessionRequestContent.getParameterByName(IS_DEPRECATED));
+        var serviceId = Long.valueOf(sessionRequestContent.getParameterByName(ID));
+        var isDeprecated = Boolean.parseBoolean(sessionRequestContent.getParameterByName(IS_DEPRECATED));
         try {
             if (!isDeprecated) {
                 servService.deleteById(serviceId);

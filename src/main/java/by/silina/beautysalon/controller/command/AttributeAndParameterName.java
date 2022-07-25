@@ -1,5 +1,10 @@
 package by.silina.beautysalon.controller.command;
 
+/**
+ * The AttributeAndParameterName final class with attribute and parameter constants.
+ *
+ * @author Silina Katsiaryna
+ */
 public final class AttributeAndParameterName {
     public static final String COMMAND = "command";
 
@@ -88,6 +93,9 @@ public final class AttributeAndParameterName {
     public static final String LOCALE_RU = "ru_RU";
     public static final String LOCALE_EN_US = "en_US";
 
+    /**
+     * Initializes a AttributeAndParameterName class.
+     */
     private AttributeAndParameterName() {
     }
 }

@@ -3,6 +3,11 @@ package by.silina.beautysalon.model.dto;
 import java.time.LocalTime;
 import java.util.Map;
 
+/**
+ * The VisitTimeSlotDto class.
+ *
+ * @author Silina Katsiaryna
+ */
 public class VisitTimeSlotDto {
     private LocalTime beginTime;
     private LocalTime endTime;
