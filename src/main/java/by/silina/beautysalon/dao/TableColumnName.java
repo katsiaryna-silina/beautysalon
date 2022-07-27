@@ -37,6 +37,7 @@ public final class TableColumnName {
     public static final String FEEDBACK = "FEEDBACK";
     public static final String MARK = "MARK";
     public static final String IS_VERIFIED = "IS_VERIFIED";
+    public static final String NUMBER_OF_ORDERS = "NUMBER_OF_ORDERS";
 
     /**
      * Initializes a TableColumnName class.

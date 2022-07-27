@@ -10,9 +10,10 @@ import liquibase.repackaged.org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.ID;
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
-import static by.silina.beautysalon.dao.TableColumnName.FEEDBACK;
-import static by.silina.beautysalon.dao.TableColumnName.MARK;
+import static by.silina.beautysalon.dao.TableColumnName.IS_VERIFIED;
+import static by.silina.beautysalon.dao.TableColumnName.*;
 
 /**
  * The OrderFeedbackMapperImpl class responsible for mapping OrderFeedback.

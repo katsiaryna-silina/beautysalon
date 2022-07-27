@@ -22,7 +22,7 @@ import java.util.Optional;
  */
 public class OrderFeedbackDaoImpl extends BaseDao<OrderFeedback> implements OrderFeedbackDao {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final OrderFeedbackDaoImpl instance = new OrderFeedbackDaoImpl();
+    private static final OrderFeedbackDaoImpl instance = new OrderFeedbackDaoImpl(ConnectionPool.getInstance());
     private static final String UPDATE_FEEDBACK = """
             UPDATE ORDER_FEEDBACKS
             SET MARK = ?, FEEDBACK = ?, IS_VERIFIED = 'N'
@@ -34,11 +34,13 @@ public class OrderFeedbackDaoImpl extends BaseDao<OrderFeedback> implements Orde
             WHERE ID = ?
             """;
     private final OrderFeedbackMapper feedbackMapper = OrderFeedbackMapperImpl.getInstance();
+    private final ConnectionPool connectionPool;
 
     /**
      * Initializes a new OrderFeedbackDaoImpl.
      */
-    private OrderFeedbackDaoImpl() {
+    private OrderFeedbackDaoImpl(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
     /**
@@ -71,7 +73,7 @@ public class OrderFeedbackDaoImpl extends BaseDao<OrderFeedback> implements Orde
     public boolean update(OrderFeedback orderFeedback) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
             try (var preparedStatement = connection.prepareStatement(UPDATE_FEEDBACK)) {
@@ -124,7 +126,7 @@ public class OrderFeedbackDaoImpl extends BaseDao<OrderFeedback> implements Orde
     @Override
     public Optional<OrderFeedback> findById(Long id) throws DaoException {
         Optional<OrderFeedback> optionalFeedback = Optional.empty();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_ORDER_FEEDBACK_BY_ID)) {
 
             preparedStatement.setLong(1, id);

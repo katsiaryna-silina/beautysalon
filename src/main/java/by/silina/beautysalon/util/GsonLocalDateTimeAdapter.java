@@ -16,7 +16,6 @@ import java.time.LocalTime;
 public class GsonLocalDateTimeAdapter {
     private static final String VALUE = "value";
 
-
     /**
      * Initializes a new GsonLocalDateTimeAdapter.
      */

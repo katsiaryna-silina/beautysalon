@@ -50,11 +50,11 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
             VALUES (?, ?)
             """;
     private static final String SELECT_NUMBER_OF_ORDERS = """
-            SELECT COUNT(ID)
+            SELECT COUNT(ID) NUMBER_OF_ORDERS
             FROM ORDERS;
             """;
     private static final String SELECT_NUMBER_OF_USER_ORDERS = """
-            SELECT COUNT(ID)
+            SELECT COUNT(ID) NUMBER_OF_ORDERS
             FROM ORDERS
             WHERE USER_ID = ?
             """;
@@ -279,7 +279,7 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
 
             try (var resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    numberOfOrders = resultSet.getLong(1);
+                    numberOfOrders = resultSet.getLong(NUMBER_OF_ORDERS);
                 }
             }
         } catch (SQLException e) {
@@ -305,7 +305,7 @@ public class OrderDaoImpl extends BaseDao<Order> implements OrderDao {
 
             try (var resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    numberOfOrders = resultSet.getLong(1);
+                    numberOfOrders = resultSet.getLong(NUMBER_OF_ORDERS);
                 }
             }
         } catch (SQLException e) {
