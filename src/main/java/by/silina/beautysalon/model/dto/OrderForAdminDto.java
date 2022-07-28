@@ -146,6 +146,73 @@ public class OrderForAdminDto {
         this.description = description;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderForAdminDto that = (OrderForAdminDto) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (orderDateTime != null ? !orderDateTime.equals(that.orderDateTime) : that.orderDateTime != null)
+            return false;
+        if (visitDate != null ? !visitDate.equals(that.visitDate) : that.visitDate != null) return false;
+        if (visitBeginTime != null ? !visitBeginTime.equals(that.visitBeginTime) : that.visitBeginTime != null)
+            return false;
+        if (visitEndTime != null ? !visitEndTime.equals(that.visitEndTime) : that.visitEndTime != null) return false;
+        if (serviceNames != null ? !serviceNames.equals(that.serviceNames) : that.serviceNames != null) return false;
+        if (priceWithDiscount != null ? !priceWithDiscount.equals(that.priceWithDiscount) : that.priceWithDiscount != null)
+            return false;
+        if (username != null ? !username.equals(that.username) : that.username != null) return false;
+        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) return false;
+        if (status != null ? !status.equals(that.status) : that.status != null) return false;
+        return description != null ? description.equals(that.description) : that.description == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (orderDateTime != null ? orderDateTime.hashCode() : 0);
+        result = 31 * result + (visitDate != null ? visitDate.hashCode() : 0);
+        result = 31 * result + (visitBeginTime != null ? visitBeginTime.hashCode() : 0);
+        result = 31 * result + (visitEndTime != null ? visitEndTime.hashCode() : 0);
+        result = 31 * result + (serviceNames != null ? serviceNames.hashCode() : 0);
+        result = 31 * result + (priceWithDiscount != null ? priceWithDiscount.hashCode() : 0);
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("OrderForAdminDto{")
+                .append("id=").append(id)
+                .append("orderDateTime=").append(orderDateTime)
+                .append(", visitDate=").append(visitDate)
+                .append(", visitBeginTime=").append(visitBeginTime)
+                .append(", visitEndTime=").append(visitEndTime)
+                .append(", serviceNames=").append(serviceNames)
+                .append(", priceWithDiscount=").append(priceWithDiscount)
+                .append(", username=").append(username)
+                .append(", firstName=").append(firstName)
+                .append(", lastName=").append(lastName)
+                .append(", email=").append(email)
+                .append(", phoneNumber=").append(phoneNumber)
+                .append(", status=").append(status)
+                .append(", description=").append(description)
+                .append('}')
+                .toString();
+    }
+
     public static class OrderForAdminDtoBuilder {
         private Long id;
         private LocalDateTime orderDateTime;

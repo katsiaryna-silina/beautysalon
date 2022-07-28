@@ -79,6 +79,48 @@ public class ServiceDto {
         this.minutesNeeded = minutesNeeded;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ServiceDto that = (ServiceDto) o;
+
+        if (isComplex != that.isComplex) return false;
+        if (isDeprecated != that.isDeprecated) return false;
+        if (minutesNeeded != null ? !minutesNeeded.equals(that.minutesNeeded) : that.minutesNeeded != null)
+            return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        return price != null ? price.equals(that.price) : that.price == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = minutesNeeded != null ? minutesNeeded.hashCode() : 0;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (isComplex ? 1 : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (isDeprecated ? 1 : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append(", minutesNeeded='").append(minutesNeeded)
+                .append(", id='").append(id)
+                .append(", isComplex='").append(isComplex)
+                .append(", description='").append(description)
+                .append(", price=").append(price)
+                .append(", isDeprecated=").append(isDeprecated)
+                .append('}')
+                .toString();
+    }
+
     public static class ServiceDtoBuilder {
         private Long id;
         private String name;

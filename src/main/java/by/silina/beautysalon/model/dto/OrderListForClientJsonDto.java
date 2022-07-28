@@ -43,6 +43,38 @@ public class OrderListForClientJsonDto {
         this.rows = rows;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderListForClientJsonDto that = (OrderListForClientJsonDto) o;
+
+        if (total != null ? !total.equals(that.total) : that.total != null) return false;
+        if (totalNotFiltered != null ? !totalNotFiltered.equals(that.totalNotFiltered) : that.totalNotFiltered != null)
+            return false;
+        return rows != null ? rows.equals(that.rows) : that.rows == null;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("OrderListForClientJsonDto{")
+                .append("total=").append(total)
+                .append(", totalNotFiltered=").append(totalNotFiltered)
+                .append(", rows=").append(rows)
+                .append('}')
+                .toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = total != null ? total.hashCode() : 0;
+        result = 31 * result + (totalNotFiltered != null ? totalNotFiltered.hashCode() : 0);
+        result = 31 * result + (rows != null ? rows.hashCode() : 0);
+        return result;
+    }
+
     public static class OrderListForClientJsonDtoBuilder {
         private Long total;
         private Long totalNotFiltered;

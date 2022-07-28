@@ -43,6 +43,38 @@ public class OrderListForAdminJsonDto {
         this.rows = rows;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderListForAdminJsonDto that = (OrderListForAdminJsonDto) o;
+
+        if (total != null ? !total.equals(that.total) : that.total != null) return false;
+        if (totalNotFiltered != null ? !totalNotFiltered.equals(that.totalNotFiltered) : that.totalNotFiltered != null)
+            return false;
+        return rows != null ? rows.equals(that.rows) : that.rows == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = total != null ? total.hashCode() : 0;
+        result = 31 * result + (totalNotFiltered != null ? totalNotFiltered.hashCode() : 0);
+        result = 31 * result + (rows != null ? rows.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("OrderListForAdminJsonDto{")
+                .append("total=").append(total)
+                .append(", totalNotFiltered=").append(totalNotFiltered)
+                .append(", rows=").append(rows)
+                .append('}')
+                .toString();
+    }
+
     public static class OrderListForAdminJsonDtoBuilder {
         private Long total;
         private Long totalNotFiltered;

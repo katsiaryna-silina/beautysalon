@@ -50,6 +50,41 @@ public class UserPasswordsDto {
         this.repeatedNewPassword = repeatedNewPassword;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserPasswordsDto that = (UserPasswordsDto) o;
+
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
+        if (currentPassword != null ? !currentPassword.equals(that.currentPassword) : that.currentPassword != null)
+            return false;
+        if (newPassword != null ? !newPassword.equals(that.newPassword) : that.newPassword != null) return false;
+        return repeatedNewPassword != null ? repeatedNewPassword.equals(that.repeatedNewPassword) : that.repeatedNewPassword == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userId != null ? userId.hashCode() : 0;
+        result = 31 * result + (currentPassword != null ? currentPassword.hashCode() : 0);
+        result = 31 * result + (newPassword != null ? newPassword.hashCode() : 0);
+        result = 31 * result + (repeatedNewPassword != null ? repeatedNewPassword.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("UserPasswordsDto{")
+                .append("userId='").append(userId)
+                .append(", currentPassword='").append(currentPassword)
+                .append(", newPassword='").append(newPassword)
+                .append(", repeatedNewPassword='").append(repeatedNewPassword)
+                .append('}')
+                .toString();
+    }
+
     public static class UserPasswordsDtoBuilder {
         private Long userId;
         private String currentPassword;

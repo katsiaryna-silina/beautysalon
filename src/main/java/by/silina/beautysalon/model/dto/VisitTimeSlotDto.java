@@ -44,6 +44,37 @@ public class VisitTimeSlotDto {
         this.visitTimeIdDuration = visitTimeIdDuration;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        VisitTimeSlotDto that = (VisitTimeSlotDto) o;
+
+        if (beginTime != null ? !beginTime.equals(that.beginTime) : that.beginTime != null) return false;
+        if (endTime != null ? !endTime.equals(that.endTime) : that.endTime != null) return false;
+        return visitTimeIdDuration != null ? visitTimeIdDuration.equals(that.visitTimeIdDuration) : that.visitTimeIdDuration == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = beginTime != null ? beginTime.hashCode() : 0;
+        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+        result = 31 * result + (visitTimeIdDuration != null ? visitTimeIdDuration.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("VisitTimeSlotDto{")
+                .append("beginTime='").append(beginTime)
+                .append(", endTime='").append(endTime)
+                .append(", visitTimeIdDuration='").append(visitTimeIdDuration)
+                .append('}')
+                .toString();
+    }
+
     public static class VisitTimeSlotDtoBuilder {
         private LocalTime beginTime;
         private LocalTime endTime;

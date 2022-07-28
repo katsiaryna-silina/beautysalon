@@ -32,6 +32,34 @@ public class UserLoginDto {
         this.password = password;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserLoginDto that = (UserLoginDto) o;
+
+        if (username != null ? !username.equals(that.username) : that.username != null) return false;
+        return password != null ? password.equals(that.password) : that.password == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = username != null ? username.hashCode() : 0;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("UserLoginDto{")
+                .append("username='").append(username)
+                .append(", password='").append(password)
+                .append('}')
+                .toString();
+    }
+
     public static class UserLoginDtoBuilder {
         private String username;
         private String password;

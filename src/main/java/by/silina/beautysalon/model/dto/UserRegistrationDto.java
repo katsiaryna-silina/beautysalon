@@ -77,6 +77,50 @@ public class UserRegistrationDto {
         this.phoneNumber = phoneNumber;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserRegistrationDto that = (UserRegistrationDto) o;
+
+        if (username != null ? !username.equals(that.username) : that.username != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        if (repeatedPassword != null ? !repeatedPassword.equals(that.repeatedPassword) : that.repeatedPassword != null)
+            return false;
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
+        return phoneNumber != null ? phoneNumber.equals(that.phoneNumber) : that.phoneNumber == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = username != null ? username.hashCode() : 0;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (repeatedPassword != null ? repeatedPassword.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("UserRegistrationDto{")
+                .append("username='").append(username)
+                .append(", password='").append(password)
+                .append(", repeatedPassword='").append(repeatedPassword)
+                .append(", email='").append(email)
+                .append(", firstName='").append(firstName)
+                .append(", lastName='").append(lastName)
+                .append(", phoneNumber='").append(phoneNumber)
+                .append('}')
+                .toString();
+    }
+
     public static class UserRegistrationDtoBuilder {
         private String username;
         private String password;
