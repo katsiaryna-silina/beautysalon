@@ -28,6 +28,11 @@ import java.util.Optional;
 
 import static by.silina.beautysalon.dao.TableColumnName.*;
 
+/**
+ * The ServDaoImplTest test class.
+ *
+ * @author Silina Katsiaryna
+ */
 @ExtendWith(MockitoExtension.class)
 class ServDaoImplTest {
     @InjectMocks
