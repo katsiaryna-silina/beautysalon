@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static by.silina.beautysalon.dao.TableColumnName.NUMBER_OF_SERVICES;
+
 /**
  * The ServDaoImpl class that responsible for getting data of services from datasource.
  *
@@ -24,8 +26,8 @@ import java.util.Optional;
  */
 public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final ServDaoImpl instance = new ServDaoImpl(ConnectionPool.getInstance());
     private static final ServiceMapper serviceMapper = ServiceMapperImpl.getInstance();
-    private static final ServDaoImpl instance = new ServDaoImpl();
     private static final String SELECT_SERVICES = """
             SELECT ID, NAME, IS_COMPLEX, MINUTES_NEEDED, DESCRIPTION, PRICE, IS_DEPRECATED
             FROM SERVICES
@@ -42,7 +44,7 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
             WHERE ID = ?
             """;
     private static final String SELECT_NUMBER_OF_SERVICES = """
-            SELECT COUNT(ID)
+            SELECT COUNT(ID) NUMBER_OF_SERVICES
             FROM SERVICES;
             """;
     private static final String SELECT_PAGED_SERVICES = """
@@ -55,11 +57,13 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
             SET IS_DEPRECATED = 'N'
             WHERE ID = ?
             """;
+    private final ConnectionPool connectionPool;
 
     /**
      * Initializes a new ServDaoImpl.
      */
-    private ServDaoImpl() {
+    private ServDaoImpl(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
     /**
@@ -81,7 +85,7 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
     @Override
     public List<Serv> findServices(boolean complex) throws DaoException {
         List<Serv> complexServices = new ArrayList<>();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_SERVICES)) {
 
             preparedStatement.setString(1, complex ? "Y" : "N");
@@ -107,7 +111,7 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
     @Override
     public Optional<Serv> findServiceByName(String name) throws DaoException {
         Optional<Serv> optionalService = Optional.empty();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_SERVICE_BY_NAME)) {
 
             preparedStatement.setString(1, name);
@@ -132,12 +136,12 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
     @Override
     public long findNumberOfServices() throws DaoException {
         long numberOfServices = 0L;
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_NUMBER_OF_SERVICES)) {
 
             try (var resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    numberOfServices = resultSet.getLong(1);
+                    numberOfServices = resultSet.getLong(NUMBER_OF_SERVICES);
                 }
             }
         } catch (SQLException e) {
@@ -157,7 +161,7 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
     @Override
     public List<Serv> findPagedServiceList(Long fromServiceId, Integer numberOfServicesPerPage) throws DaoException {
         List<Serv> services = new ArrayList<>();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_PAGED_SERVICES)) {
 
             preparedStatement.setLong(1, fromServiceId);
@@ -185,7 +189,7 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
     public boolean updateById(Long id) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
             try (var preparedStatement = connection.prepareStatement(UPDATE_SERVICE_TO_NOT_DEPRECATED)) {
@@ -237,7 +241,7 @@ public class ServDaoImpl extends BaseDao<Serv> implements ServDao {
     public boolean deleteById(Long id) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
             try (var preparedStatement = connection.prepareStatement(UPDATE_SERVICE_TO_DEPRECATED)) {

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static by.silina.beautysalon.dao.TableColumnName.NUMBER_OF_USERS;
 import static by.silina.beautysalon.dao.TableColumnName.PASSWORD;
 
 /**
@@ -28,6 +29,7 @@ import static by.silina.beautysalon.dao.TableColumnName.PASSWORD;
  */
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final UserDaoImpl instance = new UserDaoImpl(ConnectionPool.getInstance());
     private static final String SELECT_USER_BY_USERNAME = """
             SELECT U.ID, U.USERNAME, U.PASSWORD, U.EMAIL, U.FIRST_NAME, U.LAST_NAME, U.PHONE_NUMBER, U.LAST_LOGIN, DS.STATUS DISCOUNT_STATUS, DS.DISCOUNT, UR.ROLE, US.STATUS
             FROM USERS U
@@ -61,7 +63,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             WHERE ID = ?
             """;
     private static final String SELECT_NUMBER_OF_USERS = """
-            SELECT COUNT(ID)
+            SELECT COUNT(ID) NUMBER_OF_USERS
             FROM USERS;
             """;
     private static final String SELECT_PAGED_USERS = """
@@ -104,13 +106,14 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             FROM USERS 
             WHERE ID = ?         
             """;
-    private static final UserDaoImpl instance = new UserDaoImpl();
     private static final UserMapper userMapper = UserMapperImpl.getInstance();
+    private final ConnectionPool connectionPool;
 
     /**
      * Initializes a new UserDaoImpl.
      */
-    private UserDaoImpl() {
+    private UserDaoImpl(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
     /**
@@ -132,7 +135,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     @Override
     public Optional<User> findUserByUsername(String username) throws DaoException {
         Optional<User> optionalUser = Optional.empty();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_USER_BY_USERNAME)) {
 
             preparedStatement.setString(1, username);
@@ -184,7 +187,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
      * @throws DaoException if a dao exception occurs.
      */
     private boolean isParameterExits(String parameter, String select) throws DaoException {
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(select)) {
 
             preparedStatement.setString(1, parameter);
@@ -212,7 +215,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     @Override
     public Optional<String> findUserPasswordById(Long userId) throws DaoException {
         Optional<String> optionalPassword = Optional.empty();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_USER_PASSWORD)) {
 
             preparedStatement.setLong(1, userId);
@@ -242,7 +245,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public boolean changeUserPassword(Long userId, String newPassword) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
             try (var preparedStatement = connection.prepareStatement(UPDATE_USER_PASSWORD)) {
@@ -291,12 +294,12 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     @Override
     public long findNumberOfUsers() throws DaoException {
         long numberOfUsers = 0L;
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_NUMBER_OF_USERS)) {
 
             try (var resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    numberOfUsers = resultSet.getLong(1);
+                    numberOfUsers = resultSet.getLong(NUMBER_OF_USERS);
                 }
             }
             return numberOfUsers;
@@ -316,7 +319,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     @Override
     public List<User> findPagedUsers(Long fromUserId, Integer numberOfUsers) throws DaoException {
         List<User> users = new ArrayList<>();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_PAGED_USERS)) {
 
             preparedStatement.setLong(1, fromUserId);
@@ -345,7 +348,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public boolean changeUserRole(Long userId, Role role) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
             try (var preparedStatement = connection.prepareStatement(UPDATE_USER_ROLE)) {
@@ -397,7 +400,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public boolean changeDiscount(Long userId, String discountStatusName) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
             try (var preparedStatement = connection.prepareStatement(UPDATE_USER_DISCOUNT)) {
@@ -449,7 +452,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public boolean changeUserStatus(Long userId, UserStatus userStatus) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
             try (var preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS)) {
@@ -500,7 +503,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public boolean insert(User user) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
             try (var preparedStatement = connection.prepareStatement(INSERT_USER)) {
@@ -555,7 +558,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     public boolean deleteById(Long userId) throws DaoException {
         Connection connection = null;
         try {
-            connection = ConnectionPool.getInstance().getConnection();
+            connection = connectionPool.getConnection();
             connection.setAutoCommit(false);
 
             try (var preparedStatement = connection.prepareStatement(DELETE_USER)) {

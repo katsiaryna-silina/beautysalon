@@ -19,7 +19,7 @@ import java.util.Optional;
  * @author Silina Katsiaryna
  */
 public class OrderStatusDaoImpl extends BaseDao<OrderStatus> implements OrderStatusDao {
-    private static final OrderStatusDaoImpl instance = new OrderStatusDaoImpl();
+    private static final OrderStatusDaoImpl instance = new OrderStatusDaoImpl(ConnectionPool.getInstance());
     private static final String SELECT_ORDER_STATUSES = """
             SELECT OS.ID, OS.STATUS, OS.DESCRIPTION, R.ROLE
             FROM ORDER_STATUSES OS
@@ -39,11 +39,13 @@ public class OrderStatusDaoImpl extends BaseDao<OrderStatus> implements OrderSta
             WHERE O.ORDER_STATUS_ID = DEFAULT(ORDER_STATUS_ID)
             """;
     private final OrderStatusMapper orderStatusMapper = OrderStatusMapperImpl.getInstance();
+    private final ConnectionPool connectionPool;
 
     /**
      * Initializes a new OrderStatusDaoImpl.
      */
-    private OrderStatusDaoImpl() {
+    private OrderStatusDaoImpl(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
     /**
@@ -64,7 +66,7 @@ public class OrderStatusDaoImpl extends BaseDao<OrderStatus> implements OrderSta
     @Override
     public List<OrderStatus> findAll() throws DaoException {
         List<OrderStatus> orderStatuses = new ArrayList<>();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_ORDER_STATUSES)) {
 
             try (var resultSet = preparedStatement.executeQuery()) {
@@ -100,7 +102,7 @@ public class OrderStatusDaoImpl extends BaseDao<OrderStatus> implements OrderSta
     @Override
     public Optional<OrderStatus> findByName(String statusName) throws DaoException {
         Optional<OrderStatus> statusOptional = Optional.empty();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_ORDER_STATUS_BY_NAME)) {
 
             preparedStatement.setString(1, statusName);
@@ -125,7 +127,7 @@ public class OrderStatusDaoImpl extends BaseDao<OrderStatus> implements OrderSta
     @Override
     public Optional<OrderStatus> findDefault() throws DaoException {
         Optional<OrderStatus> statusOptional = Optional.empty();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_DEFAULT_ORDER_STATUS)) {
 
             try (var resultSet = preparedStatement.executeQuery()) {

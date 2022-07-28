@@ -15,8 +15,6 @@ import by.silina.beautysalon.util.PasswordEncoder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
 
@@ -26,7 +24,6 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
  * @author Silina Katsiaryna
  */
 public class UserMapperImpl implements UserMapper {
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final UserMapperImpl instance = new UserMapperImpl();
 
     /**
@@ -72,10 +69,6 @@ public class UserMapperImpl implements UserMapper {
      */
     @Override
     public User toEntity(ResultSet resultSet) throws SQLException {
-        var format = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
-        var lastLoginString = resultSet.getString(TableColumnName.LAST_LOGIN);
-        var lastLogin = LocalDateTime.parse(lastLoginString, format);
-
         return User.builder()
                 .id(resultSet.getLong(TableColumnName.ID))
                 .username(resultSet.getString(TableColumnName.USERNAME))
@@ -88,7 +81,7 @@ public class UserMapperImpl implements UserMapper {
                         .status(resultSet.getString(TableColumnName.DISCOUNT_STATUS))
                         .discount(resultSet.getBigDecimal(TableColumnName.DISCOUNT))
                         .build())
-                .lastLogin(lastLogin)
+                .lastLogin(resultSet.getTimestamp(TableColumnName.LAST_LOGIN).toLocalDateTime())
                 .phoneNumber(resultSet.getString(TableColumnName.PHONE_NUMBER))
                 .userStatus(UserStatus.valueOf(resultSet.getString(TableColumnName.STATUS).toUpperCase()))
                 .build();

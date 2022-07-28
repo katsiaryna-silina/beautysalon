@@ -57,6 +57,9 @@ class OrderFeedbackDaoImplTest {
 
     /**
      * Tests updating feedback method.
+     * This test can be fully covered only by using integration test.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates rowCountDML in order to replace a result from database in PreparedStatement.executeUpdate().
      */
     @Test
     void update() throws SQLException, DaoException {
@@ -95,6 +98,8 @@ class OrderFeedbackDaoImplTest {
 
     /**
      * Tests finding feedback by id method.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
      */
     @Test
     void findById() throws SQLException, DaoException {

@@ -46,6 +46,7 @@ class DiscountStatusDaoImplTest {
 
     /**
      * Tests finding all discount statuses.
+     * This test can be fully covered only by using integration test.
      * Uses mockConnection, mockPreparedStatement.
      * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
      */
@@ -150,12 +151,12 @@ class DiscountStatusDaoImplTest {
 
         var expectedMessage = "Method insert() is unsupported.";
         var actualMessage = exception.getMessage();
-
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
 
     /**
      * Tests finding maximum discount status method.
+     * This test can be fully covered only by using integration test.
      * Uses mockConnection, mockPreparedStatement.
      * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
      */
@@ -195,6 +196,7 @@ class DiscountStatusDaoImplTest {
                 .status("platinum")
                 .build();
 
+        //create MockResultSet to replace a result of executeQuery()
         DSLContext context = DSL.using(SQLDialect.DEFAULT);
         Field<String> columnStatus = DSL.field("NON_EXISTENT_COLUMN", SQLDataType.VARCHAR(12));
 
@@ -207,7 +209,6 @@ class DiscountStatusDaoImplTest {
         Mockito.when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
 
         var exception = Assertions.assertThrows((DaoException.class), () -> discountStatusDao.findMaximum());
-
         var expectedMessage = "Unknown column label";
         var actualMessage = exception.getMessage();
 

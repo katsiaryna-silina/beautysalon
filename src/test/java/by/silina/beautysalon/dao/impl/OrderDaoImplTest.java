@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ import static by.silina.beautysalon.dao.TableColumnName.*;
  */
 @ExtendWith(MockitoExtension.class)
 class OrderDaoImplTest {
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     @InjectMocks
     OrderDaoImpl orderDao;
     @Mock
@@ -61,6 +62,9 @@ class OrderDaoImplTest {
 
     /**
      * Tests inserting new order method.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
+     * Creates rowCountDML in order to replace a result from database in PreparedStatement.executeUpdate().
      */
     @Test
     void insert() throws DaoException, SQLException {
@@ -76,7 +80,7 @@ class OrderDaoImplTest {
         Mockito.when(mockConnection.prepareStatement(Mockito.contains("SELECT NEXTVAL('ORDERS') AS ORDER_ID"))).thenReturn(mockSelectOrderId);
         Mockito.when(mockSelectOrderId.executeQuery()).thenReturn(mockResultSet);
 
-        //create rowCountDML to replace a result of mockInsertFeedback.executeUpdate() and mockInsertOrder.executeUpdate()
+        //create rowCountDML to replace a result of executeUpdate()
         int rowCountDML = 1;
         Mockito.when(mockConnection.prepareStatement(Mockito.contains("INSERT INTO ORDER_FEEDBACKS"))).thenReturn(mockInsertFeedback);
         Mockito.when(mockInsertFeedback.executeUpdate()).thenReturn(rowCountDML);
@@ -90,13 +94,15 @@ class OrderDaoImplTest {
         Mockito.when(mockConnection.prepareStatement(Mockito.contains("INSERT INTO ORDERS_VISIT_TIMES"))).thenReturn(mockInsertOrdersVisitTimes);
         Mockito.when(mockInsertOrdersVisitTimes.executeUpdate()).thenReturn(rowCountDML);
 
-        //comparison two results
         boolean actualResult = orderDao.insert(createOrderForInsert());
         Assertions.assertTrue(actualResult);
     }
 
     /**
      * Tests inserting new order method when DaoException occurs.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
+     * Creates rowCountDML in order to replace a result from database in PreparedStatement.executeUpdate().
      */
     @Test
     void insertWithException() throws SQLException {
@@ -138,12 +144,15 @@ class OrderDaoImplTest {
 
     /**
      * Tests finding order by order id.
+     * This test can be fully covered only by using integration test.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
      */
     @Test
     void findById() throws SQLException, DaoException {
         //create expectedResult
         Optional<Order> expectedResult = Optional.of(createOrderWithoutTimeSlots1());
-        Long orderId = 3L;
+        var orderId = 3L;
 
         //create MockResultSet to replace a result of mockPreparedStatement.executeQuery()
         ResultSet mockResultSet = createMockedResultSetWithOrders(List.of(createOrderWithoutTimeSlots1()));
@@ -159,11 +168,14 @@ class OrderDaoImplTest {
 
     /**
      * Tests finding number of all orders.
+     * This test can be fully covered only by using integration test.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
      */
     @Test
     void findNumberOfAllOrders() throws SQLException, DaoException {
         //create expectedResult
-        List<Order> orders = List.of(createOrderWithTimeSlots1(), createOrderWithTimeSlots2());
+        var orders = List.of(createOrderWithTimeSlots1(), createOrderWithTimeSlots2());
         long expectedResult = orders.size();
 
         //create MockResultSet to replace a result of mockPreparedStatement.executeQuery()
@@ -180,11 +192,14 @@ class OrderDaoImplTest {
 
     /**
      * Tests finding number of user's orders.
+     * This test can be fully covered only by using integration test.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
      */
     @Test
     void findNumberOfUserOrders() throws SQLException, DaoException {
         //create expectedResult
-        List<Order> orders = List.of(createOrderWithTimeSlots1());
+        var orders = List.of(createOrderWithTimeSlots1());
         long expectedResult = orders.size();
         Assertions.assertEquals(1, expectedResult);
         var userId = 1L;
@@ -203,51 +218,114 @@ class OrderDaoImplTest {
 
     /**
      * Tests finding all paged orders.
+     * This test can be fully covered only by using integration test.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
      */
     @Test
-    void findPagedAllOrders() throws SQLException, DaoException {
+    void findPagedAllOrdersWithAllDisplayed() throws SQLException, DaoException {
         //create expectedResult
-        List<Order> expectedResult = List.of(createOrderWithoutTimeSlots1(), createOrderWithoutTimeSlots2());
-        Long fromOrderId = 1L;
-        Integer numberOfOrders = 5;
+        var allOrders = List.of(createOrderWithoutTimeSlots1(), createOrderWithoutTimeSlots2());
+        var fromOrderId = 1L;
+        var numberOfOrders = allOrders.size();
 
         //create MockResultSet to replace a result of mockPreparedStatement.executeQuery()
-        ResultSet mockResultSet = createMockedResultSetWithOrders(expectedResult);
-
         Mockito.when(mockConnectionPool.getConnection()).thenReturn(mockConnection);
         Mockito.when(mockConnection.prepareStatement(Mockito.anyString())).thenReturn(mockPreparedStatement);
-        Mockito.when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        Mockito.when(mockPreparedStatement.executeQuery()).thenAnswer(i -> {
+            var ordersToDisplay = new ArrayList<>(allOrders);
+            return createMockedResultSetWithOrders(ordersToDisplay);
+        });
 
         //comparison two results
         List<Order> actualResult = orderDao.findPagedOrders(fromOrderId, numberOfOrders);
-        Assertions.assertEquals(expectedResult, actualResult);
+        Assertions.assertEquals(allOrders, actualResult);
+    }
+
+    /**
+     * Tests finding one paged order.
+     * This test can be fully covered only by using integration test.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
+     */
+    @Test
+    void findPagedAllOrdersWithOneDisplayed() throws SQLException, DaoException {
+        //create expectedResult
+        var allOrders = List.of(createOrderWithoutTimeSlots1(), createOrderWithoutTimeSlots2());
+        var fromOrderId = 1L;
+        var numberOfOrders = 1;
+
+        //create MockResultSet to replace a result of mockPreparedStatement.executeQuery()
+        Mockito.when(mockConnectionPool.getConnection()).thenReturn(mockConnection);
+        Mockito.when(mockConnection.prepareStatement(Mockito.anyString())).thenReturn(mockPreparedStatement);
+        Mockito.when(mockPreparedStatement.executeQuery()).thenAnswer(i -> {
+            var ordersToDisplay = new ArrayList<>(allOrders.subList(Math.toIntExact(fromOrderId), numberOfOrders));
+            return createMockedResultSetWithOrders(ordersToDisplay);
+        });
+
+        //comparison two results
+        List<Order> actualResult = orderDao.findPagedOrders(fromOrderId, numberOfOrders);
+        Assertions.assertEquals(allOrders.subList(Math.toIntExact(fromOrderId), numberOfOrders), actualResult);
     }
 
     /**
      * Tests finding user's paged orders.
+     * This test can be fully covered only by using integration test.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
      */
     @Test
-    void findPagedUserOrders() throws SQLException, DaoException {
+    void findPagedUserOrdersWithAllDisplayed() throws SQLException, DaoException {
         //create expectedResult
-        List<Order> expectedResult = List.of(createOrderWithoutTimeSlots1(), createOrderWithoutTimeSlots2());
-        Long fromOrderId = 1L;
-        Integer numberOfOrders = 5;
+        var allOrders = List.of(createOrderWithoutTimeSlots1(), createOrderWithoutTimeSlots2());
+        var fromOrderId = 1L;
+        var numberOfOrders = allOrders.size();
         Long userId = 1L;
 
         //create MockResultSet to replace a result of mockPreparedStatement.executeQuery()
-        ResultSet mockResultSet = createMockedResultSetWithOrders(expectedResult);
-
         Mockito.when(mockConnectionPool.getConnection()).thenReturn(mockConnection);
         Mockito.when(mockConnection.prepareStatement(Mockito.anyString())).thenReturn(mockPreparedStatement);
-        Mockito.when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        Mockito.when(mockPreparedStatement.executeQuery()).thenAnswer(i -> {
+            var ordersToDisplay = new ArrayList<>(allOrders);
+            return createMockedResultSetWithOrders(ordersToDisplay);
+        });
 
         //comparison two results
         List<Order> actualResult = orderDao.findPagedOrders(fromOrderId, numberOfOrders, userId);
-        Assertions.assertEquals(expectedResult, actualResult);
+        Assertions.assertEquals(allOrders, actualResult);
+    }
+
+    /**
+     * Tests finding one user's paged order.
+     * This test can be fully covered only by using integration test.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates MockResultSet in order to replace resultSet from database in PreparedStatement.executeQuery().
+     */
+    @Test
+    void findPagedUserOrdersWithOneDisplayed() throws SQLException, DaoException {
+        //create expectedResult
+        var allOrders = List.of(createOrderWithoutTimeSlots1(), createOrderWithoutTimeSlots2());
+        var fromOrderId = 1L;
+        var numberOfOrders = 1;
+        var userId = 1L;
+
+        //create MockResultSet to replace a result of mockPreparedStatement.executeQuery()
+        Mockito.when(mockConnectionPool.getConnection()).thenReturn(mockConnection);
+        Mockito.when(mockConnection.prepareStatement(Mockito.anyString())).thenReturn(mockPreparedStatement);
+        Mockito.when(mockPreparedStatement.executeQuery()).thenAnswer(i -> {
+            var ordersToDisplay = new ArrayList<>(allOrders.subList(Math.toIntExact(fromOrderId), numberOfOrders));
+            return createMockedResultSetWithOrders(ordersToDisplay);
+        });
+        //comparison two results
+        List<Order> actualResult = orderDao.findPagedOrders(fromOrderId, numberOfOrders, userId);
+        Assertions.assertEquals(allOrders.subList(Math.toIntExact(fromOrderId), numberOfOrders), actualResult);
     }
 
     /**
      * Tests changing order status.
+     * This test can be fully covered only by using integration test.
+     * Uses mockConnection, mockPreparedStatement.
+     * Creates rowCountDML in order to replace a result from database in PreparedStatement.executeUpdate().
      */
     @Test
     void changeStatus() throws SQLException, DaoException {
@@ -320,7 +398,6 @@ class OrderDaoImplTest {
                 .timeSlots(List.of(VisitTime.builder().id(2L).build()))
                 .build();
     }
-
 
     /**
      * Creates service.

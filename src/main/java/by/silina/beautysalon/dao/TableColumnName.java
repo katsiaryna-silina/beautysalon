@@ -38,6 +38,8 @@ public final class TableColumnName {
     public static final String MARK = "MARK";
     public static final String IS_VERIFIED = "IS_VERIFIED";
     public static final String NUMBER_OF_ORDERS = "NUMBER_OF_ORDERS";
+    public static final String NUMBER_OF_SERVICES = "NUMBER_OF_SERVICES";
+    public static final String NUMBER_OF_USERS = "NUMBER_OF_USERS";
 
     /**
      * Initializes a TableColumnName class.

@@ -20,7 +20,7 @@ import java.util.List;
  * @author Silina Katsiaryna
  */
 public class VisitTimeDaoImpl extends BaseDao<VisitTime> implements VisitTimeDao {
-    private static final VisitTimeDaoImpl instance = new VisitTimeDaoImpl();
+    private static final VisitTimeDaoImpl instance = new VisitTimeDaoImpl(ConnectionPool.getInstance());
     private static final String SELECT_FREE_VISIT_TIMES = """
             SELECT VT.ID, VT.BEGIN_TIME, VT.END_TIME
             FROM VISIT_TIMES VT
@@ -36,11 +36,13 @@ public class VisitTimeDaoImpl extends BaseDao<VisitTime> implements VisitTimeDao
             """;
     private static final String DD_MM_YYYY = "dd-MM-yyyy";
     private final VisitTimeMapper visitTimeMapper = VisitTimeMapperImpl.getInstance();
+    private final ConnectionPool connectionPool;
 
     /**
      * Initializes a new VisitTimeDaoImpl.
      */
-    private VisitTimeDaoImpl() {
+    private VisitTimeDaoImpl(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
     /**
@@ -62,7 +64,7 @@ public class VisitTimeDaoImpl extends BaseDao<VisitTime> implements VisitTimeDao
     @Override
     public List<VisitTime> findFreeVisitTimeSlots(LocalDate visitDate) throws DaoException {
         List<VisitTime> visitTimes = new ArrayList<>();
-        try (var connection = ConnectionPool.getInstance().getConnection();
+        try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_FREE_VISIT_TIMES)) {
 
             preparedStatement.setString(1, visitDate.format(DateTimeFormatter.ofPattern(DD_MM_YYYY)));
