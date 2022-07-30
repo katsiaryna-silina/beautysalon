@@ -10,9 +10,11 @@ import by.silina.beautysalon.mapper.impl.UserMapperImpl;
 import by.silina.beautysalon.model.dto.UserPasswordsDto;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.service.impl.UserServiceImpl;
+import by.silina.beautysalon.util.MessageLocalizer;
 
 import java.util.Map;
 
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.LOCALE;
 import static by.silina.beautysalon.controller.command.PagePath.CHANGE_PASSWORD;
 import static by.silina.beautysalon.controller.command.PagePath.SUCCESS_CHANGE_PASSWORD;
 
@@ -42,6 +44,9 @@ public class ChangeUserPasswordCommand implements Command {
             if (errorMap.isEmpty()) {
                 page = SUCCESS_CHANGE_PASSWORD;
             } else {
+                var sessionLocale = (String) sessionRequestContent.getSessionAttributeByName(LOCALE);
+                MessageLocalizer.localize(errorMap, sessionLocale);
+                
                 fillRequestAttributesFrom(errorMap, sessionRequestContent);
             }
         } catch (ServiceException e) {

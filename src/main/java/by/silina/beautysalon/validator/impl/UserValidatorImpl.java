@@ -1,6 +1,7 @@
 package by.silina.beautysalon.validator.impl;
 
 import by.silina.beautysalon.validator.UserValidator;
+import liquibase.repackaged.org.apache.commons.lang3.StringUtils;
 
 /**
  * The UserValidatorImpl class that responsible for validation User.
@@ -41,7 +42,7 @@ public class UserValidatorImpl implements UserValidator {
      */
     @Override
     public boolean checkUsername(String username) {
-        return username != null && username.matches(USERNAME_REGEX);
+        return !StringUtils.isBlank(username) && username.matches(USERNAME_REGEX);
     }
 
     /**
@@ -52,7 +53,7 @@ public class UserValidatorImpl implements UserValidator {
      */
     @Override
     public boolean checkPassword(String password) {
-        return password != null && password.matches(PASSWORD_REGEX);
+        return !StringUtils.isBlank(password) && password.matches(PASSWORD_REGEX);
     }
 
     /**
@@ -63,7 +64,7 @@ public class UserValidatorImpl implements UserValidator {
      */
     @Override
     public boolean checkEmail(String email) {
-        return email != null && email.matches(EMAIL_REGEX);
+        return !StringUtils.isBlank(email) && email.matches(EMAIL_REGEX);
     }
 
     /**
@@ -74,7 +75,7 @@ public class UserValidatorImpl implements UserValidator {
      */
     @Override
     public boolean checkFirstname(String firstName) {
-        return firstName != null && firstName.matches(FIRST_AND_LAST_NAME_REGEX);
+        return !StringUtils.isBlank(firstName) && firstName.matches(FIRST_AND_LAST_NAME_REGEX);
     }
 
     /**
@@ -85,7 +86,7 @@ public class UserValidatorImpl implements UserValidator {
      */
     @Override
     public boolean checkLastName(String lastName) {
-        return lastName != null && lastName.matches(FIRST_AND_LAST_NAME_REGEX);
+        return !StringUtils.isBlank(lastName) && lastName.matches(FIRST_AND_LAST_NAME_REGEX);
     }
 
     /**
@@ -96,6 +97,6 @@ public class UserValidatorImpl implements UserValidator {
      */
     @Override
     public boolean checkPhoneNumber(String phoneNumber) {
-        return phoneNumber != null && phoneNumber.matches(PHONE_NUMBER_REGEX);
+        return !StringUtils.isBlank(phoneNumber) && phoneNumber.matches(PHONE_NUMBER_REGEX);
     }
 }

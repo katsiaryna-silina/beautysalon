@@ -23,6 +23,7 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
  */
 public class OrderFeedbackServiceImpl implements OrderFeedbackService {
     private static final OrderFeedbackServiceImpl instance = new OrderFeedbackServiceImpl();
+    private static final String ERROR_MESSAGE_FEEDBACK_CANNOT_UPDATE = "error.message.feedback.cannot.update";
     private final OrderFeedbackDaoImpl orderFeedbackDao = OrderFeedbackDaoImpl.getInstance();
     private final OrderFeedbackMapper feedbackMapper = OrderFeedbackMapperImpl.getInstance();
     private final OrderFeedbackDtoValidator feedbackDtoValidator = OrderFeedbackDtoValidatorImpl.getInstance();
@@ -54,19 +55,19 @@ public class OrderFeedbackServiceImpl implements OrderFeedbackService {
         Map<String, String> errorMap = new HashMap<>();
 
         if (feedbackDto == null) {
-            errorMap.put(FEEDBACK_UPDATE_ERROR_MESSAGE, "Feedback cannot be updated.");
+            errorMap.put(FEEDBACK_UPDATE_ERROR_MESSAGE, ERROR_MESSAGE_FEEDBACK_CANNOT_UPDATE);
             return errorMap;
         }
 
         errorMap = feedbackDtoValidator.checkOrderFeedbackDto(feedbackDto);
 
         if (!errorMap.isEmpty()) {
-            errorMap.put(FEEDBACK_UPDATE_ERROR_MESSAGE, "Feedback cannot be updated.");
+            errorMap.put(FEEDBACK_UPDATE_ERROR_MESSAGE, ERROR_MESSAGE_FEEDBACK_CANNOT_UPDATE);
         } else {
             var orderFeedback = feedbackMapper.toEntity(feedbackDto);
             try {
                 if (!orderFeedbackDao.update(orderFeedback)) {
-                    errorMap.put(FEEDBACK_UPDATE_ERROR_MESSAGE, "Feedback cannot be updated.");
+                    errorMap.put(FEEDBACK_UPDATE_ERROR_MESSAGE, ERROR_MESSAGE_FEEDBACK_CANNOT_UPDATE);
                 }
             } catch (DaoException e) {
                 throw new ServiceException(e);

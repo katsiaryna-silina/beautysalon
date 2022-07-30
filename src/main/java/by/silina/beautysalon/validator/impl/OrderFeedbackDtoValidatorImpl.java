@@ -16,13 +16,16 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
  * @author Silina Katsiaryna
  */
 public class OrderFeedbackDtoValidatorImpl implements OrderFeedbackDtoValidator {
-    private static final OrderFeedbackDtoValidatorImpl instance = new OrderFeedbackDtoValidatorImpl();
-    private final OrderFeedbackValidator feedbackValidator = OrderFeedbackValidatorImpl.getInstance();
+    private static final String ERROR_MESSAGE_MARK = "error.message.mark";
+    private static final String ERROR_MESSAGE_FEEDBACK_EMPTY = "error.message.feedback.empty";
+    private static final OrderFeedbackDtoValidatorImpl instance = new OrderFeedbackDtoValidatorImpl(OrderFeedbackValidatorImpl.getInstance());
+    private final OrderFeedbackValidator feedbackValidator;
 
     /**
      * Initializes a new OrderFeedbackDtoValidatorImpl.
      */
-    private OrderFeedbackDtoValidatorImpl() {
+    private OrderFeedbackDtoValidatorImpl(OrderFeedbackValidator feedbackValidator) {
+        this.feedbackValidator = feedbackValidator;
     }
 
     /**
@@ -46,12 +49,12 @@ public class OrderFeedbackDtoValidatorImpl implements OrderFeedbackDtoValidator 
 
         byte mark = orderFeedbackDto.getMark();
         if (!feedbackValidator.checkMark(mark)) {
-            errorMap.put(MARK_ERROR_MESSAGE, "Mark is not valid.");
+            errorMap.put(MARK_ERROR_MESSAGE, ERROR_MESSAGE_MARK);
         }
 
         var feedback = orderFeedbackDto.getFeedback();
         if (!feedbackValidator.checkFeedback(feedback)) {
-            errorMap.put(FEEDBACK_ERROR_MESSAGE, "Feedback shouldn't be empty.");
+            errorMap.put(FEEDBACK_ERROR_MESSAGE, ERROR_MESSAGE_FEEDBACK_EMPTY);
         }
         return errorMap;
     }

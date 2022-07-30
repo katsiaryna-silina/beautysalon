@@ -15,14 +15,22 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
  * @author Silina Katsiaryna
  */
 public class UserRegistrationDtoValidatorImpl implements UserRegistrationDtoValidator {
-    private static final UserRegistrationDtoValidatorImpl instance = new UserRegistrationDtoValidatorImpl();
+    private static final UserRegistrationDtoValidatorImpl instance = new UserRegistrationDtoValidatorImpl(UserValidatorImpl.getInstance());
+    private static final String ERROR_MESSAGE_USERNAME_IS_NOT_VALID = "error.message.username.is.not.valid";
+    private static final String ERROR_MESSAGE_PASSWORDS_DIDNT_MATCH = "error.message.passwords.didnt.match";
+    private static final String ERROR_MESSAGE_PASSWORD_IS_NOT_VALID = "error.message.password.is.not.valid";
+    private static final String ERROR_MESSAGE_EMAIL_IS_NOT_VALID = "error.message.email.is.not.valid";
+    private static final String ERROR_MESSAGE_FIRST_NAME = "error.message.first.name";
+    private static final String ERROR_MESSAGE_LAST_NAME = "error.message.last.name";
+    private static final String ERROR_MESSAGE_PHONE_NUMBER = "error.message.phone.number";
+    private final UserValidator userValidator;
 
     /**
      * Initializes a new UserRegistrationDtoValidatorImpl.
      */
-    private UserRegistrationDtoValidatorImpl() {
+    private UserRegistrationDtoValidatorImpl(UserValidator userValidator) {
+        this.userValidator = userValidator;
     }
-
 
     /**
      * Gets the single instance of UserRegistrationDtoValidatorImpl.
@@ -41,47 +49,40 @@ public class UserRegistrationDtoValidatorImpl implements UserRegistrationDtoVali
      */
     @Override
     public Map<String, String> checkUserRegistrationDto(UserRegistrationDto userRegistrationDto) {
-        UserValidator userValidator = UserValidatorImpl.getInstance();
-
         Map<String, String> errorMap = new HashMap<>();
 
         var username = userRegistrationDto.getUsername();
         if (!userValidator.checkUsername(username)) {
-            //todo
-            // errorMap.put(USERNAME_ERROR_MESSAGE, true);
-            // true - has message
-            errorMap.put(USERNAME_ERROR_MESSAGE, "Username is not valid, must be between 3 and 30 characters long. \n" +
-                    "Use only Latin letters, numbers, underscore and minus sign.");
+            errorMap.put(USERNAME_ERROR_MESSAGE, ERROR_MESSAGE_USERNAME_IS_NOT_VALID);
         }
 
         var password = userRegistrationDto.getPassword();
         var repeatedPassword = userRegistrationDto.getRepeatedPassword();
         if (password != null && !password.equals(repeatedPassword)) {
-            errorMap.put(PASSWORD_ERROR_MESSAGE, "Those passwords didn't match. Try again.");
+            errorMap.put(PASSWORD_ERROR_MESSAGE, ERROR_MESSAGE_PASSWORDS_DIDNT_MATCH);
         }
         if (!userValidator.checkPassword(password)) {
-            errorMap.put(PASSWORD_ERROR_MESSAGE, "Password is not valid, must be between 4 and 20 characters long. \n" +
-                    "Use only Latin letters, numbers, underscore and minus sign.");
+            errorMap.put(PASSWORD_ERROR_MESSAGE, ERROR_MESSAGE_PASSWORD_IS_NOT_VALID);
         }
 
         var email = userRegistrationDto.getEmail();
         if (!userValidator.checkEmail(email)) {
-            errorMap.put(EMAIL_ERROR_MESSAGE, "Email is not valid.");
+            errorMap.put(EMAIL_ERROR_MESSAGE, ERROR_MESSAGE_EMAIL_IS_NOT_VALID);
         }
 
         var firstName = userRegistrationDto.getFirstName();
         if (!userValidator.checkFirstname(firstName)) {
-            errorMap.put(FIRST_NAME_ERROR_MESSAGE, "First name is not valid.");
+            errorMap.put(FIRST_NAME_ERROR_MESSAGE, ERROR_MESSAGE_FIRST_NAME);
         }
 
         var lastName = userRegistrationDto.getLastName();
         if (!userValidator.checkLastName(lastName)) {
-            errorMap.put(LAST_NAME_ERROR_MESSAGE, "Last name is not valid.");
+            errorMap.put(LAST_NAME_ERROR_MESSAGE, ERROR_MESSAGE_LAST_NAME);
         }
 
         var phoneNumber = userRegistrationDto.getPhoneNumber();
         if (!userValidator.checkPhoneNumber(phoneNumber)) {
-            errorMap.put(PHONE_NUMBER_ERROR_MESSAGE, "Phone number is not valid.");
+            errorMap.put(PHONE_NUMBER_ERROR_MESSAGE, ERROR_MESSAGE_PHONE_NUMBER);
         }
 
         return errorMap;

@@ -33,6 +33,11 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
  */
 public class UserServiceImpl implements UserService {
     private static final UserServiceImpl instance = new UserServiceImpl();
+    private static final String ERROR_MESSAGE_EMAIL = "error.message.email";
+    private static final String ERROR_MESSAGE_NEW_USER_CREATION = "error.message.new.user.creation";
+    private static final String ERROR_MESSAGE_PASSWORD_CANNOT_CHANGE = "error.message.password.cannot.change";
+    private static final String ERROR_MESSAGE_PASSWORD_IS_NOT_CORRECT = "error.message.password.is.not.correct";
+    private static final String ERROR_MESSAGE_USERNAME_EXIST = "error.message.username.exist";
     private final UserValidator userValidator = UserValidatorImpl.getInstance();
     private final UserDaoImpl userDao = UserDaoImpl.getInstance();
     private final UserMapper userMapper = UserMapperImpl.getInstance();
@@ -114,15 +119,12 @@ public class UserServiceImpl implements UserService {
             try {
                 var username = userRegistrationDto.getUsername();
                 if (userDao.isUsernameExistInDB(username)) {
-                    //todo
-                    // errorMap.put(USERNAME_ERROR_MESSAGE, true);
-                    // true - has message
-                    errorMap.put(USERNAME_ERROR_MESSAGE, "Username is already exist.");
+                    errorMap.put(USERNAME_ERROR_MESSAGE, ERROR_MESSAGE_USERNAME_EXIST);
                 }
 
                 var email = userRegistrationDto.getEmail();
                 if (userDao.isEmailExistInDB(email)) {
-                    errorMap.put(EMAIL_ERROR_MESSAGE, "Email with the same name is already registered.");
+                    errorMap.put(EMAIL_ERROR_MESSAGE, ERROR_MESSAGE_EMAIL);
                 }
             } catch (DaoException e) {
                 throw new ServiceException(e);
@@ -133,7 +135,7 @@ public class UserServiceImpl implements UserService {
             User user = userMapper.toEntity(userRegistrationDto);
             try {
                 if (!userDao.insert(user)) {
-                    errorMap.put(CREATE_NEW_USER_ERROR_MESSAGE, "Cannot add new user.");
+                    errorMap.put(CREATE_NEW_USER_ERROR_MESSAGE, ERROR_MESSAGE_NEW_USER_CREATION);
                 }
             } catch (DaoException e) {
                 throw new ServiceException(e);
@@ -162,14 +164,14 @@ public class UserServiceImpl implements UserService {
                 var passwordFromDB = userDao.findUserPasswordById(userId);
 
                 if (passwordFromDB.isEmpty()) {
-                    errorMap.put(PASSWORD_ERROR_MESSAGE, "Cannot change password.");
+                    errorMap.put(PASSWORD_ERROR_MESSAGE, ERROR_MESSAGE_PASSWORD_CANNOT_CHANGE);
                 } else if (!PasswordEncoder.verifyPasswords(currentPassword, passwordFromDB.get())) {
-                    errorMap.put(PASSWORD_ERROR_MESSAGE, "Password is not correct.");
+                    errorMap.put(PASSWORD_ERROR_MESSAGE, ERROR_MESSAGE_PASSWORD_IS_NOT_CORRECT);
                 } else {
                     var newPassword = PasswordEncoder.encode(userPasswordsDto.getNewPassword());
                     boolean isPasswordChanged = userDao.changeUserPassword(userId, newPassword);
                     if (!isPasswordChanged) {
-                        errorMap.put(PASSWORD_ERROR_MESSAGE, "Cannot change password.");
+                        errorMap.put(PASSWORD_ERROR_MESSAGE, ERROR_MESSAGE_PASSWORD_CANNOT_CHANGE);
                     }
                 }
             } catch (DaoException e) {

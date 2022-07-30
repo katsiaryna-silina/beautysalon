@@ -1,6 +1,7 @@
 package by.silina.beautysalon.mapper.impl;
 
 import by.silina.beautysalon.controller.SessionRequestContent;
+import by.silina.beautysalon.dao.TableColumnName;
 import by.silina.beautysalon.model.dto.UserAuthorizedDto;
 import by.silina.beautysalon.model.dto.UserLoginDto;
 import by.silina.beautysalon.model.dto.UserPasswordsDto;
@@ -30,8 +31,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
-import static by.silina.beautysalon.dao.TableColumnName.DISCOUNT;
-import static by.silina.beautysalon.dao.TableColumnName.LAST_LOGIN;
 
 /**
  * The UserMapperImplTest test class.
@@ -105,18 +104,18 @@ class UserMapperImplTest {
 
         //create MockResultSet
         DSLContext context = DSL.using(SQLDialect.DEFAULT);
-        Field<Long> columnId = DSL.field(ID, SQLDataType.BIGINT);
-        Field<String> columnUsername = DSL.field(USERNAME, SQLDataType.VARCHAR(30));
-        Field<String> columnPassword = DSL.field(PASSWORD, SQLDataType.VARCHAR(72));
-        Field<String> columnEmail = DSL.field(EMAIL, SQLDataType.VARCHAR(100));
-        Field<String> columnFirstName = DSL.field(FIRST_NAME, SQLDataType.VARCHAR(30));
-        Field<String> columnLastName = DSL.field(LAST_NAME, SQLDataType.VARCHAR(30));
-        Field<String> columnPhoneNumber = DSL.field(PHONE_NUMBER, SQLDataType.VARCHAR(20));
-        Field<LocalDateTime> columnLastLogin = DSL.field(LAST_LOGIN, SQLDataType.LOCALDATETIME);
-        Field<String> columnDiscountStatus = DSL.field(DISCOUNT_STATUS, SQLDataType.VARCHAR(20));
-        Field<BigDecimal> columnDiscount = DSL.field(DISCOUNT, SQLDataType.DECIMAL(4, 1));
-        Field<String> columnRole = DSL.field(ROLE, SQLDataType.VARCHAR(10));
-        Field<String> columnUserStatus = DSL.field(STATUS, SQLDataType.VARCHAR(20));
+        Field<Long> columnId = DSL.field(TableColumnName.ID, SQLDataType.BIGINT);
+        Field<String> columnUsername = DSL.field(TableColumnName.USERNAME, SQLDataType.VARCHAR(30));
+        Field<String> columnPassword = DSL.field(TableColumnName.PASSWORD, SQLDataType.VARCHAR(72));
+        Field<String> columnEmail = DSL.field(TableColumnName.EMAIL, SQLDataType.VARCHAR(100));
+        Field<String> columnFirstName = DSL.field(TableColumnName.FIRST_NAME, SQLDataType.VARCHAR(30));
+        Field<String> columnLastName = DSL.field(TableColumnName.LAST_NAME, SQLDataType.VARCHAR(30));
+        Field<String> columnPhoneNumber = DSL.field(TableColumnName.PHONE_NUMBER, SQLDataType.VARCHAR(20));
+        Field<LocalDateTime> columnLastLogin = DSL.field(TableColumnName.LAST_LOGIN, SQLDataType.LOCALDATETIME);
+        Field<String> columnDiscountStatus = DSL.field(TableColumnName.DISCOUNT_STATUS, SQLDataType.VARCHAR(20));
+        Field<BigDecimal> columnDiscount = DSL.field(TableColumnName.DISCOUNT, SQLDataType.DECIMAL(4, 1));
+        Field<String> columnRole = DSL.field(TableColumnName.ROLE, SQLDataType.VARCHAR(10));
+        Field<String> columnUserStatus = DSL.field(TableColumnName.STATUS, SQLDataType.VARCHAR(20));
 
         var result = context.newResult(columnId, columnUsername, columnPassword,
                 columnEmail, columnFirstName, columnLastName, columnPhoneNumber,

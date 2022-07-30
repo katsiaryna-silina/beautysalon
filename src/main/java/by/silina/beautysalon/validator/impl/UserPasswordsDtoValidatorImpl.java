@@ -16,12 +16,18 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
  * @author Silina Katsiaryna
  */
 public class UserPasswordsDtoValidatorImpl implements UserPasswordsDtoValidator {
-    private static final UserPasswordsDtoValidatorImpl instance = new UserPasswordsDtoValidatorImpl();
+    private static final UserPasswordsDtoValidatorImpl instance = new UserPasswordsDtoValidatorImpl(UserValidatorImpl.getInstance());
+    private static final String ERROR_MESSAGE_PASSWORD_IS_NOT_CORRECT = "error.message.password.is.not.correct";
+    private static final String ERROR_MESSAGE_PASSWORD_SAME = "error.message.password.same";
+    private static final String ERROR_MESSAGE_PASSWORDS_DIDNT_MATCH = "error.message.passwords.didnt.match";
+    private static final String ERROR_MESSAGE_PASSWORD_IS_NOT_VALID = "error.message.password.is.not.valid";
+    private final UserValidator userValidator;
 
     /**
      * Initializes a new UserPasswordsDtoValidatorImpl.
      */
-    private UserPasswordsDtoValidatorImpl() {
+    private UserPasswordsDtoValidatorImpl(UserValidator userValidator) {
+        this.userValidator = userValidator;
     }
 
     /**
@@ -41,8 +47,6 @@ public class UserPasswordsDtoValidatorImpl implements UserPasswordsDtoValidator 
      */
     @Override
     public Map<String, String> checkUserPasswordsDto(UserPasswordsDto userPasswordsDto) {
-        UserValidator userValidator = UserValidatorImpl.getInstance();
-
         Map<String, String> errorMap = new HashMap<>();
 
         var currentPassword = userPasswordsDto.getCurrentPassword();
@@ -50,21 +54,20 @@ public class UserPasswordsDtoValidatorImpl implements UserPasswordsDtoValidator 
         var repeatedNewPassword = userPasswordsDto.getRepeatedNewPassword();
 
         if (!userValidator.checkPassword(currentPassword)) {
-            errorMap.put(PASSWORD_ERROR_MESSAGE, "Password is not correct.");
+            errorMap.put(PASSWORD_ERROR_MESSAGE, ERROR_MESSAGE_PASSWORD_IS_NOT_CORRECT);
             return errorMap;
         }
 
         if (currentPassword.equals(newPassword)) {
-            errorMap.put(NEW_PASSWORD_ERROR_MESSAGE, "New password is the same as the old one.");
+            errorMap.put(NEW_PASSWORD_ERROR_MESSAGE, ERROR_MESSAGE_PASSWORD_SAME);
             return errorMap;
         }
 
         if (newPassword != null && !newPassword.equals(repeatedNewPassword)) {
-            errorMap.put(NEW_PASSWORD_ERROR_MESSAGE, "Those passwords didn't match. Try again.");
+            errorMap.put(NEW_PASSWORD_ERROR_MESSAGE, ERROR_MESSAGE_PASSWORDS_DIDNT_MATCH);
         }
         if (!userValidator.checkPassword(newPassword) && !userValidator.checkPassword(repeatedNewPassword)) {
-            errorMap.put(NEW_PASSWORD_ERROR_MESSAGE, "Password is not valid, must be between 4 and 20 characters long. \n" +
-                    "Use only Latin letters, numbers, underscore and minus sign.");
+            errorMap.put(NEW_PASSWORD_ERROR_MESSAGE, ERROR_MESSAGE_PASSWORD_IS_NOT_VALID);
         }
         return errorMap;
     }

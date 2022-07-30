@@ -9,6 +9,7 @@ import by.silina.beautysalon.mapper.UserMapper;
 import by.silina.beautysalon.mapper.impl.UserMapperImpl;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.service.impl.UserServiceImpl;
+import by.silina.beautysalon.util.MessageLocalizer;
 
 import java.util.Map;
 
@@ -36,7 +37,6 @@ public class RegistrationCommand implements Command {
         UserMapper userMapper = UserMapperImpl.getInstance();
 
         var userRegistrationDto = userMapper.toUserRegistrationDto(sessionRequestContent);
-
         var page = REGISTRATION;
 
         try {
@@ -45,6 +45,9 @@ public class RegistrationCommand implements Command {
                 sessionRequestContent.putSessionAttribute(USERNAME, userRegistrationDto.getFirstName());
                 page = WELCOME;
             } else {
+                var sessionLocale = (String) sessionRequestContent.getSessionAttributeByName(LOCALE);
+                MessageLocalizer.localize(errorMap, sessionLocale);
+
                 fillRequestAttributesFrom(errorMap, sessionRequestContent);
                 sessionRequestContent.putRequestAttribute(USERNAME, userRegistrationDto.getFirstName());
                 sessionRequestContent.putRequestAttribute(EMAIL, userRegistrationDto.getEmail());
