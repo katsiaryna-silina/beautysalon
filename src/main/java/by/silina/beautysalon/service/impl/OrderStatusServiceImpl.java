@@ -17,13 +17,14 @@ import java.util.Optional;
  * @author Silina Katsiaryna
  */
 public class OrderStatusServiceImpl implements OrderStatusService {
-    private static final OrderStatusServiceImpl instance = new OrderStatusServiceImpl();
-    private final OrderStatusDaoImpl orderStatusDao = OrderStatusDaoImpl.getInstance();
+    private static final OrderStatusServiceImpl instance = new OrderStatusServiceImpl(OrderStatusDaoImpl.getInstance());
+    private final OrderStatusDaoImpl orderStatusDao;
 
     /**
      * Initializes a new OrderStatusServiceImpl.
      */
-    private OrderStatusServiceImpl() {
+    private OrderStatusServiceImpl(OrderStatusDaoImpl orderStatusDao) {
+        this.orderStatusDao = orderStatusDao;
     }
 
     /**

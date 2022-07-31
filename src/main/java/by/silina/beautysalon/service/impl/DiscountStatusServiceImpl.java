@@ -15,13 +15,14 @@ import java.util.Optional;
  * @author Silina Katsiaryna
  */
 public class DiscountStatusServiceImpl implements DiscountStatusService {
-    private static final DiscountStatusServiceImpl instance = new DiscountStatusServiceImpl();
-    private final DiscountStatusDaoImpl discountStatusDao = DiscountStatusDaoImpl.getInstance();
+    private static final DiscountStatusServiceImpl instance = new DiscountStatusServiceImpl(DiscountStatusDaoImpl.getInstance());
+    private final DiscountStatusDaoImpl discountStatusDao;
 
     /**
      * Initializes a new DiscountStatusServiceImpl.
      */
-    private DiscountStatusServiceImpl() {
+    private DiscountStatusServiceImpl(DiscountStatusDaoImpl discountStatusDao) {
+        this.discountStatusDao = discountStatusDao;
     }
 
     /**

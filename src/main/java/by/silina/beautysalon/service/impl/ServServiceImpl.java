@@ -18,14 +18,15 @@ import java.util.Optional;
  * @author Silina Katsiaryna
  */
 public class ServServiceImpl implements ServService {
-    private static final ServServiceImpl instance = new ServServiceImpl();
-    private static final ServDaoImpl serviceDao = ServDaoImpl.getInstance();
+    private static final ServServiceImpl instance = new ServServiceImpl(ServDaoImpl.getInstance());
     private final ServiceMapper serviceMapper = ServiceMapperImpl.getInstance();
+    private final ServDaoImpl serviceDao;
 
     /**
      * Initializes a new ServServiceImpl.
      */
-    private ServServiceImpl() {
+    private ServServiceImpl(ServDaoImpl serviceDao) {
+        this.serviceDao = serviceDao;
     }
 
     /**
@@ -36,7 +37,6 @@ public class ServServiceImpl implements ServService {
     public static ServServiceImpl getInstance() {
         return instance;
     }
-
 
     /**
      * Finds complex services.

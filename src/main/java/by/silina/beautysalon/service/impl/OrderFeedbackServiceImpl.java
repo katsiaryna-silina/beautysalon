@@ -22,16 +22,17 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
  * @author Silina Katsiaryna
  */
 public class OrderFeedbackServiceImpl implements OrderFeedbackService {
-    private static final OrderFeedbackServiceImpl instance = new OrderFeedbackServiceImpl();
+    private static final OrderFeedbackServiceImpl instance = new OrderFeedbackServiceImpl(OrderFeedbackDaoImpl.getInstance());
     private static final String ERROR_MESSAGE_FEEDBACK_CANNOT_UPDATE = "error.message.feedback.cannot.update";
-    private final OrderFeedbackDaoImpl orderFeedbackDao = OrderFeedbackDaoImpl.getInstance();
     private final OrderFeedbackMapper feedbackMapper = OrderFeedbackMapperImpl.getInstance();
     private final OrderFeedbackDtoValidator feedbackDtoValidator = OrderFeedbackDtoValidatorImpl.getInstance();
+    private final OrderFeedbackDaoImpl orderFeedbackDao;
 
     /**
      * Initializes a new OrderFeedbackServiceImpl.
      */
-    private OrderFeedbackServiceImpl() {
+    private OrderFeedbackServiceImpl(OrderFeedbackDaoImpl orderFeedbackDao) {
+        this.orderFeedbackDao = orderFeedbackDao;
     }
 
     /**

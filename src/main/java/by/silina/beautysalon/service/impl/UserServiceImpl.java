@@ -32,20 +32,21 @@ import static by.silina.beautysalon.controller.command.AttributeAndParameterName
  * @author Silina Katsiaryna
  */
 public class UserServiceImpl implements UserService {
-    private static final UserServiceImpl instance = new UserServiceImpl();
+    private static final UserServiceImpl instance = new UserServiceImpl(UserDaoImpl.getInstance());
     private static final String ERROR_MESSAGE_EMAIL = "error.message.email";
     private static final String ERROR_MESSAGE_NEW_USER_CREATION = "error.message.new.user.creation";
     private static final String ERROR_MESSAGE_PASSWORD_CANNOT_CHANGE = "error.message.password.cannot.change";
     private static final String ERROR_MESSAGE_PASSWORD_IS_NOT_CORRECT = "error.message.password.is.not.correct";
     private static final String ERROR_MESSAGE_USERNAME_EXIST = "error.message.username.exist";
     private final UserValidator userValidator = UserValidatorImpl.getInstance();
-    private final UserDaoImpl userDao = UserDaoImpl.getInstance();
+    private final UserDaoImpl userDao;
     private final UserMapper userMapper = UserMapperImpl.getInstance();
 
     /**
      * Initializes a new UserServiceImpl.
      */
-    private UserServiceImpl() {
+    private UserServiceImpl(UserDaoImpl userDao) {
+        this.userDao = userDao;
     }
 
     /**

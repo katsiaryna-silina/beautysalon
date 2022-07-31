@@ -22,14 +22,15 @@ import java.util.List;
  * @author Silina Katsiaryna
  */
 public class VisitTimeServiceImpl implements VisitTimeService {
-    private static final VisitTimeServiceImpl instance = new VisitTimeServiceImpl();
-    private final VisitTimeDaoImpl visitTimeDao = VisitTimeDaoImpl.getInstance();
+    private static final VisitTimeServiceImpl instance = new VisitTimeServiceImpl(VisitTimeDaoImpl.getInstance());
+    private final VisitTimeDaoImpl visitTimeDao;
     private final VisitTimeMapper visitTimeMapper = VisitTimeMapperImpl.getInstance();
 
     /**
      * Initializes a new VisitTimeServiceImpl.
      */
-    private VisitTimeServiceImpl() {
+    private VisitTimeServiceImpl(VisitTimeDaoImpl visitTimeDao) {
+        this.visitTimeDao = visitTimeDao;
     }
 
     /**

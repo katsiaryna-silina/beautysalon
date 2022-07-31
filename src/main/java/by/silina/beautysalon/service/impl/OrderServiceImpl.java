@@ -20,14 +20,15 @@ import java.util.Optional;
  * @author Silina Katsiaryna
  */
 public class OrderServiceImpl implements OrderService {
-    private static final OrderServiceImpl instance = new OrderServiceImpl();
-    private final OrderDaoImpl orderDao = OrderDaoImpl.getInstance();
+    private static final OrderServiceImpl instance = new OrderServiceImpl(OrderDaoImpl.getInstance());
     private final OrderMapper orderMapper = OrderMapperImpl.getInstance();
+    private final OrderDaoImpl orderDao;
 
     /**
      * Initializes a new OrderServiceImpl.
      */
-    private OrderServiceImpl() {
+    private OrderServiceImpl(OrderDaoImpl orderDao) {
+        this.orderDao = orderDao;
     }
 
     /**
