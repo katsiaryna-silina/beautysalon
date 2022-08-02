@@ -8,7 +8,9 @@ import by.silina.beautysalon.exception.ServiceException;
 import by.silina.beautysalon.mapper.OrderMapper;
 import by.silina.beautysalon.mapper.impl.OrderMapperImpl;
 import by.silina.beautysalon.service.OrderService;
+import by.silina.beautysalon.service.VisitTimeService;
 import by.silina.beautysalon.service.impl.OrderServiceImpl;
+import by.silina.beautysalon.service.impl.VisitTimeServiceImpl;
 
 import static by.silina.beautysalon.controller.command.PagePath.FAILED_NEW_ORDER;
 import static by.silina.beautysalon.controller.command.PagePath.SUCCESS_NEW_ORDER;
@@ -30,17 +32,20 @@ public class CreateOrderCommand implements Command {
     @Override
     public Router execute(SessionRequestContent sessionRequestContent) throws CommandException {
         OrderService orderService = OrderServiceImpl.getInstance();
+        VisitTimeService visitTimeService = VisitTimeServiceImpl.getInstance();
         OrderMapper orderMapper = OrderMapperImpl.getInstance();
 
         var page = SUCCESS_NEW_ORDER;
         var orderFormDto = orderMapper.toOrderFormDto(sessionRequestContent);
         try {
-            if (!orderService.addOrder(orderFormDto)) {
+            var isVisitTimeSlotFree = visitTimeService.isVisitTimeSlotFree(orderFormDto.getVisitDate(), orderFormDto.getTimeSlotIds());
+
+            if (!isVisitTimeSlotFree || !orderService.addOrder(orderFormDto)) {
                 page = FAILED_NEW_ORDER;
             }
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return new Router(page, Router.Type.FORWARD);
+        return new Router(page, Router.Type.REDIRECT);
     }
 }

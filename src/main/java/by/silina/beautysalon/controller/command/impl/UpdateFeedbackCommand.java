@@ -36,29 +36,31 @@ public class UpdateFeedbackCommand implements Command {
 
         var feedbackId = Long.valueOf(sessionRequestContent.getParameterByName(ID));
 
-        var page = UPDATE_FEEDBACK;
+        Router router;
         try {
             var feedbackDtoOptional = feedbackService.findById(feedbackId);
-            if (feedbackDtoOptional.isEmpty()) {
-                return new Router(UPDATE_FEEDBACK_FAILED, Router.Type.FORWARD);
-            }
+            if (feedbackDtoOptional.isPresent()) {
+                var newFeedbackDto = orderFeedbackMapper.toDto(sessionRequestContent);
 
-            var newFeedbackDto = orderFeedbackMapper.toDto(sessionRequestContent);
+                Map<String, String> errorMap = feedbackService.updateFeedback(newFeedbackDto);
+                if (!errorMap.isEmpty()) {
+                    var feedbackDto = feedbackDtoOptional.get();
 
-            Map<String, String> errorMap = feedbackService.updateFeedback(newFeedbackDto);
-            if (errorMap.isEmpty()) {
-                page = UPDATE_FEEDBACK_SUCCESS;
+                    fillRequestAttributesFrom(errorMap, sessionRequestContent);
+                    sessionRequestContent.putRequestAttribute(CURRENT_FEEDBACK, feedbackDto.getFeedback());
+                    sessionRequestContent.putRequestAttribute(CURRENT_MARK, feedbackDto.getMark());
+
+                    router = new Router(UPDATE_FEEDBACK, Router.Type.FORWARD);
+                } else {
+                    router = new Router(UPDATE_FEEDBACK_SUCCESS, Router.Type.REDIRECT);
+                }
             } else {
-                var feedbackDto = feedbackDtoOptional.get();
-
-                fillRequestAttributesFrom(errorMap, sessionRequestContent);
-                sessionRequestContent.putRequestAttribute(CURRENT_FEEDBACK, feedbackDto.getFeedback());
-                sessionRequestContent.putRequestAttribute(CURRENT_MARK, feedbackDto.getMark());
+                router = new Router(UPDATE_FEEDBACK_FAILED, Router.Type.REDIRECT);
             }
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return new Router(page, Router.Type.FORWARD);
+        return router;
     }
 
     /**

@@ -39,6 +39,6 @@ public class UpdateServiceCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return new Router(ALL_SERVICES_FOR_ADMIN, Router.Type.FORWARD);
+        return new Router(ALL_SERVICES_FOR_ADMIN, Router.Type.REDIRECT);
     }
 }

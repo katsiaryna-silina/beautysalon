@@ -21,4 +21,14 @@ public interface VisitTimeDao {
      * @throws DaoException if a dao exception occurs.
      */
     List<VisitTime> findFreeVisitTimeSlots(LocalDate visitDate) throws DaoException;
+
+    /**
+     * Checks if visit time slots free for the date.
+     *
+     * @param visitDate    LocalDate. Date of the visit.
+     * @param visitTimeIds List of VisitTime id.
+     * @return boolean.  True if time slots are free; false otherwise.
+     * @throws DaoException if a dao exception occurs.
+     */
+    boolean isVisitTimeSlotFree(LocalDate visitDate, List<Long> visitTimeIds) throws DaoException;
 }

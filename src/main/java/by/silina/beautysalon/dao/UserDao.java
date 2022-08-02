@@ -26,6 +26,15 @@ public interface UserDao {
     Optional<User> findUserByUsername(String username) throws DaoException;
 
     /**
+     * Finds not blocked user by username.
+     *
+     * @param username String. The username.
+     * @return Optional of User
+     * @throws DaoException if a dao exception occurs.
+     */
+    Optional<User> findNotBlockedUserByUsername(String username) throws DaoException;
+
+    /**
      * Checks if username exists in the datasource.
      *
      * @param username String. The username.

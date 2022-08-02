@@ -8,7 +8,8 @@ import by.silina.beautysalon.exception.ServiceException;
 import by.silina.beautysalon.service.OrderService;
 import by.silina.beautysalon.service.impl.OrderServiceImpl;
 
-import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.NEW_ORDER_STATUS_NAME;
+import static by.silina.beautysalon.controller.command.AttributeAndParameterName.ORDER_ID;
 import static by.silina.beautysalon.controller.command.PagePath.ORDER_STATUS_FAILED_CHANGE;
 import static by.silina.beautysalon.controller.command.PagePath.ORDER_STATUS_SUCCESS_CHANGE;
 
@@ -31,22 +32,18 @@ public class ChangeOrderStatusCommand implements Command {
         OrderService orderService = OrderServiceImpl.getInstance();
 
         var orderId = Long.valueOf(sessionRequestContent.getParameterByName(ORDER_ID));
-        sessionRequestContent.putRequestAttribute(ORDER_ID, orderId);
-
         String newOrderStatusName = sessionRequestContent.getParameterByName(NEW_ORDER_STATUS_NAME);
 
-        var page = ORDER_STATUS_SUCCESS_CHANGE;
+        String page;
         try {
             if (orderService.changeStatus(orderId, newOrderStatusName)) {
-                String currentOrderStatus = sessionRequestContent.getParameterByName(CURRENT_ORDER_STATUS_NAME);
-                sessionRequestContent.putRequestAttribute(CURRENT_ORDER_STATUS_NAME, currentOrderStatus);
-                sessionRequestContent.putRequestAttribute(NEW_ORDER_STATUS_NAME, newOrderStatusName);
+                page = ORDER_STATUS_SUCCESS_CHANGE;
             } else {
                 page = ORDER_STATUS_FAILED_CHANGE;
             }
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return new Router(page, Router.Type.FORWARD);
+        return new Router(page, Router.Type.REDIRECT);
     }
 }

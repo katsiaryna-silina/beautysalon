@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
         if (userValidator.checkUsername(usernameFromDto) && userValidator.checkPassword(passwordFromDto)) {
             try {
-                optionalUser = userDao.findUserByUsername(usernameFromDto);
+                optionalUser = userDao.findNotBlockedUserByUsername(usernameFromDto);
                 if (optionalUser.isPresent()) {
                     var passwordFromDB = optionalUser.get().getPassword();
 

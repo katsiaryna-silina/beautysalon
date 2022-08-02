@@ -28,7 +28,7 @@
             <h3><fmt:message key="table.header.delete.user"/></h3>
             </br>
             </br>
-            <a>${delete_user_result_message}</a>
+            <a><fmt:message key="user.delete.failed"/></a>
         </div>
     </div>
 </div>

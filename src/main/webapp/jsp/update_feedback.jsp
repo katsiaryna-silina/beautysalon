@@ -50,7 +50,9 @@
                 </div>
                 <div style="clear: both"></div>
                 </br>
-                <input class="btn btn-info btn-lg" type="submit" value="Save">
+                <button class="btn btn-info btn-lg" type="submit">
+                    <fmt:message key="button.save"/>
+                </button>
             </form>
 
             <hr/>

@@ -7,9 +7,11 @@ import by.silina.beautysalon.exception.CommandException;
 import by.silina.beautysalon.exception.ServiceException;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.service.impl.UserServiceImpl;
+import by.silina.beautysalon.util.MessageLocalizer;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
-import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_RESULT;
+import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_DISCOUNT_SUCCESS;
+import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_FAILED;
 
 /**
  * The ChangeDiscountCommand class for change user's discount command by admin.
@@ -17,6 +19,8 @@ import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_RESU
  * @author Silina Katsiaryna
  */
 public class ChangeDiscountCommand implements Command {
+    private static final String USER_DISCOUNT_UPDATE_FAILED_CAUSE_SAME_KEY = "user.discount.update.failed.cause.same";
+    private static final String USER_DISCOUNT_CANNOT_UPDATE_KEY = "user.discount.cannot.update";
 
     /**
      * Executes change discount command.
@@ -38,19 +42,25 @@ public class ChangeDiscountCommand implements Command {
         String currentDiscountStatusName = sessionRequestContent.getParameterByName(CURRENT_DISCOUNT_STATUS_NAME);
         String newDiscountStatusName = sessionRequestContent.getParameterByName(NEW_DISCOUNT_STATUS_NAME);
 
+        var sessionLocale = (String) sessionRequestContent.getSessionAttributeByName(LOCALE);
+
+        var router = new Router(UPDATE_USER_FAILED, Router.Type.FORWARD);
+
         if (currentDiscountStatusName != null && currentDiscountStatusName.equals(newDiscountStatusName)) {
-            sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Picked discount status is the same as current.");
+            var message = MessageLocalizer.getLocalizedMessage(USER_DISCOUNT_UPDATE_FAILED_CAUSE_SAME_KEY, sessionLocale);
+            sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, message);
         } else {
             try {
                 if (userService.changeDiscount(userId, newDiscountStatusName)) {
-                    sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "User's discount status has changed on \"" + newDiscountStatusName + "%\"");
+                    router = new Router(UPDATE_USER_DISCOUNT_SUCCESS, Router.Type.REDIRECT);
                 } else {
-                    sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Cannot change user's discount status.");
+                    var message = MessageLocalizer.getLocalizedMessage(USER_DISCOUNT_CANNOT_UPDATE_KEY, sessionLocale);
+                    sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, message);
                 }
             } catch (ServiceException e) {
                 throw new CommandException(e);
             }
         }
-        return new Router(UPDATE_USER_RESULT, Router.Type.FORWARD);
+        return router;
     }
 }

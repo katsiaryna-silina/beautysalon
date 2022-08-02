@@ -12,6 +12,9 @@ import java.util.Map;
  * @author Silina Katsiaryna
  */
 public class SessionRequestContent {
+    private static final String LESS_THAN_SIGN = "<";
+    private static final String GREATER_THAN_SIGN = ">";
+    private static final String REPLACEMENT = "";
     private final Map<String, Object> requestAttributes = new HashMap<>();
     private final Map<String, String[]> requestParameters = new HashMap<>();
     private final Map<String, Object> sessionAttributes = new HashMap<>();
@@ -73,7 +76,7 @@ public class SessionRequestContent {
      */
     public String getParameterByName(String parameterName) {
         String[] parameters = requestParameters.get(parameterName);
-        return (parameters == null || parameters.length == 0) ? null : parameters[0];
+        return (parameters == null || parameters.length == 0) ? null : getSafeString(parameters[0]);
     }
 
     /**
@@ -116,5 +119,17 @@ public class SessionRequestContent {
      */
     public Object putSessionAttribute(String sessionAttributeName, Object object) {
         return sessionAttributes.put(sessionAttributeName, object);
+    }
+
+    /**
+     * Gets safe String in order to avoiding xss attacks.
+     *
+     * @param string String
+     * @return String
+     */
+    private String getSafeString(String string) {
+        return string.strip()
+                .replace(LESS_THAN_SIGN, REPLACEMENT)
+                .replace(GREATER_THAN_SIGN, REPLACEMENT);
     }
 }

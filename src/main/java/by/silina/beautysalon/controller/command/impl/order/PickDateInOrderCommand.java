@@ -12,6 +12,7 @@ import by.silina.beautysalon.service.impl.ServServiceImpl;
 import liquibase.repackaged.org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +109,6 @@ public class PickDateInOrderCommand implements Command {
         var discountStatus = (DiscountStatus) sessionRequestContent.getSessionAttributeByName(DISCOUNT_STATUS);
         return fullPrice.multiply(BigDecimal.valueOf(100).subtract(discountStatus.getDiscount()))
                 .divide(BigDecimal.valueOf(100))
-                .setScale(DECIMAL_PLACES);
+                .setScale(DECIMAL_PLACES, RoundingMode.DOWN);
     }
 }

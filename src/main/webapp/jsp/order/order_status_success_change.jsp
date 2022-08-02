@@ -25,9 +25,7 @@
 <h3 class="text-center"><fmt:message key="table.header.update.order"/></h3>
 <br/>
 <div class="container">
-    <h5><fmt:message key="description.order.status.with.id"/>${order_id}
-        <fmt:message key="description.order.changed"/>
-        "${current_order_status_name}" <fmt:message key="to"/> "${new_order_status_name}"!</h5>
+    <h5><fmt:message key="description.order.status.changed"/></h5>
 
     <c:choose>
         <c:when test="${role == 'ADMIN'}">

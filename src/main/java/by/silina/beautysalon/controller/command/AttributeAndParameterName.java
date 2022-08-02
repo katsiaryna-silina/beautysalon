@@ -22,6 +22,8 @@ public final class AttributeAndParameterName {
     public static final String DISCOUNT_STATUSES = "discount_statuses";
     public static final String ROLE = "role";
 
+    public static final String WELCOME_MESSAGE = "welcome_message";
+    public static final String LOGIN_NEEDED_MESSAGE = "login_needed_message";
     public static final String LOGIN_FAILED_MESSAGE = "login_failed_message";
 
     public static final String USERNAME_ERROR_MESSAGE = "username_error_message";

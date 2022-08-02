@@ -36,6 +36,7 @@ public final class TableColumnName {
     public static final String SERVICE_NAME = "SERVICE_NAME";
     public static final String FEEDBACK = "FEEDBACK";
     public static final String MARK = "MARK";
+    public static final String COUNTER = "COUNTER";
     public static final String IS_VERIFIED = "IS_VERIFIED";
     public static final String NUMBER_OF_ORDERS = "NUMBER_OF_ORDERS";
     public static final String NUMBER_OF_SERVICES = "NUMBER_OF_SERVICES";

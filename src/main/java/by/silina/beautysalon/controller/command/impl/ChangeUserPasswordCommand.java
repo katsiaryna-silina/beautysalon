@@ -45,8 +45,8 @@ public class ChangeUserPasswordCommand implements Command {
                 page = SUCCESS_CHANGE_PASSWORD;
             } else {
                 var sessionLocale = (String) sessionRequestContent.getSessionAttributeByName(LOCALE);
-                MessageLocalizer.localize(errorMap, sessionLocale);
-                
+                MessageLocalizer.getLocalizedMessage(errorMap, sessionLocale);
+
                 fillRequestAttributesFrom(errorMap, sessionRequestContent);
             }
         } catch (ServiceException e) {

@@ -33,13 +33,17 @@ public class PageSecurityFilter implements Filter {
     public void init(FilterConfig config) {
         adminPages = Set.of(
                 INDEX,
+                SERVICES,
+                PROFILE,
                 MAIN_ADMIN,
-                WELCOME,
                 CHANGE_PASSWORD,
                 SUCCESS_CHANGE_PASSWORD,
                 ALL_USERS,
                 UPDATE_USER_FORM,
-                UPDATE_USER_RESULT,
+                UPDATE_USER_DISCOUNT_SUCCESS,
+                UPDATE_USER_STATUS_SUCCESS,
+                UPDATE_USER_ROLE_SUCCESS,
+                UPDATE_USER_FAILED,
                 ORDER_FORM_PICK_SERVICES,
                 ORDER_FORM_PICK_DATE,
                 ORDER_FORM_PICK_TIME,
@@ -58,13 +62,16 @@ public class PageSecurityFilter implements Filter {
                 UPDATE_FEEDBACK,
                 UPDATE_FEEDBACK_SUCCESS,
                 UPDATE_FEEDBACK_FAILED,
-                DELETE_USER_RESULT
+                DELETE_USER,
+                DELETE_USER_FAILED,
+                DELETE_USER_SUCCESS
         );
 
         clientPages = Set.of(
                 INDEX,
+                SERVICES,
+                PROFILE,
                 MAIN_CLIENT,
-                WELCOME,
                 CHANGE_PASSWORD,
                 SUCCESS_CHANGE_PASSWORD,
                 ORDER_FORM_PICK_SERVICES,
@@ -82,11 +89,15 @@ public class PageSecurityFilter implements Filter {
                 UPDATE_FEEDBACK,
                 UPDATE_FEEDBACK_SUCCESS,
                 UPDATE_FEEDBACK_FAILED,
-                DELETE_USER_RESULT
+                DELETE_USER,
+                DELETE_USER_FAILED,
+                DELETE_USER_SUCCESS
         );
 
         guestPages = Set.of(INDEX,
+                SERVICES,
                 LOGIN,
+                DELETE_USER_SUCCESS,
                 REGISTRATION
         );
     }

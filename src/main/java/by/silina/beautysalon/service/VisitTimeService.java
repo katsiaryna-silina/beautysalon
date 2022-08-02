@@ -22,4 +22,14 @@ public interface VisitTimeService {
      * @throws ServiceException if a service exception occurs.
      */
     List<VisitTimeSlotDto> getVisitTimeSlotDtos(LocalDate visitDate, Integer neededMinutes) throws ServiceException;
+
+    /**
+     * Checks if visit time slots free for the date.
+     *
+     * @param visitDate    LocalDate. Date of the visit.
+     * @param visitTimeIds List of VisitTime id.
+     * @return boolean.  True if time slots are free; false otherwise.
+     * @throws ServiceException if a dao exception occurs.
+     */
+    boolean isVisitTimeSlotFree(LocalDate visitDate, List<Long> visitTimeIds) throws ServiceException;
 }

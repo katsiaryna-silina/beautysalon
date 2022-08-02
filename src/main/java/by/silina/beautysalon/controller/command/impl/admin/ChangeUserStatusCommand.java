@@ -8,9 +8,11 @@ import by.silina.beautysalon.exception.ServiceException;
 import by.silina.beautysalon.model.entity.UserStatus;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.service.impl.UserServiceImpl;
+import by.silina.beautysalon.util.MessageLocalizer;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
-import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_RESULT;
+import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_FAILED;
+import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_STATUS_SUCCESS;
 
 /**
  * The ChangeUserStatusCommand class for change user's status command by admin.
@@ -18,6 +20,8 @@ import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_RESU
  * @author Silina Katsiaryna
  */
 public class ChangeUserStatusCommand implements Command {
+    private static final String USER_STATUS_UPDATE_FAILED_CAUSE_SAME_KEY = "user.status.update.failed.cause.same";
+    private static final String USER_STATUS_UPDATE_FAILED_KEY = "user.status.update.failed";
 
     /**
      * Executes change user's status command.
@@ -40,19 +44,25 @@ public class ChangeUserStatusCommand implements Command {
         String newUserStatusName = sessionRequestContent.getParameterByName(NEW_USER_STATUS_NAME);
         var newUserStatus = UserStatus.valueOf(newUserStatusName);
 
+        var sessionLocale = (String) sessionRequestContent.getSessionAttributeByName(LOCALE);
+
+        var router = new Router(UPDATE_USER_FAILED, Router.Type.FORWARD);
+
         if (currentUserStatusName != null && currentUserStatusName.equals(newUserStatusName)) {
-            sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Picked user status is the same as current.");
+            var message = MessageLocalizer.getLocalizedMessage(USER_STATUS_UPDATE_FAILED_CAUSE_SAME_KEY, sessionLocale);
+            sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, message);
         } else {
             try {
                 if (userService.changeUserStatus(userId, newUserStatus)) {
-                    sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "User status has changed on " + newUserStatusName);
+                    router = new Router(UPDATE_USER_STATUS_SUCCESS, Router.Type.REDIRECT);
                 } else {
-                    sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Cannot change user status.");
+                    var message = MessageLocalizer.getLocalizedMessage(USER_STATUS_UPDATE_FAILED_KEY, sessionLocale);
+                    sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, message);
                 }
             } catch (ServiceException e) {
                 throw new CommandException(e);
             }
         }
-        return new Router(UPDATE_USER_RESULT, Router.Type.FORWARD);
+        return router;
     }
 }

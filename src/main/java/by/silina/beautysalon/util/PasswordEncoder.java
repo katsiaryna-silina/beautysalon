@@ -19,6 +19,7 @@ public class PasswordEncoder {
     /**
      * Encodes passed password using BCrypt.
      *
+     * @param password String. Password.
      * @return String
      */
     public static String encode(final String password) {
@@ -28,6 +29,8 @@ public class PasswordEncoder {
     /**
      * Verifies passwords from dto and database using BCrypt.
      *
+     * @param passwordFromDto String. Password from dto.
+     * @param passwordFromDB  String. Password from database.
      * @return boolean. True if passwords are the same; false otherwise.
      */
     public static boolean verifyPasswords(String passwordFromDto, String passwordFromDB) {

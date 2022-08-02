@@ -69,6 +69,23 @@ public class VisitTimeServiceImpl implements VisitTimeService {
     }
 
     /**
+     * Checks if visit time slots free for the date.
+     *
+     * @param visitDate    LocalDate. Date of the visit.
+     * @param visitTimeIds List of VisitTime id.
+     * @return boolean.  True if time slots are free; false otherwise.
+     * @throws ServiceException if a dao exception occurs.
+     */
+    @Override
+    public boolean isVisitTimeSlotFree(LocalDate visitDate, List<Long> visitTimeIds) throws ServiceException {
+        try {
+            return visitTimeDao.isVisitTimeSlotFree(visitDate, visitTimeIds);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    /**
      * Filters lister of free time slots.
      * Adds to result list a time slot which begin time is after then now.
      *

@@ -39,6 +39,7 @@ public class UpdateOrderStatusByAdminCommand implements Command {
 
         var orderId = Long.valueOf(sessionRequestContent.getParameterByName(ID));
 
+        var router = new Router(IMPOSSIBLE_TO_UPDATE_ORDER, Router.Type.REDIRECT);
         try {
             var orderOptional = orderService.findById(orderId);
             if (orderOptional.isPresent()) {
@@ -46,19 +47,16 @@ public class UpdateOrderStatusByAdminCommand implements Command {
                 String currentOrderStatusName = sessionRequestContent.getParameterByName(STATUS);
 
                 var newOrderStatusNames = orderStatusService.findOrderStatusNamesForAdmin(currentOrderStatusName);
-                if (newOrderStatusNames.isEmpty()) {
-                    return new Router(IMPOSSIBLE_TO_UPDATE_ORDER, Router.Type.FORWARD);
+                if (!newOrderStatusNames.isEmpty()) {
+                    OrderForAdminDto orderDto = orderMapper.toOrderForAdminDto(orderOptional.get());
+                    sessionRequestContent.putRequestAttribute(ORDER, orderDto);
+                    sessionRequestContent.putRequestAttribute(ORDER_STATUSES, newOrderStatusNames);
+                    router = new Router(UPDATE_ORDER_FORM_BY_ADMIN, Router.Type.FORWARD);
                 }
-
-                OrderForAdminDto orderDto = orderMapper.toOrderForAdminDto(orderOptional.get());
-                sessionRequestContent.putRequestAttribute(ORDER, orderDto);
-                sessionRequestContent.putRequestAttribute(ORDER_STATUSES, newOrderStatusNames);
-            } else {
-                return new Router(IMPOSSIBLE_TO_UPDATE_ORDER, Router.Type.FORWARD);
             }
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return new Router(UPDATE_ORDER_FORM_BY_ADMIN, Router.Type.FORWARD);
+        return router;
     }
 }

@@ -47,7 +47,7 @@
     <form action="${pageContext.request.contextPath}/controller" method="POST">
         <input type="hidden" name="command" value="change_password"/>
 
-        <label for="current_password_enter">Enter current password:</label>
+        <label for="current_password_enter"><fmt:message key="user.enter.current.password"/></label>
         <div class="input-with-error">
             <input id="current_password_enter" name="current_password" type="password"/>
             <div class="small" style="color: red">${password_error_message}</div>

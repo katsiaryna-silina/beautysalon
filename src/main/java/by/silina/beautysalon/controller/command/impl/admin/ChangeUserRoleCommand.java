@@ -10,9 +10,11 @@ import by.silina.beautysalon.service.DiscountStatusService;
 import by.silina.beautysalon.service.UserService;
 import by.silina.beautysalon.service.impl.DiscountStatusServiceImpl;
 import by.silina.beautysalon.service.impl.UserServiceImpl;
+import by.silina.beautysalon.util.MessageLocalizer;
 
 import static by.silina.beautysalon.controller.command.AttributeAndParameterName.*;
-import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_RESULT;
+import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_FAILED;
+import static by.silina.beautysalon.controller.command.PagePath.UPDATE_USER_ROLE_SUCCESS;
 import static by.silina.beautysalon.model.entity.Role.ADMIN;
 import static by.silina.beautysalon.model.entity.Role.CLIENT;
 
@@ -22,6 +24,8 @@ import static by.silina.beautysalon.model.entity.Role.CLIENT;
  * @author Silina Katsiaryna
  */
 public class ChangeUserRoleCommand implements Command {
+    private static final String USER_ROLE_FAILED_CAUSE_SAME_KEY = "user.role.failed.cause.same";
+    private static final String USER_ROLE_UPDATE_FAILED_KEY = "user.role.update.failed";
 
     /**
      * Executes change role command.
@@ -44,23 +48,29 @@ public class ChangeUserRoleCommand implements Command {
         var currentRole = Role.valueOf(sessionRequestContent.getParameterByName(CURRENT_ROLE_NAME));
         var newRole = Role.valueOf(sessionRequestContent.getParameterByName(NEW_ROLE_NAME));
 
+        var sessionLocale = (String) sessionRequestContent.getSessionAttributeByName(LOCALE);
+
+        var router = new Router(UPDATE_USER_FAILED, Router.Type.FORWARD);
+
         if (newRole.equals(currentRole)) {
-            sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Picked role is the same as current.");
+            var message = MessageLocalizer.getLocalizedMessage(USER_ROLE_FAILED_CAUSE_SAME_KEY, sessionLocale);
+            sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, message);
         } else if (CLIENT.equals(currentRole) && ADMIN.equals(newRole)) {
             try {
                 var maximumDiscountOptional = discountStatusService.findMaximum();
                 if (maximumDiscountOptional.isPresent()) {
                     var discountStatusName = maximumDiscountOptional.get().getStatus();
                     if (userService.changeUserRoleAndDiscount(userId, ADMIN, discountStatusName)) {
-                        sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "User's role has changed on \"admin\"");
+                        router = new Router(UPDATE_USER_ROLE_SUCCESS, Router.Type.REDIRECT);
                     }
                 }
             } catch (ServiceException e) {
                 throw new CommandException(e);
             }
         } else {
-            sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, "Cannot change user's role. Contact technical support.");
+            var message = MessageLocalizer.getLocalizedMessage(USER_ROLE_UPDATE_FAILED_KEY, sessionLocale);
+            sessionRequestContent.putRequestAttribute(CHANGE_USER_MESSAGE, message);
         }
-        return new Router(UPDATE_USER_RESULT, Router.Type.FORWARD);
+        return router;
     }
 }

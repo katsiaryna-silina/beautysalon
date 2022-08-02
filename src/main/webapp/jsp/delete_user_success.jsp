@@ -5,15 +5,15 @@
 <fmt:setBundle basename="locale.pagecontent"/>
 <html>
 <head>
-    <title><fmt:message key="title"/></title>
+    <title><fmt:message key="title.delete.user"/></title>
 </head>
 <body>
 <c:choose>
     <c:when test="${role == 'ADMIN'}">
-        <jsp:include page="fragment/header_admin_with_locale.jsp"/>
+        <jsp:include page="fragment/header_admin.jsp"/>
     </c:when>
     <c:when test="${role == 'CLIENT'}">
-        <jsp:include page="fragment/header_client_with_locale.jsp"/>
+        <jsp:include page="fragment/header_client.jsp"/>
     </c:when>
     <c:otherwise>
         <jsp:include page="fragment/header_default.jsp"/>
@@ -25,12 +25,11 @@
     </br>
     <div class="row">
         <div class="col text-center">
-            <h4><fmt:message key="hi"/>${username}!</h4>
+            <h3><fmt:message key="table.header.delete.user"/></h3>
+            </br>
+            </br>
+            <a><fmt:message key="user.delete.success"/></a>
         </div>
-    </div>
-    </br>
-    <div class="col text-center">
-        <img style="width: 70%" src="../image/welcome.jpg" alt="welcome">
     </div>
 </div>
 

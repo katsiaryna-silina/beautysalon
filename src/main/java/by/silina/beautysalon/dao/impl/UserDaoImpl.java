@@ -38,6 +38,15 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             JOIN USER_STATUSES US ON US.ID = U.USER_STATUS_ID
             WHERE U.USERNAME = ?
             """;
+    private static final String SELECT_NOT_BLOCKED_USER_BY_USERNAME = """
+            SELECT U.ID, U.USERNAME, U.PASSWORD, U.EMAIL, U.FIRST_NAME, U.LAST_NAME, U.PHONE_NUMBER, U.LAST_LOGIN, DS.STATUS DISCOUNT_STATUS, DS.DISCOUNT, UR.ROLE, US.STATUS
+            FROM USERS U
+            JOIN USER_ROLES UR ON UR.ID = U.ROLE_ID
+            JOIN DISCOUNT_STATUSES DS ON DS.ID = U.DISCOUNT_STATUS_ID
+            JOIN USER_STATUSES US ON US.ID = U.USER_STATUS_ID
+            WHERE U.USERNAME = ?
+             AND US.STATUS != 'blocked'
+            """;
     private static final String SELECT_USERNAME_IN_USERS = """
             SELECT USERNAME
             FROM USERS
@@ -126,7 +135,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     /**
-     * Finds an user by username.
+     * Finds user by username.
      *
      * @param username String. The username.
      * @return Optional of User
@@ -137,6 +146,35 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         Optional<User> optionalUser = Optional.empty();
         try (var connection = connectionPool.getConnection();
              var preparedStatement = connection.prepareStatement(SELECT_USER_BY_USERNAME)) {
+
+            preparedStatement.setString(1, username);
+            try (var resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    User userFromResultSet = userMapper.toEntity(resultSet);
+                    optionalUser = Optional.of(userFromResultSet);
+                    log.debug("User was found.");
+                } else {
+                    log.debug("User was not found.");
+                }
+            }
+            return optionalUser;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    /**
+     * Finds not blocked user by username.
+     *
+     * @param username String. The username.
+     * @return Optional of User
+     * @throws DaoException if a dao exception occurs.
+     */
+    @Override
+    public Optional<User> findNotBlockedUserByUsername(String username) throws DaoException {
+        Optional<User> optionalUser = Optional.empty();
+        try (var connection = connectionPool.getConnection();
+             var preparedStatement = connection.prepareStatement(SELECT_NOT_BLOCKED_USER_BY_USERNAME)) {
 
             preparedStatement.setString(1, username);
             try (var resultSet = preparedStatement.executeQuery()) {
