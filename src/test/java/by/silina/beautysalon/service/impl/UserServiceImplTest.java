@@ -56,7 +56,7 @@ class UserServiceImplTest {
                 .build();
         var expectedResult = Optional.of(user);
 
-        Mockito.when(userDao.findUserByUsername(dto.getUsername())).thenReturn(expectedResult);
+        Mockito.when(userDao.findNotBlockedUserByUsername(dto.getUsername())).thenReturn(expectedResult);
 
         var actualResult = userService.findUser(dto);
         Assertions.assertEquals(expectedResult, actualResult);
